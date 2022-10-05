@@ -1,0 +1,12 @@
+{
+  "name": "@animaapp/scooby-types",
+  "version": "1.0.0",
+  "description": "Typings for the Scooby data structures",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "repository": "https://github.com/AnimaApp/scooby",
+  "author": "Federico Terzi",
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com"
+  }
+}

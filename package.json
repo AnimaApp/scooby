@@ -13,7 +13,8 @@
     "release:publish:ci": "yarn lerna publish from-git --yes",
     "prepare": "yarn husky install",
     "cli": "yarn workspace @animaapp/scooby-cli",
-    "cli:run:dev": "./packages/scooby-cli/bin/dev"
+    "cli:run:dev": "./packages/scooby-cli/bin/dev",
+    "core": "yarn workspace @animaapp/scooby-core"
   },
   "workspaces": [
     "packages/*"

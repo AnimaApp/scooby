@@ -1,0 +1,20 @@
+{
+  "name": "@animaapp/scooby-core",
+  "version": "1.0.0",
+  "description": "This package contains the logic used to perform testing",
+  "main": "src/index.ts",
+  "repository": "https://github.com/AnimaApp/scooby",
+  "author": "Federico Terzi",
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com"
+  },
+  "scripts": {
+    "build": "tsc",
+    "test": "jest"
+  },
+  "devDependencies": {
+    "@types/jest": "^27.4.1",
+    "jest": "^27.5.1",
+    "ts-jest": "^27.1.4"
+  }
+}

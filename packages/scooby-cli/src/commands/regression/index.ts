@@ -1,3 +1,4 @@
+import { runRegressionTest } from "@animaapp/scooby-core";
 import { Command, Flags } from "@oclif/core";
 
 export default class Regression extends Command {
@@ -23,6 +24,9 @@ export default class Regression extends Command {
   async run(): Promise<void> {
     const { flags } = await this.parse(Regression);
 
-    // TODO
+    const result = await runRegressionTest({
+      name: flags.name,
+      testsPath: flags.tests,
+    });
   }
 }
