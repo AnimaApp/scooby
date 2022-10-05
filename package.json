@@ -1,0 +1,32 @@
+{
+  "name": "scooby",
+  "repository": "https://github.com/AnimaApp/scooby.git",
+  "private": true,
+  "scripts": {
+    "build:all": "yarn workspaces run build",
+    "check:lint": "yarn eslint --ext .ts packages",
+    "check:format": "yarn prettier --check 'packages/**/*.ts'",
+    "clean:all": "yarn workspaces run clean",
+    "release:prepare": "yarn lerna version --conventional-commits",
+    "release:prepare:ci": "yarn lerna version --conventional-commits --yes",
+    "release:publish": "yarn lerna publish from-git",
+    "release:publish:ci": "yarn lerna publish from-git --yes",
+    "prepare": "yarn husky install",
+    "cli": "yarn workspace @animaapp/scooby-cli",
+    "cli:run:dev": "./packages/scooby-cli/bin/dev"
+  },
+  "workspaces": [
+    "packages/*"
+  ],
+  "devDependencies": {
+    "@commitlint/cli": "^16.2.3",
+    "@commitlint/config-conventional": "^16.2.1",
+    "@typescript-eslint/eslint-plugin": "^5.15.0",
+    "@typescript-eslint/parser": "^5.15.0",
+    "eslint": "^8.11.0",
+    "eslint-config-prettier": "8.5.0",
+    "husky": "^7.0.4",
+    "lerna": "^4.0.0",
+    "prettier": "2.6.1"
+  }
+}

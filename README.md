@@ -1,2 +1,3 @@
-# scooby
-[WIP] An optimised visual and E2E testing framework
+# Scooby 
+
+[WIP] An optimized E2E and visual testing framework
