@@ -1,3 +1,20 @@
+// COMMON PROPERTIES
+
+export type TestEntry = {
+  id: string;
+  path: string;
+  options?: TestEntryOptions;
+};
+
+export type TestEntryOptions = {
+  viewports?: Viewport[];
+};
+
+export type Viewport = {
+  width: number;
+  height: number;
+};
+
 // REGRESSION
 
 export type RegressionTestRequest = {

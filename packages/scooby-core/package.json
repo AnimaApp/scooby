@@ -16,5 +16,8 @@
     "@types/jest": "^27.4.1",
     "jest": "^27.5.1",
     "ts-jest": "^27.1.4"
+  },
+  "dependencies": {
+    "zod": "^3.19.1"
   }
 }
