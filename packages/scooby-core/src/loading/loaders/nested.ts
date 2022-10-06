@@ -53,7 +53,7 @@ export const nestedLoader: Loader = {
         id: dirEntry.name,
         type: getTypeForEntry(mainFile),
         path: path.join(dirPath, mainFile),
-        options,
+        ...(options && { options }),
       });
     }
 

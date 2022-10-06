@@ -32,7 +32,7 @@ const DEFAULT_COMPARISON_OPTIONS: ImageComparisonOptions = {
 export async function compareImages(
   expectedPath: string,
   actualPath: string,
-  options: Partial<ImageComparisonOptions>
+  options?: Partial<ImageComparisonOptions>
 ): Promise<ImageComparisonResult> {
   const effectiveOptions: ImageComparisonOptions = {
     ...DEFAULT_COMPARISON_OPTIONS,

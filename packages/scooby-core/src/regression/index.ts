@@ -1,6 +1,10 @@
+import { batchImageComparison } from "../comparison";
 import { loadTestEntries } from "../loading";
+import { matchSources } from "../matching";
 import { generateImageSources } from "../source/image";
 import { RegressionTestRequest, RegressionTestResult } from "../types";
+import { calculateRegressions } from "./changes";
+import { printRegressionResults } from "./print";
 import { loadReferenceEntries } from "./reference";
 
 export async function runRegressionTest(
@@ -28,11 +32,25 @@ export async function runRegressionTest(
   const referenceSources = await generateImageSources(referenceEntries, {});
   console.log(`generated ${referenceSources.length} reference sources`);
 
-  console.log(testSources);
-  console.log(referenceSources);
+  console.log("matching datasets...");
+  const matchedSources = matchSources(referenceSources, testSources);
+  console.log(
+    `found ${matchedSources.matching.length} matched tests, ${matchedSources.new.length} new test(s) and ${matchedSources.removed.length} removed test(s)`
+  );
 
-  // Compute the matching pairs (by id)
-  // Compute the diffs on the matching pairs (by id)
-  // Return diffs
+  console.log("comparing tests...");
+  const comparisonResult = await batchImageComparison(matchedSources.matching);
+
+  console.log("determining regressions...");
+  const regressions = calculateRegressions(comparisonResult);
+
+  printRegressionResults(regressions, matchedSources);
+
   throw new Error("not yet implemented");
+
+  // return {
+  //   new: matchedSources.new,
+
+  //   removed: matchedSources.removed,
+  // };
 }

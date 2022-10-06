@@ -40,6 +40,7 @@ export type RegressionTestRequest = {
 };
 
 export type RegressionTestResult = {
+  unchanged: RegressionTestEntry[];
   changed: RegressionTestEntry[];
   new: RegressionTestEntry[];
   removed: RegressionTestEntry[];

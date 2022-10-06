@@ -14,6 +14,7 @@ describe("loading test folders", () => {
     expect(entries).toEqual([
       {
         id: "test1",
+        type: "html",
         path: path.join(testsPath, "./test1.html"),
         options: {
           viewports: [
@@ -26,6 +27,7 @@ describe("loading test folders", () => {
       },
       {
         id: "test2",
+        type: "html",
         path: path.join(testsPath, "./test2.html"),
       },
     ] as TestEntry[]);
@@ -42,10 +44,12 @@ describe("loading test folders", () => {
     expect(entries).toEqual([
       {
         id: "test1",
+        type: "html",
         path: path.join(testsPath, "./test1/index.html"),
       },
       {
         id: "test2",
+        type: "html",
         path: path.join(testsPath, "./test2/index.html"),
         options: {
           viewports: [
