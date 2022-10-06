@@ -64,11 +64,6 @@ function getTestExtension(entries: string[]): string | undefined {
     return "png";
   }
 
-  const jpgFile = entries.find((entry) => entry.endsWith(".jpg"));
-  if (jpgFile) {
-    return "jpg";
-  }
-
   const jsonFile = entries.find(
     (entry) => entry.endsWith(".json") && !entry.endsWith(".scooby.json")
   );

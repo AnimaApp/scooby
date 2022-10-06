@@ -15,6 +15,11 @@ export type Viewport = {
   height: number;
 };
 
+export type ImageSize = {
+  width: number;
+  height: number;
+};
+
 // REGRESSION
 
 export type RegressionTestRequest = {
@@ -28,4 +33,8 @@ export type RegressionTestResult = {
   removed: RegressionTestEntry[];
 };
 
-export type RegressionTestEntry = {};
+export type RegressionTestEntry = {
+  id: string;
+  group: string;
+  tags: string[];
+};

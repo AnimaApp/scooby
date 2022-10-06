@@ -10,5 +10,11 @@ export async function loadTestEntries(path: string): Promise<TestEntry[]> {
 
   const loader = await getLoaderForPath(path);
 
-  return loader.load(path);
+  const entries = await loader.load(path);
+
+  if (!entries.length) {
+    throw new Error(`no test entries found in path: ${path}`);
+  }
+
+  return entries;
 }
