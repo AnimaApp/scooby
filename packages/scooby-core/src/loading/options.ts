@@ -12,6 +12,7 @@ const optionsSchema = z.object({
       })
     )
   ),
+  tags: z.optional(z.array(z.string())),
 });
 
 export async function loadOptions(

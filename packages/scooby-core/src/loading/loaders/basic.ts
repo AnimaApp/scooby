@@ -4,6 +4,7 @@ import { readdir } from "fs/promises";
 import { Loader } from ".";
 import { TestEntry } from "../../types";
 import { loadOptions } from "../options";
+import { getTypeForEntry } from "./util";
 
 export const basicLoader: Loader = {
   async isCompatible(testsPath: string): Promise<boolean> {
@@ -44,6 +45,7 @@ export const basicLoader: Loader = {
 
       entries.push({
         id,
+        type: getTypeForEntry(dirEntry.name),
         path: path.join(testsPath, dirEntry.name),
         options,
       });

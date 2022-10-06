@@ -1,13 +1,17 @@
-// COMMON PROPERTIES
+// SHARED
+
+export type TestEntryType = "png" | "html";
 
 export type TestEntry = {
   id: string;
+  type: TestEntryType;
   path: string;
   options?: TestEntryOptions;
 };
 
 export type TestEntryOptions = {
   viewports?: Viewport[];
+  tags?: string[];
 };
 
 export type Viewport = {
@@ -20,11 +24,19 @@ export type ImageSize = {
   height: number;
 };
 
+export type ImageSourceEntry = {
+  id: string;
+  groupId: string;
+  tags: string[];
+  path: string;
+};
+
 // REGRESSION
 
 export type RegressionTestRequest = {
   name: string;
   testsPath: string;
+  referencePath?: string;
 };
 
 export type RegressionTestResult = {
@@ -35,6 +47,6 @@ export type RegressionTestResult = {
 
 export type RegressionTestEntry = {
   id: string;
-  group: string;
+  groupId: string;
   tags: string[];
 };

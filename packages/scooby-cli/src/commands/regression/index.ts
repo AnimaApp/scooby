@@ -19,6 +19,12 @@ export default class Regression extends Command {
       description: "Path to the folder containing the tests",
       required: true,
     }),
+    reference: Flags.string({
+      char: "r",
+      description:
+        "(optional) Specify a custom path that acts as reference dataset, instead of pulling it automatically. You should probably not use this, unless you know what you're doing.",
+      required: false,
+    }),
   };
 
   async run(): Promise<void> {
@@ -27,6 +33,7 @@ export default class Regression extends Command {
     const result = await runRegressionTest({
       name: flags.name,
       testsPath: flags.tests,
+      referencePath: flags.reference,
     });
   }
 }
