@@ -43,10 +43,10 @@ export const nestedLoader: Loader = {
       }
 
       const optionsFile = subEntries.find(
-        (entry) => entry.name === "snoopy.json"
+        (entry) => entry.name === "scooby.json"
       );
       const options = optionsFile
-        ? await loadOptions(path.join(dirPath, "snoopy.json"))
+        ? await loadOptions(path.join(dirPath, "scooby.json"))
         : undefined;
 
       entries.push({

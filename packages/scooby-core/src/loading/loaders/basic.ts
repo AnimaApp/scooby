@@ -38,7 +38,7 @@ export const basicLoader: Loader = {
 
       const id = path.parse(dirEntry.name).name;
 
-      const optionsFile = path.join(testsPath, `${id}.snoopy.json`);
+      const optionsFile = path.join(testsPath, `${id}.scooby.json`);
       const options = existsSync(optionsFile)
         ? await loadOptions(optionsFile)
         : undefined;

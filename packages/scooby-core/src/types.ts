@@ -1,5 +1,3 @@
-// SHARED
-
 export type TestEntryType = "png" | "html";
 
 export type TestEntry = {
@@ -29,25 +27,4 @@ export type ImageSourceEntry = {
   groupId: string;
   tags: string[];
   path: string;
-};
-
-// REGRESSION
-
-export type RegressionTestRequest = {
-  name: string;
-  testsPath: string;
-  referencePath?: string;
-};
-
-export type RegressionTestResult = {
-  unchanged: RegressionTestEntry[];
-  changed: RegressionTestEntry[];
-  new: RegressionTestEntry[];
-  removed: RegressionTestEntry[];
-};
-
-export type RegressionTestEntry = {
-  id: string;
-  groupId: string;
-  tags: string[];
 };

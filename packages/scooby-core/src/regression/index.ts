@@ -1,26 +1,37 @@
+import { getScoobyAPI } from "@animaapp/scooby-api";
+import { HostedRegressionReport } from "@animaapp/scooby-types";
 import { batchImageComparison } from "../comparison";
 import { loadTestEntries } from "../loading";
 import { matchSources } from "../matching";
 import { generateImageSources } from "../source/image";
-import { RegressionTestRequest, RegressionTestResult } from "../types";
 import { calculateRegressions } from "./changes";
 import { printRegressionResults } from "./print";
 import { loadReferenceEntries } from "./reference";
 
+export type RegressionTestRequest = {
+  name: string;
+  testsPath: string;
+  referencePath?: string;
+};
+
 export async function runRegressionTest(
   request: RegressionTestRequest
-): Promise<RegressionTestResult> {
+): Promise<HostedRegressionReport> {
   // TODO: validate name format (alphanumeric and dash)
 
   console.log("loading test entries from path: " + request.testsPath);
   const testEntries = await loadTestEntries(request.testsPath);
   console.log(`found ${testEntries.length} test entries`);
 
+  console.log("initializing API...");
+  const api = await getScoobyAPI();
+
   // TODO: Download reference test files from S3 (and check their format)
 
   console.log("loading reference dataset...");
   const referenceEntries = await loadReferenceEntries({
     localReferencePath: request.referencePath,
+    api,
   });
   console.log(`found ${referenceEntries.length} reference entries`);
 
@@ -45,6 +56,8 @@ export async function runRegressionTest(
   const regressions = calculateRegressions(comparisonResult);
 
   printRegressionResults(regressions, matchedSources);
+
+  // upload to S3
 
   throw new Error("not yet implemented");
 

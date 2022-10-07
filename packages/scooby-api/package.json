@@ -1,7 +1,7 @@
 {
-  "name": "@animaapp/scooby-core",
+  "name": "@animaapp/scooby-api",
   "version": "1.0.0",
-  "description": "This package contains the logic used to perform testing",
+  "description": "This package contains the logic to upload/retrieve test results",
   "main": "dist/src/index.js",
   "repository": "https://github.com/AnimaApp/scooby",
   "author": "Federico Terzi",
@@ -14,22 +14,13 @@
   },
   "devDependencies": {
     "@types/jest": "^27.4.1",
-    "@types/pixelmatch": "^5.2.4",
-    "@types/pngjs": "^6.0.1",
-    "@types/sharp": "^0.31.0",
     "jest": "^27.5.1",
     "ts-jest": "^27.1.4"
   },
   "dependencies": {
-    "@animaapp/scooby-api": "*",
     "@animaapp/scooby-types": "*",
+    "@aws-sdk/client-s3": "^3.186.0",
     "fastq": "^1.13.0",
-    "piscina": "^3.2.0",
-    "pixelmatch": "^5.3.0",
-    "pngjs": "^6.0.0",
-    "puppeteer": "^18.2.1",
-    "sharp": "^0.31.1",
-    "tmp-promise": "^3.0.3",
     "zod": "^3.19.1"
   }
 }

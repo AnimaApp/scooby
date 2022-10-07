@@ -5,6 +5,7 @@
     "moduleResolution": "node",
     "declaration": true,
     "resolveJsonModule": true,
+    "composite": true,
     "outDir": "./dist",
     "lib": [
       "es2019"
