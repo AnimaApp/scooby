@@ -30,6 +30,7 @@ export function getAWSCredentials(options: ScoobyAPIOptions): {
 
 export type BucketOptions = {
   bucket: string;
+  region: string;
 };
 
 export function getAWSBucketOptions(options: ScoobyAPIOptions): BucketOptions {
@@ -37,14 +38,17 @@ export function getAWSBucketOptions(options: ScoobyAPIOptions): BucketOptions {
     console.log("loading AWS S3 bucket config from option overrides");
     return {
       bucket: options.awsS3Bucket.name,
+      region: options.awsS3Bucket.region,
     };
   }
 
   const bucket = process.env["SCOOBY_AWS_S3_BUCKET"];
-  if (bucket) {
+  const region = process.env["SCOOBY_AWS_S3_REGION"];
+  if (bucket && region) {
     console.log("loading AWS S3 bucket config from env variables");
     return {
       bucket,
+      region,
     };
   }
 

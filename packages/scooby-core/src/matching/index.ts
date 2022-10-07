@@ -1,4 +1,6 @@
-type MatchableSource = {
+import { validateSources } from "./validation";
+
+export type MatchableSource = {
   id: string;
   groupId: string;
 };
@@ -18,6 +20,8 @@ export function matchSources<T extends MatchableSource>(
   expected: T[],
   actual: T[]
 ): MatchedSources<T> {
+  validateSources(expected, actual);
+
   const expectedSourceById = new Map(
     expected.map((entry) => [entry.id, entry])
   );

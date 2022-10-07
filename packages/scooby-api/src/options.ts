@@ -12,6 +12,7 @@ const optionsSchema = z.object({
   awsS3Bucket: z.optional(
     z.object({
       name: z.string(),
+      region: z.string(),
     })
   ),
 });

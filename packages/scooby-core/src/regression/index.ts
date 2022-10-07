@@ -1,12 +1,14 @@
 import { getScoobyAPI } from "@animaapp/scooby-api";
 import { HostedRegressionReport } from "@animaapp/scooby-shared";
 import { batchImageComparison } from "../comparison";
+import { getContext } from "../context";
 import { loadTestEntries } from "../loading";
 import { matchSources } from "../matching";
 import { generateImageSources } from "../source/image";
 import { calculateRegressions } from "./changes";
 import { printRegressionResults } from "./print";
 import { loadReferenceEntries } from "./reference";
+import { generateReport } from "./report";
 
 export type RegressionTestRequest = {
   name: string;
@@ -18,13 +20,17 @@ export async function runRegressionTest(
   request: RegressionTestRequest
 ): Promise<HostedRegressionReport> {
   // TODO: validate name format (alphanumeric and dash)
+  const context = await getContext();
+  console.log("Loaded context: ", context);
 
   console.log("loading test entries from path: " + request.testsPath);
   const testEntries = await loadTestEntries(request.testsPath);
   console.log(`found ${testEntries.length} test entries`);
 
   console.log("initializing API...");
-  const api = await getScoobyAPI();
+  const api = await getScoobyAPI({
+    repositoryName: context.repositoryName,
+  });
 
   // TODO: Download reference test files from S3 (and check their format)
 
@@ -57,13 +63,17 @@ export async function runRegressionTest(
 
   printRegressionResults(regressions, matchedSources);
 
-  // upload to S3
+  const report = generateReport({
+    name: request.name,
+    commitHash: context.commitHash,
+    regressions,
+    matchedSources,
+  });
 
-  throw new Error("not yet implemented");
+  const hostedReport = await api.uploadRegressionReport(
+    { commitHash: context.commitHash },
+    report
+  );
 
-  // return {
-  //   new: matchedSources.new,
-
-  //   removed: matchedSources.removed,
-  // };
+  return hostedReport;
 }

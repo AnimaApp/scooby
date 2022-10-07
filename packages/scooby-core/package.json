@@ -29,6 +29,7 @@
     "pngjs": "^6.0.0",
     "puppeteer": "^18.2.1",
     "sharp": "^0.31.1",
+    "simple-git": "^3.14.1",
     "tmp-promise": "^3.0.3",
     "zod": "^3.19.1"
   }

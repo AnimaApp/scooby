@@ -19,7 +19,8 @@
     "@animaapp/scooby-core": "1.0.0",
     "@oclif/core": "^1.16.4",
     "@oclif/plugin-help": "^5",
-    "@oclif/plugin-plugins": "^2.1.1"
+    "@oclif/plugin-plugins": "^2.1.1",
+    "dotenv": "^16.0.3"
   },
   "devDependencies": {
     "@types/node": "^16.11.63",

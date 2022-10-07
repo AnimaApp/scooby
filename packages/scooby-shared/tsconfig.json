@@ -3,10 +3,12 @@
     "target": "es6",
     "jsx": "react",
     "moduleResolution": "node",
+    "module": "CommonJS",
     "declaration": true,
     "resolveJsonModule": true,
     "composite": true,
     "outDir": "./dist",
+    "rootDir": "./src",
     "lib": [
       "es2019"
     ],

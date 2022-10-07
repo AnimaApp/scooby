@@ -13,3 +13,8 @@ export type ScoobyAPI = {
 export type UploadReportContext = {
   commitHash: string;
 };
+
+export type UploadReportResourceContext = {
+  commitHash: string;
+  reportName: string;
+};

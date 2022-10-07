@@ -11,6 +11,7 @@ export type Resource = LocalResource | HostedResource;
 export type BaseReport = {
   name: string;
   createdAt: number;
+  commitHash: string;
 };
 
 export type BaseRegressionReport<TResource extends Resource> = BaseReport & {
@@ -43,6 +44,10 @@ export type RegressionTestEntry<TResource extends Resource> = {
   tags: string[];
   image: TResource;
 };
+export type LocalRegressionTestPair = RegressionTestPair<LocalResource>;
+export type HostedRegressionTestPair = RegressionTestPair<HostedResource>;
+export type LocalRegressionTestEntry = RegressionTestEntry<LocalResource>;
+export type HostedRegressionTestEntry = RegressionTestEntry<HostedResource>;
 
 export type LocalRegressionReport = BaseRegressionReport<LocalResource>;
 export type HostedRegressionReport = BaseRegressionReport<HostedResource>;
