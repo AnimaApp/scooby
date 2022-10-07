@@ -1,7 +1,7 @@
 import {
   HostedRegressionReport,
   LocalRegressionReport,
-} from "@animaapp/scooby-types";
+} from "@animaapp/scooby-shared";
 
 export type ScoobyAPI = {
   uploadRegressionReport: (

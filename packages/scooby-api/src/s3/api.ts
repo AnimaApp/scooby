@@ -2,7 +2,7 @@ import { S3 } from "@aws-sdk/client-s3";
 import {
   LocalRegressionReport,
   HostedRegressionReport,
-} from "@animaapp/scooby-types";
+} from "@animaapp/scooby-shared";
 import { readFile } from "fs/promises";
 import { ScoobyAPIOptions } from "../options";
 import { ScoobyAPI, UploadReportContext } from "../types";

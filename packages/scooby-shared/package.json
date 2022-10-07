@@ -1,7 +1,7 @@
 {
-  "name": "@animaapp/scooby-types",
+  "name": "@animaapp/scooby-shared",
   "version": "1.0.0",
-  "description": "Typings for the Scooby data structures",
+  "description": "Code that should be shared between backend and frontend",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "repository": "https://github.com/AnimaApp/scooby",

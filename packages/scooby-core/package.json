@@ -22,7 +22,7 @@
   },
   "dependencies": {
     "@animaapp/scooby-api": "*",
-    "@animaapp/scooby-types": "*",
+    "@animaapp/scooby-shared": "*",
     "fastq": "^1.13.0",
     "piscina": "^3.2.0",
     "pixelmatch": "^5.3.0",

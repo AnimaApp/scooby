@@ -1,5 +1,5 @@
 import { getScoobyAPI } from "@animaapp/scooby-api";
-import { HostedRegressionReport } from "@animaapp/scooby-types";
+import { HostedRegressionReport } from "@animaapp/scooby-shared";
 import { batchImageComparison } from "../comparison";
 import { loadTestEntries } from "../loading";
 import { matchSources } from "../matching";

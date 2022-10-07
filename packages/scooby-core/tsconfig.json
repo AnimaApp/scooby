@@ -16,7 +16,7 @@
     "allowSyntheticDefaultImports": true,
     "skipLibCheck": true,
     "paths": {
-      "@animaapp/scooby-types": ["../scooby-types"],
+      "@animaapp/scooby-shared": ["../scooby-shared"],
       "@animaapp/scooby-api": ["../scooby-api"]
     }
   },
@@ -27,7 +27,7 @@
     "test"
   ],
   "references": [
-    {"path": "../scooby-types"},
+    {"path": "../scooby-shared"},
     {"path": "../scooby-api"}
   ]
 }
