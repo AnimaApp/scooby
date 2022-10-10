@@ -1,5 +1,6 @@
 import { getScoobyAPI } from "@animaapp/scooby-api";
 import { ScoobyAPI } from "@animaapp/scooby-api/src/types";
+import { LocalRegressionReport } from "@animaapp/scooby-shared";
 import { batchImageComparison } from "../comparison";
 import { Context, getContext } from "../context";
 import { loadTestEntries } from "../loading";
@@ -64,17 +65,41 @@ async function performFeatureBranchFlow(
   testEntries: TestEntry[],
   api: ScoobyAPI
 ): Promise<void> {
-  if (!context.baseCommitHash) {
-    throw new Error(
-      "unable to run regression test, as Scooby was unable to determine the base commit hash"
-    );
-  }
-
   console.log(
     "this regression test will be compared against snapshot with git hash: " +
       context.baseCommitHash
   );
 
+  const report = await performRegressionTest(
+    request,
+    context,
+    testEntries,
+    api
+  );
+
+  const runningOnReferenceCommit = isRunningOnReferenceCommit(
+    context.currentCommitHash,
+    context.baseCommitHash
+  );
+  if (runningOnReferenceCommit) {
+    console.warn(
+      `this regression test is running on the same commit used as reference (${context.baseCommitHash}), therefore no report will be uploaded to the API to avoid conflicts.`
+    );
+  }
+  if (!runningOnReferenceCommit) {
+    await api.uploadRegressionReport(
+      { commitHash: context.currentCommitHash },
+      report
+    );
+  }
+}
+
+async function performRegressionTest(
+  request: RegressionTestRequest,
+  context: Context,
+  testEntries: TestEntry[],
+  api: ScoobyAPI
+): Promise<LocalRegressionReport> {
   console.log("loading reference dataset...");
   const referenceEntries = await loadReferenceEntries({
     baseCommitHash: context.baseCommitHash,
@@ -114,8 +139,12 @@ async function performFeatureBranchFlow(
     matchedSources,
   });
 
-  await api.uploadRegressionReport(
-    { commitHash: context.currentCommitHash },
-    report
-  );
+  return report;
+}
+
+function isRunningOnReferenceCommit(
+  currentCommit: string,
+  baseCommit: string
+): boolean {
+  return currentCommit === baseCommit;
 }

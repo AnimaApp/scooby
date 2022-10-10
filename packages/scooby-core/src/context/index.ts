@@ -5,7 +5,7 @@ export * from "./repositoryName";
 
 export type Context = {
   currentCommitHash: string;
-  baseCommitHash: string | undefined;
+  baseCommitHash: string;
   branchName: string;
   isMainBranch: boolean;
   repositoryName: string;
