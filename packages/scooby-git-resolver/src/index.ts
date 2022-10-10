@@ -5,18 +5,11 @@ import { CommitExplorer } from "./commit-explorer";
 export class GitResolver {
   private _explorer = new CommitExplorer();
 
-  async getBranchName(): Promise<string | undefined> {
+  async getBranchName(): Promise<string> {
     if (!this._checkAndMessage()) {
-      return;
+      throw new Error("invalid git configuration");
     }
-    try {
-      const result = this._explorer.getCurrentBranchName();
-      if (result) {
-        return result;
-      }
-    } catch (e: any) {
-      console.error(e);
-    }
+    return this._explorer.getCurrentBranchName();
   }
 
   async getBaseCommitHash(): Promise<string | undefined> {
@@ -33,9 +26,9 @@ export class GitResolver {
     }
   }
 
-  async getCurrentCommitHash(): Promise<string | undefined> {
+  async getCurrentCommitHash(): Promise<string> {
     if (!this._checkAndMessage()) {
-      return;
+      throw new Error("invalid git configuration");
     }
     return this._explorer.getCurrentCommitHash();
   }

@@ -25,6 +25,22 @@ export function buildReportJSONPath(context: {
   return `${buildReportPath(context)}/report.json`;
 }
 
+export function buildSnapshotPath(context: {
+  repository: string;
+  commitHash: string;
+  snapshotName: string;
+}): string {
+  return `${buildCommitPath(context)}/snapshots/${context.snapshotName}`;
+}
+
+export function buildSnapshotArchivePath(context: {
+  repository: string;
+  commitHash: string;
+  snapshotName: string;
+}): string {
+  return `${buildSnapshotPath(context)}/archive.zip`;
+}
+
 // Regression tests
 
 export function buildReportResourcePath(context: {

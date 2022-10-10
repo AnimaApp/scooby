@@ -1,17 +1,29 @@
-import { getCommitHash } from "./commitHash";
+import { GitResolver } from "@animaapp/scooby-git-resolver";
 import { getRepositoryName } from "./repositoryName";
 
 export * from "./repositoryName";
-export * from "./commitHash";
 
 export type Context = {
-  commitHash: string;
+  currentCommitHash: string;
+  baseCommitHash: string | undefined;
+  branchName: string;
+  isMainBranch: boolean;
   repositoryName: string;
 };
 
 export async function getContext(): Promise<Context> {
+  const gitResolver = new GitResolver();
+
+  const baseCommitHash = await gitResolver.getBaseCommitHash();
+  const currentCommitHash = await gitResolver.getCurrentCommitHash();
+  const branchName = await gitResolver.getBranchName();
+  const isMainBranch = branchName === "main" || branchName === "master";
+
   return {
-    commitHash: await getCommitHash(),
+    baseCommitHash,
+    currentCommitHash,
+    branchName,
+    isMainBranch,
     repositoryName: await getRepositoryName(),
   };
 }

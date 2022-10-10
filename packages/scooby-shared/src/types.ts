@@ -12,6 +12,7 @@ export type BaseReport = {
   name: string;
   createdAt: number;
   commitHash: string;
+  baseCommitHash: string;
 };
 
 export type BaseRegressionReport<TResource extends Resource> = BaseReport & {

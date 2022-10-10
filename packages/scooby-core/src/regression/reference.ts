@@ -1,9 +1,12 @@
 import { ScoobyAPI } from "@animaapp/scooby-api/src/types";
 import { loadTestEntries } from "../loading";
 import { TestEntry } from "../types";
+import { downloadTestSnapshot } from "./snapshot";
 
 export type LoadReferenceRequest = {
+  snapshotName: string;
   localReferencePath?: string;
+  baseCommitHash: string;
   api: ScoobyAPI;
 };
 
@@ -18,7 +21,11 @@ export async function loadReferenceEntries(
     return loadTestEntries(request.localReferencePath);
   }
 
-  // TODO: download from s3 and load from there
-
-  throw new Error("unable to load reference dataset, invalid configuration");
+  console.log("loading reference dataset from remote");
+  const remoteReferencePath = await downloadTestSnapshot(
+    request.snapshotName,
+    request.baseCommitHash,
+    request.api
+  );
+  return loadTestEntries(remoteReferencePath);
 }

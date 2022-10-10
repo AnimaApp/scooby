@@ -1,5 +1,6 @@
-import { S3 } from "@aws-sdk/client-s3";
+import { GetObjectCommandOutput, S3 } from "@aws-sdk/client-s3";
 import { v4 as uuidv4 } from "uuid";
+import { writeFile } from "fs/promises";
 import path from "path";
 import {
   LocalRegressionReport,
@@ -9,11 +10,13 @@ import {
   buildReportResourcePath,
   Report,
   buildReportJSONPath,
+  buildSnapshotArchivePath,
 } from "@animaapp/scooby-shared";
 import { readFile } from "fs/promises";
 import { ScoobyAPIOptions } from "../options";
 import {
   ScoobyAPI,
+  SnapshotContext,
   UploadReportContext,
   UploadReportResourceContext,
 } from "../types";
@@ -26,6 +29,7 @@ import {
   buildHostedRegressionReport,
   getAllLocalResourcesForRegression,
 } from "./resources";
+import { Readable } from "stream";
 
 export class S3ScoobyAPI implements ScoobyAPI {
   private options: ScoobyAPIOptions;
@@ -126,6 +130,37 @@ export class S3ScoobyAPI implements ScoobyAPI {
     return resourceUrl;
   }
 
+  async uploadSnapshotArchive(
+    context: SnapshotContext,
+    archivePath: string
+  ): Promise<void> {
+    const targetPath = buildSnapshotArchivePath({
+      commitHash: context.commitHash,
+      snapshotName: context.snapshotName,
+      repository: this.options.repositoryName,
+    });
+
+    await this.uploadFile(targetPath, archivePath);
+  }
+
+  async downloadSnapshotArchive(
+    context: SnapshotContext,
+    targetArchivePath: string
+  ): Promise<void> {
+    const targetPath = buildSnapshotArchivePath({
+      commitHash: context.commitHash,
+      snapshotName: context.snapshotName,
+      repository: this.options.repositoryName,
+    });
+
+    const archive = await this.client.getObject({
+      Bucket: this.bucketOptions.bucket,
+      Key: targetPath,
+    });
+
+    await writeFile(targetArchivePath, getBody(archive));
+  }
+
   async uploadBody(key: string, body: string): Promise<string> {
     await this.client.putObject({
       Bucket: this.bucketOptions.bucket,
@@ -149,4 +184,13 @@ export class S3ScoobyAPI implements ScoobyAPI {
 
     return `https://${this.bucketOptions.bucket}.s3.${this.bucketOptions.region}.amazonaws.com/${key}`;
   }
+}
+
+function getBody(response: GetObjectCommandOutput): Readable {
+  const body = response.Body;
+  if (!body) {
+    throw new Error("unable to download snapshot archive, body is empty");
+  }
+
+  return body && (body as Readable);
 }

@@ -12,13 +12,15 @@ import { RegressionCheckResult } from "./changes";
 export function generateReport(context: {
   name: string;
   commitHash: string;
+  baseCommitHash: string;
   regressions: RegressionCheckResult;
   matchedSources: MatchedSources<ImageSourceEntry>;
 }): LocalRegressionReport {
   return {
     type: "regression",
     name: context.name,
-    commitHash: context.name,
+    commitHash: context.commitHash,
+    baseCommitHash: context.baseCommitHash,
     createdAt: new Date().getTime(),
     results: {
       new: context.matchedSources.new.map(convertImageSourceEntryToReportEntry),

@@ -8,6 +8,15 @@ export type ScoobyAPI = {
     context: UploadReportContext,
     report: LocalRegressionReport
   ) => Promise<HostedRegressionReport>;
+
+  uploadSnapshotArchive: (
+    context: SnapshotContext,
+    archivePath: string
+  ) => Promise<void>;
+  downloadSnapshotArchive: (
+    context: SnapshotContext,
+    targetArchivePath: string
+  ) => Promise<void>;
 };
 
 export type UploadReportContext = {
@@ -17,4 +26,9 @@ export type UploadReportContext = {
 export type UploadReportResourceContext = {
   commitHash: string;
   reportName: string;
+};
+
+export type SnapshotContext = {
+  commitHash: string;
+  snapshotName: string;
 };

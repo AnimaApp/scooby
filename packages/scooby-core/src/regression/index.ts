@@ -1,15 +1,16 @@
 import { getScoobyAPI } from "@animaapp/scooby-api";
-import { HostedRegressionReport } from "@animaapp/scooby-shared";
-import { GitResolver } from "@animaapp/scooby-git-resolver";
+import { ScoobyAPI } from "@animaapp/scooby-api/src/types";
 import { batchImageComparison } from "../comparison";
-import { getContext } from "../context";
+import { Context, getContext } from "../context";
 import { loadTestEntries } from "../loading";
 import { matchSources } from "../matching";
 import { generateImageSources } from "../source/image";
+import { TestEntry } from "../types";
 import { calculateRegressions } from "./changes";
 import { printRegressionResults } from "./print";
 import { loadReferenceEntries } from "./reference";
 import { generateReport } from "./report";
+import { uploadTestSnapshot } from "./snapshot";
 
 export type RegressionTestRequest = {
   name: string;
@@ -19,7 +20,7 @@ export type RegressionTestRequest = {
 
 export async function runRegressionTest(
   request: RegressionTestRequest
-): Promise<HostedRegressionReport> {
+): Promise<void> {
   // TODO: validate name format (alphanumeric and dash)
   const context = await getContext();
   console.log("Loaded context: ", context);
@@ -33,17 +34,51 @@ export async function runRegressionTest(
     repositoryName: context.repositoryName,
   });
 
-  // TODO: move into context
-  const gitResolver = new GitResolver();
-  console.log("branch", await gitResolver.getBranchName());
-  console.log("base", await gitResolver.getBaseCommitHash());
-  console.log("current", await gitResolver.getCurrentCommitHash());
+  if (context.isMainBranch) {
+    return performMainBranchFlow(request, context, api);
+  } else {
+    return performFeatureBranchFlow(request, context, testEntries, api);
+  }
+}
 
-  // TODO: get git "reference" branch
-  // TODO: Download reference test files from S3 (and check their format)!
+async function performMainBranchFlow(
+  request: RegressionTestRequest,
+  context: Context,
+  api: ScoobyAPI
+): Promise<void> {
+  console.log(
+    "skipping regression test as changes are auto-approved on default branch"
+  );
+
+  await uploadTestSnapshot(
+    request.name,
+    request.testsPath,
+    context.currentCommitHash,
+    api
+  );
+}
+
+async function performFeatureBranchFlow(
+  request: RegressionTestRequest,
+  context: Context,
+  testEntries: TestEntry[],
+  api: ScoobyAPI
+): Promise<void> {
+  if (!context.baseCommitHash) {
+    throw new Error(
+      "unable to run regression test, as Scooby was unable to determine the base commit hash"
+    );
+  }
+
+  console.log(
+    "this regression test will be compared against snapshot with git hash: " +
+      context.baseCommitHash
+  );
 
   console.log("loading reference dataset...");
   const referenceEntries = await loadReferenceEntries({
+    baseCommitHash: context.baseCommitHash,
+    snapshotName: request.name,
     localReferencePath: request.referencePath,
     api,
   });
@@ -73,17 +108,21 @@ export async function runRegressionTest(
 
   const report = generateReport({
     name: request.name,
-    commitHash: context.commitHash,
+    commitHash: context.currentCommitHash,
+    baseCommitHash: context.baseCommitHash,
     regressions,
     matchedSources,
   });
 
-  const hostedReport = await api.uploadRegressionReport(
-    { commitHash: context.commitHash },
+  await api.uploadRegressionReport(
+    { commitHash: context.currentCommitHash },
     report
   );
 
-  // TODO: upload also the "input" artifacts to be used in the next regression test
-
-  return hostedReport;
+  await uploadTestSnapshot(
+    request.name,
+    request.testsPath,
+    context.currentCommitHash,
+    api
+  );
 }
