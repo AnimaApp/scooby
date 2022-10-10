@@ -9,15 +9,10 @@
     "composite": true,
     "outDir": "./dist",
     "rootDir": "./src",
-    "lib": [
-      "es2019"
-    ],
+    "strict": true,
+    "lib": ["es2019"],
     "allowSyntheticDefaultImports": true,
-    "skipLibCheck": true,
+    "skipLibCheck": true
   },
-  "exclude": [
-    "node_modules",
-    "__tests__",
-    "dist"
-  ]
+  "exclude": ["node_modules", "__tests__", "dist"]
 }
