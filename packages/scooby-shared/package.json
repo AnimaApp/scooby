@@ -8,5 +8,9 @@
   "author": "Federico Terzi",
   "publishConfig": {
     "registry": "https://npm.pkg.github.com"
+  },
+  "scripts": {
+    "build": "tsc",
+    "clean": "rm -Rf ./dist && rm tsconfig.tsbuildinfo"
   }
 }
