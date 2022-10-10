@@ -2,7 +2,8 @@
   "name": "@animaapp/scooby-git-resolver",
   "version": "1.0.0",
   "description": "Detect the base and actual git commit hash",
-  "main": "lib/index.js",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "scripts": {
     "test": "jest",
     "gen:fixtures": "find test/builder -type f -name *.sh -exec sh {} \\;"
@@ -16,7 +17,6 @@
     "@types/shell-escape": "0.2.0",
     "glob": "7.2.0",
     "jest": "27.5.1",
-    "reg-suit-interface": "^0.12.1",
     "rimraf": "3.0.2",
     "ts-jest": "27.1.4",
     "typescript": "^4.8.4"

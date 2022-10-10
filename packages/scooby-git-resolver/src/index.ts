@@ -2,31 +2,42 @@ import { fsUtil } from "./fs-util";
 
 import { CommitExplorer } from "./commit-explorer";
 
-export class GitCommitResolver {
+export class GitResolver {
   private _explorer = new CommitExplorer();
 
-  getExpectedKey(): Promise<string> {
+  async getBranchName(): Promise<string | undefined> {
     if (!this._checkAndMessage()) {
-      return Promise.reject<string>(null);
+      return;
+    }
+    try {
+      const result = this._explorer.getCurrentBranchName();
+      if (result) {
+        return result;
+      }
+    } catch (e: any) {
+      console.error(e);
+    }
+  }
+
+  async getBaseCommitHash(): Promise<string | undefined> {
+    if (!this._checkAndMessage()) {
+      return;
     }
     try {
       const result = this._explorer.getBaseCommitHash();
       if (result) {
-        return Promise.resolve(result);
-      } else {
-        return Promise.reject<string>(null);
+        return result;
       }
     } catch (e: any) {
       console.error(e);
-      return Promise.reject<string>(null);
     }
   }
 
-  getActualKey(): Promise<string> {
+  async getCurrentCommitHash(): Promise<string | undefined> {
     if (!this._checkAndMessage()) {
-      return Promise.reject<string>(new Error());
+      return;
     }
-    return Promise.resolve(this._explorer.getCurrentCommitHash());
+    return this._explorer.getCurrentCommitHash();
   }
 
   private _isInGitRepository() {

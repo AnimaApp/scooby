@@ -17,7 +17,8 @@
     "skipLibCheck": true,
     "paths": {
       "@animaapp/scooby-shared": ["../scooby-shared"],
-      "@animaapp/scooby-api": ["../scooby-api"]
+      "@animaapp/scooby-api": ["../scooby-api"],
+      "@animaapp/scooby-git-resolver": ["../scooby-git-resolver"]
     }
   },
   "exclude": [
@@ -28,6 +29,7 @@
   ],
   "references": [
     {"path": "../scooby-shared"},
-    {"path": "../scooby-api"}
+    {"path": "../scooby-api"},
+    {"path": "../scooby-git-resolver"}
   ]
 }

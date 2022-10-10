@@ -19,5 +19,25 @@
       "console": "integratedTerminal",
       "internalConsoleOptions": "neverOpen"
     },
+    {
+      "name": "Debug CLI (regression)",
+      "type": "node",
+      "request": "launch",
+      "runtimeArgs": [
+        "--inspect-brk",
+        "${workspaceRoot}/packages/scooby-cli/bin/run",
+        "regression",
+        "--name",
+        "regression-test",
+        "--tests",
+        "sample-projects/basic-regression/actual",
+        "--reference",
+        "sample-projects/basic-regression/expected"
+      ],
+      "cwd": "${workspaceFolder}/",
+      "console": "integratedTerminal",
+      "internalConsoleOptions": "neverOpen",
+      "preLaunchTask": "build-cli"
+    }
   ]
 }

@@ -1,5 +1,6 @@
 import { getScoobyAPI } from "@animaapp/scooby-api";
 import { HostedRegressionReport } from "@animaapp/scooby-shared";
+import { GitResolver } from "@animaapp/scooby-git-resolver";
 import { batchImageComparison } from "../comparison";
 import { getContext } from "../context";
 import { loadTestEntries } from "../loading";
@@ -31,6 +32,12 @@ export async function runRegressionTest(
   const api = await getScoobyAPI({
     repositoryName: context.repositoryName,
   });
+
+  // TODO: move into context
+  const gitResolver = new GitResolver();
+  console.log("branch", await gitResolver.getBranchName());
+  console.log("base", await gitResolver.getBaseCommitHash());
+  console.log("current", await gitResolver.getCurrentCommitHash());
 
   // TODO: get git "reference" branch
   // TODO: Download reference test files from S3 (and check their format)!

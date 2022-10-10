@@ -1,0 +1,11 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "build-cli",
+      "command": "yarn",
+      "args": ["workspace", "@animaapp/scooby-cli", "build"],
+      "type": "shell"
+    }
+  ]
+}
