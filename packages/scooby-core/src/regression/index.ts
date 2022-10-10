@@ -118,11 +118,4 @@ async function performFeatureBranchFlow(
     { commitHash: context.currentCommitHash },
     report
   );
-
-  await uploadTestSnapshot(
-    request.name,
-    request.testsPath,
-    context.currentCommitHash,
-    api
-  );
 }

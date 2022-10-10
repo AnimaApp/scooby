@@ -10,26 +10,14 @@
     "declaration": true,
     "composite": true,
     "strict": true,
-    "lib": [
-      "es2019"
-    ],
+    "lib": ["es2019"],
     "allowSyntheticDefaultImports": true,
     "skipLibCheck": true,
     "paths": {
       "@animaapp/scooby-shared": ["../scooby-shared"],
-      "@animaapp/scooby-api": ["../scooby-api"],
-      "@animaapp/scooby-git-resolver": ["../scooby-git-resolver"]
+      "@animaapp/scooby-api": ["../scooby-api"]
     }
   },
-  "exclude": [
-    "node_modules",
-    "__tests__",
-    "dist",
-    "test"
-  ],
-  "references": [
-    {"path": "../scooby-shared"},
-    {"path": "../scooby-api"},
-    {"path": "../scooby-git-resolver"}
-  ]
+  "exclude": ["node_modules", "__tests__", "dist", "test"],
+  "references": [{ "path": "../scooby-shared" }, { "path": "../scooby-api" }]
 }
