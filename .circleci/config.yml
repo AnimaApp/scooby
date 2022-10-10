@@ -1,0 +1,35 @@
+version: 2.1
+orbs:
+  anima-orb: anima/anima-orb@dev:alpha
+workflows:
+  scooby:
+    jobs:
+      - build-and-test:
+          context: anima-prod
+jobs:
+  build-and-test:
+    docker:
+      - image: node:16
+    steps:
+      - run: |
+          echo "registry=https://registry.npmjs.org/" >> ~/.npmrc
+          echo "@animaapp:registry=https://npm.pkg.github.com" >> ~/.npmrc
+          echo "//npm.pkg.github.com:_authToken=${GITHUB_PACKAGE_TOKEN}" >> ~/.npmrc
+      - checkout
+      - run:
+          name: "Install Ubuntu dependencies"
+          command: |
+            apt-get -y update
+            apt-get install -y jq
+      - run:
+          name: "Install dependencies"
+          command: "yarn install --frozen-lockfile"
+      - run:
+          name: "Build monorepo"
+          command: "yarn build:all"
+      - run:
+          name: "Run tests"
+          command: "./scripts/run_all_tests.sh"
+      - run:
+          name: "Check formatting"
+          command: "yarn check:format"
