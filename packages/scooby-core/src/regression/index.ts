@@ -32,7 +32,8 @@ export async function runRegressionTest(
     repositoryName: context.repositoryName,
   });
 
-  // TODO: Download reference test files from S3 (and check their format)
+  // TODO: get git "reference" branch
+  // TODO: Download reference test files from S3 (and check their format)!
 
   console.log("loading reference dataset...");
   const referenceEntries = await loadReferenceEntries({
@@ -74,6 +75,8 @@ export async function runRegressionTest(
     { commitHash: context.commitHash },
     report
   );
+
+  // TODO: upload also the "input" artifacts to be used in the next regression test
 
   return hostedReport;
 }
