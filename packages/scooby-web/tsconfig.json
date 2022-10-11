@@ -1,0 +1,19 @@
+{
+  "compilerOptions": {
+    "target": "es6",
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "jsx": "react-jsx",
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "outDir": "./dist",
+    "rootDir": "./src",
+    "strict": true,
+    "allowSyntheticDefaultImports": true,
+    "skipLibCheck": true,
+    "paths": {
+      "@animaapp/scooby-shared": ["../scooby-shared"]
+    }
+  },
+  "exclude": ["node_modules", "__tests__", "dist"],
+  "references": [{ "path": "../scooby-shared" }]
+}

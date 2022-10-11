@@ -1,0 +1,33 @@
+{
+  "name": "@animaapp/scooby-web",
+  "version": "1.0.0",
+  "description": "Web frontend for the Scooby project",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "repository": "https://github.com/AnimaApp/scooby",
+  "author": "Federico Terzi",
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com"
+  },
+  "scripts": {
+    "build": "tsc",
+    "clean": "rm -Rf ./dist && rm tsconfig.tsbuildinfo",
+    "dev": "yarn parcel src/index.html"
+  },
+  "dependencies": {
+    "@animaapp/scooby-shared": "*",
+    "@ant-design/icons": "^4.7.0",
+    "@aws-sdk/client-s3": "^3.186.0",
+    "antd": "^4.23.5",
+    "parcel": "^2.7.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-router-dom": "^6.4.2",
+    "swr": "^1.3.0"
+  },
+  "devDependencies": {
+    "@parcel/transformer-svg-react": "^2.7.0",
+    "@types/react": "^18.0.21",
+    "@types/react-dom": "^18.0.6"
+  }
+}
