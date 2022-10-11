@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { HostedRegressionReport, Report } from "./types";
+import { HostedRegressionReport, HostedReport } from "./types";
 
 const baseReportSchema = z.object({
   name: z.string(),
@@ -43,7 +43,7 @@ const regressionReportSchema = baseReportSchema.extend({
   }),
 });
 
-export function parseReport(report: unknown): Report {
+export function parseHostedReport(report: unknown): HostedReport {
   const baseReport = baseReportSchema.parse(report);
 
   if (baseReport.type === "regression") {

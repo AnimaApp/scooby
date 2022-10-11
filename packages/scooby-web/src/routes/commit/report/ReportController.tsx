@@ -28,5 +28,5 @@ export function ReportController({ commit, reportName, repository }: Props) {
     return <ErrorPanel message={"Unreachable report"} />;
   }
 
-  return <Report report={report} />;
+  return <Report report={report} repository={repository} commit={commit} />;
 }

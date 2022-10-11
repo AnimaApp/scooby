@@ -1,16 +1,19 @@
-import { Report } from "@animaapp/scooby-shared";
-import { PageHeader, Tag } from "antd";
+import { HostedReport } from "@animaapp/scooby-shared";
+import { Breadcrumb, PageHeader, Tag, Typography } from "antd";
+import { Link } from "react-router-dom";
 import ErrorPanel from "../../../components/ErrorPanel";
-import { RegressionReport } from "./regression";
+import { RegressionReportController } from "./regression";
 
 type Props = {
-  report: Report;
+  report: HostedReport;
+  repository: string;
+  commit: string;
 };
 
-export function Report({ report }: Props) {
+export function Report({ report, repository, commit }: Props) {
   function getContent() {
     if (report.type === "regression") {
-      return <RegressionReport report={report} />;
+      return <RegressionReportController report={report} />;
     } else {
       return (
         <ErrorPanel
@@ -21,10 +24,30 @@ export function Report({ report }: Props) {
   }
 
   return (
-    <div>
+    <div style={{ flex: 1 }}>
       <PageHeader
         title={report.name}
         tags={<Tag color="blue">{report.type}</Tag>}
+        breadcrumb={
+          <Breadcrumb>
+            <Breadcrumb.Item>{repository}</Breadcrumb.Item>
+            <Breadcrumb.Item>
+              <Link relative="path" to="../../">
+                {commit}
+              </Link>
+            </Breadcrumb.Item>
+            <Breadcrumb.Item>
+              <Typography.Text strong>{report.name} </Typography.Text>
+              <Typography.Text type="secondary">
+                (created at {new Date(report.createdAt).toLocaleString()})
+              </Typography.Text>
+            </Breadcrumb.Item>
+          </Breadcrumb>
+        }
+        style={{
+          borderBottom: "1px solid #c9c9c9",
+          marginBottom: "8px",
+        }}
       />
       {getContent()}
     </div>

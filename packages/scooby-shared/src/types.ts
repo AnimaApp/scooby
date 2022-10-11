@@ -55,3 +55,4 @@ export type HostedRegressionReport = BaseRegressionReport<HostedResource>;
 export type RegressionReport = LocalRegressionReport | HostedRegressionReport;
 
 export type Report = RegressionReport;
+export type HostedReport = HostedRegressionReport;

@@ -1,7 +1,7 @@
 import {
   buildReportJSONPath,
-  parseReport,
-  RegressionReport,
+  HostedRegressionReport,
+  parseHostedReport,
 } from "@animaapp/scooby-shared";
 import { S3 } from "@aws-sdk/client-s3";
 import { CommitContext, ReportContext, ScoobyWebAPI } from "../types";
@@ -20,11 +20,11 @@ export class S3ScoobyWebAPI implements ScoobyWebAPI {
     });
   }
 
-  getReports(params: CommitContext): Promise<RegressionReport[]> {
+  getReports(params: CommitContext): Promise<HostedRegressionReport[]> {
     throw new Error("Method not implemented.");
   }
 
-  async getReport(params: ReportContext): Promise<RegressionReport> {
+  async getReport(params: ReportContext): Promise<HostedRegressionReport> {
     const key = buildReportJSONPath({
       commitHash: params.commit,
       reportName: params.reportName,
@@ -33,7 +33,7 @@ export class S3ScoobyWebAPI implements ScoobyWebAPI {
 
     const body = await this.getJSONObject(key);
 
-    return parseReport(body);
+    return parseHostedReport(body);
   }
 
   async getJSONObject(key: string): Promise<unknown> {

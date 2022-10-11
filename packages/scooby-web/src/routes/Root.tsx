@@ -10,7 +10,13 @@ export default function Root() {
       <Header style={{ display: "flex", alignItems: "center" }}>
         <Logo />
       </Header>
-      <Content style={{ flex: 1 }}>
+      <Content
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          height: "calc(100vh - 64px)",
+        }}
+      >
         <Outlet />
       </Content>
     </Layout>

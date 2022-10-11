@@ -1,8 +1,8 @@
-import { Report } from "@animaapp/scooby-shared";
+import { HostedReport } from "@animaapp/scooby-shared";
 
 export type ScoobyWebAPI = {
-  getReports(params: CommitContext): Promise<Report[]>;
-  getReport(params: ReportContext): Promise<Report>;
+  getReports(params: CommitContext): Promise<HostedReport[]>;
+  getReport(params: ReportContext): Promise<HostedReport>;
 };
 
 export type CommitContext = {
