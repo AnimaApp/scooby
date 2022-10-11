@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useHotkeys } from "react-hotkeys-hook";
 import { ImageComparator, PreferredMode } from "./ImageComparator";
 
 type Props = {
@@ -27,6 +28,11 @@ export type ImageData =
 
 export const ImageComparatorController = (props: Props) => {
   const [mode, setMode] = useState<PreferredMode>("diff");
+
+  useHotkeys("left", () => setMode("expected"));
+  useHotkeys("right", () => setMode("actual"));
+  useHotkeys("d", () => setMode("diff"));
+  useHotkeys("o", () => setMode("overlap"));
 
   return (
     <ImageComparator
