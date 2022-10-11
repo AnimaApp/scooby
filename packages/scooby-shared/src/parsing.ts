@@ -1,11 +1,39 @@
 import { z } from "zod";
 import { HostedRegressionReport, HostedReport } from "./types";
 
+const baseStatisticSchema = z.object({
+  name: z.string(),
+  description: z.optional(z.string()),
+  sentiment: z.enum(["success", "danger", "warning", "info"]),
+});
+
+const fractionStatisticSchema = baseStatisticSchema.extend({
+  type: z.literal("fraction"),
+  numerator: z.number(),
+  denominator: z.number(),
+});
+
+const gaugeStatisticSchema = baseStatisticSchema.extend({
+  type: z.literal("gauge"),
+  value: z.number(),
+});
+
+const statisticSchema = z.discriminatedUnion("type", [
+  fractionStatisticSchema,
+  gaugeStatisticSchema,
+]);
+
+const summarySchema = z.object({
+  result: z.enum(["success", "failure"]),
+  stats: z.array(statisticSchema),
+});
+
 const baseReportSchema = z.object({
   name: z.string(),
   createdAt: z.number(),
   commitHash: z.string(),
   type: z.string(),
+  summary: summarySchema,
 });
 
 const hostedResource = z.object({

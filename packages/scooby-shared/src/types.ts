@@ -12,6 +12,7 @@ export type BaseReport = {
   name: string;
   createdAt: number;
   commitHash: string;
+  summary: Summary;
 };
 
 export type BaseRegressionReport<TResource extends Resource> = BaseReport & {
@@ -56,3 +57,27 @@ export type RegressionReport = LocalRegressionReport | HostedRegressionReport;
 
 export type Report = RegressionReport;
 export type HostedReport = HostedRegressionReport;
+
+export type Summary = {
+  result: "success" | "failure";
+  stats: SummaryStatistic[];
+};
+
+export type BaseStatistic = {
+  name: string;
+  description?: string;
+  sentiment: "success" | "danger" | "warning" | "info";
+};
+
+export type GaugeStatistic = BaseStatistic & {
+  type: "gauge";
+  value: number;
+};
+
+export type FractionStatistic = BaseStatistic & {
+  type: "fraction";
+  numerator: number;
+  denominator: number;
+};
+
+export type SummaryStatistic = GaugeStatistic | FractionStatistic;
