@@ -33,17 +33,10 @@ export const StatisticView = ({
           title={capitalize(statistic.name)}
           valueStyle={{
             color,
-            lineHeight: 1,
-            marginBottom: 4,
           }}
           value={value}
           suffix={suffix}
           prefix={prefix}
-          style={{
-            border: `1px solid ${color}`,
-            padding: "0 8px",
-            borderRadius: 8,
-          }}
         />
       )}
     </Tooltip>

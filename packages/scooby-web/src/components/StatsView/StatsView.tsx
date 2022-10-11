@@ -9,7 +9,7 @@ type Props = {
 
 export const StatsView = (props: Props) => {
   return (
-    <div style={{ display: "flex", gap: props.compact ? 0 : 4 }}>
+    <div style={{ display: "flex", gap: props.compact ? 0 : 32 }}>
       {props.stats.map((stat) => {
         if (stat.type === "fraction") {
           return (

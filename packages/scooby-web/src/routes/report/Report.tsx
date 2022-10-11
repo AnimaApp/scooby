@@ -1,9 +1,9 @@
 import { HostedReport } from "@animaapp/scooby-shared";
 import { Breadcrumb, PageHeader, Tag, Typography } from "antd";
-import { Link } from "react-router-dom";
-import ErrorPanel from "../../../components/ErrorPanel";
-import { StatsView } from "../../../components/StatsView";
-import { SummaryBadge } from "../../../components/SummaryBadge";
+import { EnhancedLink } from "../../components/EnhancedLink";
+import ErrorPanel from "../../components/ErrorPanel";
+import { StatsView } from "../../components/StatsView";
+import { SummaryBadge } from "../../components/SummaryBadge";
 import { RegressionReportController } from "./regression";
 
 type Props = {
@@ -39,9 +39,9 @@ export function Report({ report, repository, commit }: Props) {
           <Breadcrumb>
             <Breadcrumb.Item>{repository}</Breadcrumb.Item>
             <Breadcrumb.Item>
-              <Link relative="path" to="../../">
+              <EnhancedLink relative="path" to="../../">
                 {commit}
-              </Link>
+              </EnhancedLink>
             </Breadcrumb.Item>
             <Breadcrumb.Item>
               <Typography.Text strong>{report.name} </Typography.Text>

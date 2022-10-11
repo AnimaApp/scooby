@@ -166,7 +166,6 @@ export class S3ScoobyAPI implements ScoobyAPI {
       Bucket: this.bucketOptions.bucket,
       Key: key,
       Body: body,
-      ACL: "public-read",
     });
 
     return `https://${this.bucketOptions.bucket}.s3.${this.bucketOptions.region}.amazonaws.com/${key}`;
@@ -179,7 +178,6 @@ export class S3ScoobyAPI implements ScoobyAPI {
       Bucket: this.bucketOptions.bucket,
       Key: key,
       Body: file,
-      ACL: "public-read",
     });
 
     return `https://${this.bucketOptions.bucket}.s3.${this.bucketOptions.region}.amazonaws.com/${key}`;

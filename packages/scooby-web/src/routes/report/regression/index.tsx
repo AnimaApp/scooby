@@ -3,12 +3,12 @@ import {
   HostedRegressionReport,
   HostedRegressionTestPair,
 } from "@animaapp/scooby-shared";
-import { useCallback, useMemo } from "react";
-import { ImageEntry } from "../../../../components/ImageEntryList";
-import { useQueryParams } from "../../../hooks/useQueryParams";
-import { useUpdateParams } from "../../../hooks/useUpdateParams";
+import { useCallback, useEffect, useMemo } from "react";
+import { ImageEntry } from "../../../components/ImageEntryList";
+import { useQueryParams } from "../../hooks/useQueryParams";
+import { useUpdateParams } from "../../hooks/useUpdateParams";
 import { Action } from "./actions";
-import { RegressionReport, RegressionReportState } from "./RegressionReport";
+import { RegressionReport } from "./RegressionReport";
 
 type Props = {
   report: HostedRegressionReport;
@@ -37,7 +37,6 @@ export function RegressionReportController({ report }: Props) {
   }, [report.results]);
 
   const params = useQueryParams<QueryParams>();
-  const state = useMemo(() => convertParamsToViewState(params), [params]);
   const { updateParams } = useUpdateParams();
 
   const handleAction = useCallback(
@@ -46,14 +45,21 @@ export function RegressionReportController({ report }: Props) {
         updateParams({ id: action.entry.id });
       }
     },
-    [state]
+    [params]
   );
+
+  useEffect(() => {
+    if (!params.id) {
+      const firstId = findFirstId(report);
+      updateParams({ id: firstId });
+    }
+  }, [params.id]);
 
   return (
     <RegressionReport
       report={report}
       entries={listEntries}
-      state={state}
+      selectedId={params.id}
       dispatchAction={handleAction}
     />
   );
@@ -77,15 +83,23 @@ function mapRegressionPairToImageEntry(
   };
 }
 
-function convertParamsToViewState(params: QueryParams): RegressionReportState {
-  if (!params.id) {
-    return {
-      state: "summary",
-    };
+function findFirstId(report: HostedRegressionReport): string {
+  const changedFirstId = report.results.changed?.[0];
+  if (changedFirstId) {
+    return changedFirstId.actual.id;
+  }
+  const newFirstId = report.results.new?.[0];
+  if (newFirstId) {
+    return newFirstId.id;
+  }
+  const removedFirstId = report.results.removed?.[0];
+  if (removedFirstId) {
+    return removedFirstId.id;
+  }
+  const unchangedFirstId = report.results.unchanged?.[0];
+  if (unchangedFirstId) {
+    return unchangedFirstId.actual.id;
   }
 
-  return {
-    state: "selection",
-    id: params.id,
-  };
+  throw new Error("this report has no entry");
 }

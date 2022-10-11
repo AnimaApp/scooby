@@ -1,6 +1,6 @@
-import ErrorPanel from "../../../components/ErrorPanel";
-import Loader from "../../../components/Loader";
-import { useReport } from "../../../data-fetching/hooks/useReport";
+import ErrorPanel from "../../components/ErrorPanel";
+import Loader from "../../components/Loader";
+import { useReport } from "../../data-fetching/hooks/useReport";
 import { Report } from "./Report";
 
 type Props = {

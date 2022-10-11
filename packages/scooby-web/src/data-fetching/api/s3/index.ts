@@ -1,10 +1,11 @@
 import {
   buildReportJSONPath,
+  buildReportsPath,
   HostedRegressionReport,
   parseHostedReport,
 } from "@animaapp/scooby-shared";
 import { S3 } from "@aws-sdk/client-s3";
-import { CommitContext, ReportContext, ScoobyWebAPI } from "../types";
+import { CommitContext, ReportContext, ReportId, ScoobyWebAPI } from "../types";
 import { getS3Config, S3Config } from "./config";
 
 export class S3ScoobyWebAPI implements ScoobyWebAPI {
@@ -20,8 +21,14 @@ export class S3ScoobyWebAPI implements ScoobyWebAPI {
     });
   }
 
-  getReports(params: CommitContext): Promise<HostedRegressionReport[]> {
-    throw new Error("Method not implemented.");
+  async getReports(params: CommitContext): Promise<ReportId[]> {
+    const key = `${buildReportsPath({
+      commitHash: params.commit,
+      repository: params.repository,
+    })}/`;
+
+    const subdirectories = await this.listSubdirectories(key);
+    return subdirectories;
   }
 
   async getReport(params: ReportContext): Promise<HostedRegressionReport> {
@@ -50,6 +57,33 @@ export class S3ScoobyWebAPI implements ScoobyWebAPI {
     const string = await streamToString(stream);
 
     return JSON.parse(string);
+  }
+
+  async listSubdirectories(key: string): Promise<string[]> {
+    const output = await this.client.listObjectsV2({
+      Bucket: this.config.bucket,
+      Prefix: key,
+      Delimiter: "/",
+    });
+
+    if (!output.CommonPrefixes) {
+      throw new Error("unable to list objects, common prefixes are empty");
+    }
+
+    return output.CommonPrefixes.flatMap(({ Prefix }) => {
+      if (!Prefix) {
+        return [];
+      }
+
+      const tokens = Prefix.split("/");
+      const directory = tokens[tokens.length - 2];
+
+      if (!directory) {
+        return [];
+      }
+
+      return [directory];
+    });
   }
 }
 
