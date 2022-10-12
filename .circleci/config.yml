@@ -45,6 +45,9 @@ jobs:
       - run:
           name: "Run HTML regression test"
           command: "./packages/scooby-cli/bin/run regression --name 'html-regression' --tests sample-projects/ci-html-regression"
+      - run:
+          name: "Run PNG regression test"
+          command: "./packages/scooby-cli/bin/run regression --name 'png-regression' --tests sample-projects/ci-png-regression"
 
   deploy-scooby-web-ui:
     docker:
