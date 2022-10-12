@@ -8,7 +8,7 @@
     "registry": "https://npm.pkg.github.com"
   },
   "scripts": {
-    "build": "tsc -b && rm -Rf dist/ && yarn parcel build src/index.html",
+    "build": "tsc -b && rm -Rf dist/ && yarn parcel build src/index.html --public-url .",
     "clean": "rm -Rf ./dist && rm -f tsconfig.tsbuildinfo",
     "dev": "yarn parcel src/index.html"
   },
