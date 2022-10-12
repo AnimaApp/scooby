@@ -24,7 +24,12 @@ export function useQuery<TRequest extends APIRequest>(
   const { api } = useAPI();
   const { data, error } = useSWR(
     serializeRequest(request, params),
-    buildFetcher(api)
+    buildFetcher(api),
+    {
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
+      dedupingInterval: 60000,
+    }
   );
 
   return {

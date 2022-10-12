@@ -1,6 +1,6 @@
 import { Layout } from "antd";
 import { Outlet } from "react-router-dom";
-import Logo from "../assets/logo.svg";
+import logo from "../assets/scooby-logo.png";
 
 const { Header, Content } = Layout;
 
@@ -8,7 +8,7 @@ export default function Root() {
   return (
     <Layout style={{ height: "100%" }}>
       <Header style={{ display: "flex", alignItems: "center" }}>
-        <Logo />
+        <img src={logo} style={{ color: "white", height: 50 }} />
       </Header>
       <Content
         style={{
