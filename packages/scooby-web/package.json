@@ -9,8 +9,8 @@
   },
   "scripts": {
     "build": "tsc -b && rm -Rf dist/ && yarn parcel build src/index.html --public-url .",
-    "clean": "rm -Rf ./dist && rm -f tsconfig.tsbuildinfo",
-    "dev": "yarn parcel src/index.html"
+    "clean": "rm -Rf ./dist && rm -f tsconfig.tsbuildinfo && rm -Rf .parcel-cache",
+    "dev": "yarn parcel src/index.html --cache-dir .parcel-cache"
   },
   "dependencies": {
     "@animaapp/scooby-shared": "*",

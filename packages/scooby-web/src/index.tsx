@@ -1,5 +1,5 @@
 import ReactDOM from "react-dom";
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { createHashRouter, RouterProvider } from "react-router-dom";
 import Root from "./routes/Root";
 import ErrorPage from "./routes/ErrorPage";
 import Commit from "./routes/commit";
@@ -10,7 +10,7 @@ import { createAPI } from "./data-fetching/api";
 import "antd/dist/antd.css";
 import "./index.css";
 
-const router = createBrowserRouter([
+const router = createHashRouter([
   {
     path: "/",
     element: <Root />,
