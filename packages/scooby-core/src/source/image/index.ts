@@ -10,6 +10,10 @@ export async function generateImageSources(
   entries: TestEntry[],
   options: GenerateImageSourcesOptions
 ): Promise<ImageSourceEntry[]> {
+  if (entries.length === 0) {
+    return [];
+  }
+
   const datasetType = getDatasetType(entries);
 
   if (datasetType === "png") {
