@@ -1,5 +1,6 @@
 import { HostedReport } from "@animaapp/scooby-shared";
 import { Card, Skeleton, Space, Tag, Typography } from "antd";
+import { CSSProperties } from "react";
 import { StatsView } from "../../../components/StatsView";
 import { SummaryBadge } from "../../../components/SummaryBadge";
 import { capitalize } from "../../../utils/capitalize";
@@ -23,9 +24,20 @@ export const ReportListItem = ({
     onReportSelect?.(name);
   };
 
+  const commonStyles: CSSProperties = {
+    marginBottom: 8,
+  };
+
+  const commonCardProps: Parameters<typeof Card>[0] = {
+    hoverable: true,
+    size: "small",
+    onClick: handleClick,
+    style: commonStyles,
+  };
+
   if (isLoading) {
     return (
-      <Card hoverable title={name} size="small" onClick={handleClick}>
+      <Card {...commonCardProps} title={name}>
         <Space>
           <Skeleton.Button active />
           <Skeleton.Avatar active />
@@ -43,7 +55,7 @@ export const ReportListItem = ({
 
   if (error || !report) {
     return (
-      <Card hoverable title={name} size="small" onClick={handleClick}>
+      <Card {...commonCardProps} title={name}>
         Unable to retrieve report data
       </Card>
     );
@@ -51,8 +63,7 @@ export const ReportListItem = ({
 
   return (
     <Card
-      hoverable
-      onClick={handleClick}
+      {...commonCardProps}
       title={
         <>
           <Typography.Text strong style={{ marginRight: 8 }}>
@@ -69,8 +80,8 @@ export const ReportListItem = ({
           </Typography.Text>
         </>
       }
-      size="small"
       style={{
+        ...commonStyles,
         borderColor: report.summary.result === "success" ? "green" : "red",
       }}
     >
