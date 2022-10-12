@@ -42,7 +42,7 @@ export const ImageComparator = (props: Props) => {
       size="small"
       extra={
         <div style={{ display: "flex", gap: 4 }}>
-          <Tooltip title="Show expected image, the 'reference' image used as benchmark">
+          <Tooltip title="(←) Show expected image, the 'reference' image used as benchmark">
             <Button
               disabled={props.imageData.type === "new"}
               type={props.mode === "expected" ? "primary" : "default"}
@@ -51,7 +51,7 @@ export const ImageComparator = (props: Props) => {
               <CaretLeftOutlined /> Expected
             </Button>
           </Tooltip>
-          <Tooltip title="Show actual image, the one produced by this test run">
+          <Tooltip title="(⭢) Show actual image, the one produced by this test run">
             <Button
               disabled={props.imageData.type === "removed"}
               type={props.mode === "actual" ? "primary" : "default"}
@@ -60,7 +60,7 @@ export const ImageComparator = (props: Props) => {
               <CaretRightOutlined /> Actual
             </Button>
           </Tooltip>
-          <Tooltip title="Show Difference">
+          <Tooltip title="(d) Show Difference">
             <Button
               disabled={
                 props.imageData.type === "removed" ||
@@ -72,7 +72,7 @@ export const ImageComparator = (props: Props) => {
               <DiffOutlined /> Difference
             </Button>
           </Tooltip>
-          <Tooltip title="Show Overlap">
+          <Tooltip title="(o) Show Overlap">
             <Button
               disabled={
                 props.imageData.type === "removed" ||

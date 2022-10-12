@@ -1,7 +1,9 @@
 import { HostedReport } from "@animaapp/scooby-shared";
 import { Breadcrumb, PageHeader, Tag, Typography } from "antd";
-import { Link } from "react-router-dom";
-import ErrorPanel from "../../../components/ErrorPanel";
+import { EnhancedLink } from "../../components/EnhancedLink";
+import ErrorPanel from "../../components/ErrorPanel";
+import { StatsView } from "../../components/StatsView";
+import { SummaryBadge } from "../../components/SummaryBadge";
 import { RegressionReportController } from "./regression";
 
 type Props = {
@@ -27,14 +29,19 @@ export function Report({ report, repository, commit }: Props) {
     <div style={{ flex: 1 }}>
       <PageHeader
         title={report.name}
-        tags={<Tag color="blue">{report.type}</Tag>}
+        tags={
+          <>
+            <Tag color="blue">{report.type}</Tag>{" "}
+            <SummaryBadge summary={report.summary} />
+          </>
+        }
         breadcrumb={
           <Breadcrumb>
             <Breadcrumb.Item>{repository}</Breadcrumb.Item>
             <Breadcrumb.Item>
-              <Link relative="path" to="../../">
+              <EnhancedLink relative="path" to="../../">
                 {commit}
-              </Link>
+              </EnhancedLink>
             </Breadcrumb.Item>
             <Breadcrumb.Item>
               <Typography.Text strong>{report.name} </Typography.Text>
@@ -48,6 +55,7 @@ export function Report({ report, repository, commit }: Props) {
           borderBottom: "1px solid #c9c9c9",
           marginBottom: "8px",
         }}
+        extra={<StatsView compact stats={report.summary.stats} />}
       />
       {getContent()}
     </div>

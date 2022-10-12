@@ -2,52 +2,39 @@ import {
   RegressionReport,
   HostedRegressionReport,
 } from "@animaapp/scooby-shared";
-import ErrorPanel from "../../../../components/ErrorPanel";
+import ErrorPanel from "../../../components/ErrorPanel";
 import {
   ImageComparator,
   ImageData,
-} from "../../../../components/ImageComparator";
-import {
-  ImageEntry,
-  ImageEntryList,
-} from "../../../../components/ImageEntryList";
+} from "../../../components/ImageComparator";
+import { ImageEntry, ImageEntryList } from "../../../components/ImageEntryList";
 import { Action } from "./actions";
-import Summary from "./Summary";
 
 type Props = {
   report: HostedRegressionReport;
   entries: ImageEntry[];
-  state: RegressionReportState;
+  selectedId?: string;
   dispatchAction: (action: Action) => void;
 };
-
-export type RegressionReportState =
-  | {
-      state: "summary";
-    }
-  | {
-      state: "selection";
-      id: string;
-    };
 
 export function RegressionReport({
   report,
   entries,
-  state,
+  selectedId,
   dispatchAction,
 }: Props) {
   function renderView() {
-    if (state.state === "summary") {
-      return <Summary report={report} />;
-    } else if (state.state === "selection") {
-      const data = getImageDataById(state.id, report);
-      if (!data) {
-        return (
-          <ErrorPanel message={`Could not find entry with id ${state.id}`} />
-        );
-      }
-      return <ImageComparator name={data.name} data={data.imageData} />;
+    if (!selectedId) {
+      return <h3>Select an image to get started</h3>;
     }
+
+    const data = getImageDataById(selectedId, report);
+    if (!data) {
+      return (
+        <ErrorPanel message={`Could not find entry with id ${selectedId}`} />
+      );
+    }
+    return <ImageComparator name={data.name} data={data.imageData} />;
   }
 
   const handleEntrySelected = (entry: ImageEntry) => {
@@ -59,7 +46,7 @@ export function RegressionReport({
       <div style={{ display: "flex", height: "calc(100vh - 170px)" }}>
         <ImageEntryList
           entries={entries}
-          selectedEntryId={state.state === "selection" ? state.id : undefined}
+          selectedEntryId={selectedId}
           onEntrySelected={handleEntrySelected}
         />
       </div>

@@ -1,5 +1,6 @@
 import { useCallback } from "react";
 import { useNavigate } from "react-router-dom";
+import { getProtectedParams } from "./params";
 import { useQueryParams } from "./useQueryParams";
 
 type Callback =
@@ -35,16 +36,4 @@ export function useUpdateParams(): {
   return {
     updateParams,
   };
-}
-
-function getProtectedParams(params: Record<string, any>): Record<string, any> {
-  const output: Record<string, any> = {};
-
-  for (const [key, value] of Object.entries(params)) {
-    if (key.startsWith("_")) {
-      output[key] = value;
-    }
-  }
-
-  return output;
 }

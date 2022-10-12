@@ -1,6 +1,6 @@
 import { useParams } from "react-router-dom";
-import ErrorPanel from "../../../components/ErrorPanel";
-import { ReportParams } from "../../../types";
+import ErrorPanel from "../../components/ErrorPanel";
+import { ReportParams } from "../../types";
 import { ReportController } from "./ReportController";
 
 export default function ReportRoot() {

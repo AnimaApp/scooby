@@ -4,9 +4,11 @@ export type S3Config = {
 };
 
 export function getS3Config(): S3Config {
-  // TODO: make not hardcoded
+  const urlSearchParams = new URLSearchParams(window.location.search);
+  const params = Object.fromEntries(urlSearchParams.entries());
+
   return {
-    region: "us-west-2",
-    bucket: "scooby-testing-development",
+    region: params["_s3_region"],
+    bucket: params["_s3_bucket"],
   };
 }
