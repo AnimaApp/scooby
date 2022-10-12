@@ -9,13 +9,12 @@ workflows:
 
       - deploy-scooby-web-ui:
           context: anima-prod
-          # TODO: uncomment!
-          # requires:
-          #   - build-and-test
-          # filters:
-          #   branches:
-          #     only:
-          #       - main
+          requires:
+            - build-and-test
+          filters:
+            branches:
+              only:
+                - main
 jobs:
   build-and-test:
     docker:
