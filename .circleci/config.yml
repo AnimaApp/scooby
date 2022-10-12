@@ -25,11 +25,6 @@ jobs:
     steps:
       - setup-dependencies
       - run:
-          name: "Install Ubuntu dependencies"
-          command: |
-            apt-get -y update
-            apt-get install -y jq
-      - run:
           name: "Build monorepo"
           command: "yarn build:all"
       - run:
@@ -88,3 +83,8 @@ commands:
       - run:
           name: "Install dependencies"
           command: "yarn install --frozen-lockfile"
+      - run:
+          name: "Install Ubuntu dependencies"
+          command: |
+            apt-get -y update
+            apt-get install -y libasound2 libgconf-2-4 libatk1.0-0 libatk-bridge2.0-0 libgdk-pixbuf2.0-0 libgtk-3-0 libgbm-dev libnss3-dev libxss-dev chromium jq curl rsync
