@@ -50,6 +50,9 @@ jobs:
           fingerprints:
             - "ed:65:07:95:99:35:d0:fb:3c:38:82:39:db:2a:98:ee"
       - run:
+          name: "Add Jekyll disable file"
+          command: "touch ./packages/scooby-web/dist/.nojekyll"
+      - run:
           name: Deploy Scooby Web to gh-pages branch
           command: gh-pages --dotfiles --message '[skip ci] updates' --dist ./packages/scooby-web/dist
 
