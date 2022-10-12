@@ -3,6 +3,13 @@ import { ScoobyWebAPI } from "./types";
 
 export * from "./types";
 
-export function createAPI(): ScoobyWebAPI {
-  return new S3ScoobyWebAPI();
+export type APICreationOptions = {
+  s3?: {
+    bucket: string;
+    region: string;
+  };
+};
+
+export function createAPI(options: APICreationOptions): ScoobyWebAPI {
+  return new S3ScoobyWebAPI(options);
 }
