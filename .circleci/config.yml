@@ -39,15 +39,13 @@ jobs:
       - image: node:16
     steps:
       - setup-dependencies
-      - run:
-          name: "Build Scooby CLI"
-          command: "yarn cli build"
+      - setup-scooby
       - run:
           name: "Run HTML regression test"
-          command: "./packages/scooby-cli/bin/run regression --name 'html-regression' --tests sample-projects/ci-html-regression"
+          command: "scooby regression --name 'html-regression' --tests sample-projects/ci-html-regression"
       - run:
           name: "Run PNG regression test"
-          command: "./packages/scooby-cli/bin/run regression --name 'png-regression' --tests sample-projects/ci-png-regression"
+          command: "scooby regression --name 'png-regression' --tests sample-projects/ci-png-regression"
 
   deploy-scooby-web-ui:
     docker:
@@ -91,3 +89,13 @@ commands:
           command: |
             apt-get -y update
             apt-get install -y libasound2 libgconf-2-4 libatk1.0-0 libatk-bridge2.0-0 libgdk-pixbuf2.0-0 libgtk-3-0 libgbm-dev libnss3-dev libxss-dev chromium jq curl rsync
+
+  setup-scooby:
+    steps:
+      - run:
+          name: "Build Scooby CLI"
+          command: "yarn cli build"
+      - run:
+          name: "Setup snoopy alias"
+          command: |
+            ln -s $(pwd)/packages/scooby-cli/bin/run /usr/bin/scooby
