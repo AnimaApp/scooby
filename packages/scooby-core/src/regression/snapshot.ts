@@ -25,17 +25,23 @@ export async function downloadTestSnapshot(
   snapshotName: string,
   baseCommitHash: string,
   api: ScoobyAPI
-): Promise<string> {
+): Promise<string | undefined> {
   console.log("downloading test snapshot...");
   const targetArchivePath = await createTemporaryFile("snapshot", ".zip");
 
-  await api.downloadSnapshotArchive(
+  const success = await api.downloadSnapshotArchive(
     {
       commitHash: baseCommitHash,
       snapshotName,
     },
     targetArchivePath
   );
+  if (!success) {
+    console.log(
+      "could not find matching snapshot for commit: " + baseCommitHash
+    );
+    return;
+  }
 
   console.log("extracting test snapshot...");
   const extractedDirPath = await extractArchive(targetArchivePath);

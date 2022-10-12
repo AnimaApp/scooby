@@ -1,4 +1,4 @@
-import { GetObjectCommandOutput, S3 } from "@aws-sdk/client-s3";
+import { GetObjectCommandOutput, NoSuchKey, S3 } from "@aws-sdk/client-s3";
 import { v4 as uuidv4 } from "uuid";
 import { writeFile } from "fs/promises";
 import path from "path";
@@ -146,19 +146,29 @@ export class S3ScoobyAPI implements ScoobyAPI {
   async downloadSnapshotArchive(
     context: SnapshotContext,
     targetArchivePath: string
-  ): Promise<void> {
+  ): Promise<boolean> {
     const targetPath = buildSnapshotArchivePath({
       commitHash: context.commitHash,
       snapshotName: context.snapshotName,
       repository: this.options.repositoryName,
     });
 
-    const archive = await this.client.getObject({
-      Bucket: this.bucketOptions.bucket,
-      Key: targetPath,
-    });
+    try {
+      const archive = await this.client.getObject({
+        Bucket: this.bucketOptions.bucket,
+        Key: targetPath,
+      });
 
-    await writeFile(targetArchivePath, getBody(archive));
+      await writeFile(targetArchivePath, getBody(archive));
+
+      return true;
+    } catch (error) {
+      if (error instanceof NoSuchKey) {
+        return false;
+      }
+
+      throw error;
+    }
   }
 
   async uploadBody(key: string, body: string): Promise<string> {
