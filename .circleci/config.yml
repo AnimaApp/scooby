@@ -23,6 +23,11 @@ jobs:
     steps:
       - setup-dependencies
       - run:
+          name: "Install Ubuntu dependencies"
+          command: |
+            apt-get -y update
+            apt-get install -y jq
+      - run:
           name: "Build monorepo"
           command: "yarn build:all"
       - run:
