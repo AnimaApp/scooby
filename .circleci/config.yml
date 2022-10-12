@@ -7,6 +7,9 @@ workflows:
       - build-and-test:
           context: anima-prod
 
+      - run-scooby-regression-tests:
+          context: anima-prod
+
       - deploy-scooby-web-ui:
           context: anima-prod
           requires:
@@ -35,6 +38,18 @@ jobs:
       - run:
           name: "Check formatting"
           command: "yarn check:format"
+
+  run-scooby-regression-tests:
+    docker:
+      - image: node:16
+    steps:
+      - setup-dependencies
+      - run:
+          name: "Build Snoopy CLI"
+          command: "yarn cli build"
+      - run:
+          name: "Run HTML regression test"
+          command: "./packages/scooby-cli/bin/run regression --name 'html-regression' --tests sample-projects/ci-html-regression"
 
   deploy-scooby-web-ui:
     docker:
