@@ -1,5 +1,5 @@
 import { HostedReport } from "@animaapp/scooby-shared";
-import { Card, Spin, Tag, Typography } from "antd";
+import { Card, Skeleton, Space, Tag, Typography } from "antd";
 import { StatsView } from "../../../components/StatsView";
 import { SummaryBadge } from "../../../components/SummaryBadge";
 import { capitalize } from "../../../utils/capitalize";
@@ -25,16 +25,19 @@ export const ReportListItem = ({
 
   if (isLoading) {
     return (
-      <Card
-        hoverable
-        title={
-          <>
-            {name} <Spin />
-          </>
-        }
-        size="small"
-        onClick={handleClick}
-      ></Card>
+      <Card hoverable title={name} size="small" onClick={handleClick}>
+        <Space>
+          <Skeleton.Button active />
+          <Skeleton.Avatar active />
+          <Skeleton.Input active />
+          <Skeleton.Button active />
+          <Skeleton.Avatar active />
+          <Skeleton.Input active />
+          <Skeleton.Button active />
+          <Skeleton.Avatar active />
+          <Skeleton.Input active />
+        </Space>
+      </Card>
     );
   }
 

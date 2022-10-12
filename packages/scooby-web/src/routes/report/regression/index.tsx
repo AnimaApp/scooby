@@ -3,6 +3,7 @@ import {
   HostedRegressionReport,
   HostedRegressionTestPair,
 } from "@animaapp/scooby-shared";
+import useHotkeys from "@reecelucas/react-use-hotkeys";
 import { useCallback, useEffect, useMemo } from "react";
 import { ImageEntry } from "../../../components/ImageEntryList";
 import { useQueryParams } from "../../hooks/useQueryParams";
@@ -19,7 +20,7 @@ type QueryParams = {
 };
 
 export function RegressionReportController({ report }: Props) {
-  const listEntries: ImageEntry[] = useMemo(() => {
+  const entries: ImageEntry[] = useMemo(() => {
     return [
       ...report.results.changed
         .map(mapRegressionPairToImageEntry)
@@ -37,6 +38,7 @@ export function RegressionReportController({ report }: Props) {
   }, [report.results]);
 
   const params = useQueryParams<QueryParams>();
+  const selectedId = params.id;
   const { updateParams } = useUpdateParams();
 
   const handleAction = useCallback(
@@ -55,11 +57,31 @@ export function RegressionReportController({ report }: Props) {
     }
   }, [params.id]);
 
+  useHotkeys("ArrowDown", (event) => {
+    event.preventDefault();
+    const currentIndex = entries.findIndex((entry) => entry.id === selectedId);
+    const nextIndex = currentIndex + 1;
+    const nextEntry = entries[nextIndex];
+    if (nextEntry) {
+      handleAction({ type: "select-entry", entry: nextEntry });
+    }
+  });
+
+  useHotkeys("ArrowUp", (event) => {
+    event.preventDefault();
+    const currentIndex = entries.findIndex((entry) => entry.id === selectedId);
+    const prevIndex = currentIndex - 1;
+    const prevEntry = entries[prevIndex];
+    if (prevEntry) {
+      handleAction({ type: "select-entry", entry: prevEntry });
+    }
+  });
+
   return (
     <RegressionReport
       report={report}
-      entries={listEntries}
-      selectedId={params.id}
+      entries={entries}
+      selectedId={selectedId}
       dispatchAction={handleAction}
     />
   );
