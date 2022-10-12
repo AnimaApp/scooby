@@ -2,16 +2,14 @@
   "name": "@animaapp/scooby-web",
   "version": "1.0.0",
   "description": "Web frontend for the Scooby project",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
   "repository": "https://github.com/AnimaApp/scooby",
   "author": "Federico Terzi",
   "publishConfig": {
     "registry": "https://npm.pkg.github.com"
   },
   "scripts": {
-    "build": "tsc",
-    "clean": "rm -Rf ./dist && rm tsconfig.tsbuildinfo",
+    "build": "tsc -b && rm -Rf dist/ && yarn parcel build src/index.html",
+    "clean": "rm -Rf ./dist && rm -f tsconfig.tsbuildinfo",
     "dev": "yarn parcel src/index.html"
   },
   "dependencies": {
