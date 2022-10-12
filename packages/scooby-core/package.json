@@ -10,7 +10,7 @@
   },
   "scripts": {
     "build": "tsc --build",
-    "clean": "rm -Rf ./dist && rm tsconfig.tsbuildinfo",
+    "clean": "rm -Rf ./dist && rm -f tsconfig.tsbuildinfo",
     "test": "jest"
   },
   "devDependencies": {

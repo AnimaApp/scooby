@@ -1,14 +1,17 @@
+import { APICreationOptions } from "..";
+
 export type S3Config = {
   region: string;
   bucket: string;
 };
 
-export function getS3Config(): S3Config {
-  const urlSearchParams = new URLSearchParams(window.location.search);
-  const params = Object.fromEntries(urlSearchParams.entries());
+export function getS3Config(options: APICreationOptions): S3Config {
+  if (!options.s3) {
+    throw new Error("missing S3 configuration options");
+  }
 
   return {
-    region: params["_s3_region"],
-    bucket: params["_s3_bucket"],
+    region: options.s3.region,
+    bucket: options.s3.bucket,
   };
 }

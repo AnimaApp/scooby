@@ -5,6 +5,7 @@ import {
   parseHostedReport,
 } from "@animaapp/scooby-shared";
 import { S3 } from "@aws-sdk/client-s3";
+import { APICreationOptions } from "..";
 import { CommitContext, ReportContext, ReportId, ScoobyWebAPI } from "../types";
 import { getS3Config, S3Config } from "./config";
 
@@ -12,8 +13,8 @@ export class S3ScoobyWebAPI implements ScoobyWebAPI {
   private client: S3;
   private config: S3Config;
 
-  constructor() {
-    this.config = getS3Config();
+  constructor(options: APICreationOptions) {
+    this.config = getS3Config(options);
     this.client = new S3({
       region: this.config.region,
       // To make public S3 requests
