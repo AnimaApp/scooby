@@ -45,7 +45,7 @@ jobs:
     steps:
       - setup-dependencies
       - run:
-          name: "Build Snoopy CLI"
+          name: "Build Scooby CLI"
           command: "yarn cli build"
       - run:
           name: "Run HTML regression test"
