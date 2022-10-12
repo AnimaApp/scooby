@@ -3,7 +3,7 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Root from "./routes/Root";
 import ErrorPage from "./routes/ErrorPage";
 import Commit from "./routes/commit";
-import Report from "./routes/commit/report";
+import Report from "./routes/report";
 import { APIContextProvider } from "./data-fetching/api/provider";
 import { createAPI } from "./data-fetching/api";
 

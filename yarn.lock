@@ -3425,6 +3425,11 @@
     chrome-trace-event "^1.0.2"
     nullthrows "^1.1.1"
 
+"@reecelucas/react-use-hotkeys@^2.0.0":
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/@reecelucas/react-use-hotkeys/-/react-use-hotkeys-2.0.0.tgz#91b45191a4eef77aafd3b77f9eb91dd9b5229790"
+  integrity sha512-FIld06jQRLhp3Bl4ykwB/xDALLv2i/1y6ncLYv9wn7ZO7nVDs9HH9oTKFxX7K8U7EQ/bdPWWtN2fy2vci0ssTg==
+
 "@remix-run/router@1.0.2":
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/@remix-run/router/-/router-1.0.2.tgz#1c17eadb2fa77f80a796ad5ea9bf108e6993ef06"

@@ -9,6 +9,13 @@ export function buildCommitPath(context: {
   return `${buildRepositoryPath(context)}/commits/${context.commitHash}`;
 }
 
+export function buildReportsPath(context: {
+  repository: string;
+  commitHash: string;
+}): string {
+  return `${buildCommitPath(context)}/reports`;
+}
+
 export function buildReportPath(context: {
   repository: string;
   commitHash: string;

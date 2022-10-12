@@ -1,4 +1,5 @@
 import { Card, Tag } from "antd";
+import { useEffect, useRef } from "react";
 import { ImageEntry } from "./ImageEntryList";
 
 type Props = {
@@ -12,8 +13,17 @@ export const LargeImageEntryListItem = ({
   entry,
   onClick,
 }: Props) => {
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (selected) {
+      ref?.current?.scrollIntoView({ behavior: "smooth", block: "center" });
+    }
+  }, [selected]);
+
   return (
     <Card
+      ref={ref}
       hoverable
       title={entry.id}
       extra={

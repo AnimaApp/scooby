@@ -1,8 +1,16 @@
 import { useParams } from "react-router-dom";
+import ErrorPanel from "../../components/ErrorPanel";
 import { CommitParams } from "../../types";
+import { CommitController } from "./CommitController";
 
-export default function Commit() {
+export default function CommitRoot() {
   const params = useParams<CommitParams>();
 
-  return <h1>Commit {JSON.stringify(params)}</h1>;
+  if (!params.commit || !params.repository) {
+    return <ErrorPanel message="Some URL parameters are missing" />;
+  }
+
+  return (
+    <CommitController commit={params.commit} repository={params.repository} />
+  );
 }
