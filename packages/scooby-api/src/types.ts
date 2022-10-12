@@ -16,7 +16,7 @@ export type ScoobyAPI = {
   downloadSnapshotArchive: (
     context: SnapshotContext,
     targetArchivePath: string
-  ) => Promise<void>;
+  ) => Promise<boolean>;
 };
 
 export type UploadReportContext = {

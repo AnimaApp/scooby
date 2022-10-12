@@ -14,18 +14,38 @@ export async function loadReferenceEntries(
   request: LoadReferenceRequest
 ): Promise<TestEntry[]> {
   if (request.localReferencePath) {
-    console.log(
-      "loading reference dataset from local path instead of remote: " +
-        request.localReferencePath
-    );
-    return loadTestEntries(request.localReferencePath);
+    return loadLocalReferenceEntries(request.localReferencePath);
   }
 
+  return loadRemoteReferenceEntries(request);
+}
+
+async function loadRemoteReferenceEntries(
+  request: LoadReferenceRequest
+): Promise<TestEntry[]> {
   console.log("loading reference dataset from remote");
   const remoteReferencePath = await downloadTestSnapshot(
     request.snapshotName,
     request.baseCommitHash,
     request.api
   );
+
+  if (!remoteReferencePath) {
+    console.warn(
+      "could not find matching reference dataset on remote. Considering this a fresh run."
+    );
+    return [];
+  }
+
   return loadTestEntries(remoteReferencePath);
+}
+
+async function loadLocalReferenceEntries(
+  localReferencePath: string
+): Promise<TestEntry[]> {
+  console.log(
+    "loading reference dataset from local path instead of remote: " +
+      localReferencePath
+  );
+  return loadTestEntries(localReferencePath);
 }
