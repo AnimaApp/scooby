@@ -11,6 +11,8 @@ import {
   Report,
   buildReportJSONPath,
   buildSnapshotArchivePath,
+  LocalFidelityReport,
+  HostedFidelityReport,
 } from "@animaapp/scooby-shared";
 import { readFile } from "fs/promises";
 import { ScoobyAPIOptions } from "../options";
@@ -26,7 +28,9 @@ import {
   getAWSCredentials,
 } from "./awsConfig";
 import {
+  buildHostedFidelityReport,
   buildHostedRegressionReport,
+  getAllLocalResourcesForFidelity,
   getAllLocalResourcesForRegression,
 } from "./resources";
 import { Readable } from "stream";
@@ -68,6 +72,28 @@ export class S3ScoobyAPI implements ScoobyAPI {
       report,
       hostedResourcesMap
     );
+
+    await this.uploadReportJSON(context, hostedReport);
+
+    return hostedReport;
+  }
+
+  async uploadFidelityReport(
+    context: UploadReportContext,
+    report: LocalFidelityReport
+  ): Promise<HostedFidelityReport> {
+    const resources = getAllLocalResourcesForFidelity(report);
+
+    console.log("uploading resources...");
+    const hostedResourcesMap = await this.uploadReportResources(
+      {
+        ...context,
+        reportName: report.name,
+      },
+      resources
+    );
+
+    const hostedReport = buildHostedFidelityReport(report, hostedResourcesMap);
 
     await this.uploadReportJSON(context, hostedReport);
 

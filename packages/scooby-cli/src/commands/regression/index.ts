@@ -30,7 +30,7 @@ export default class Regression extends Command {
   async run(): Promise<void> {
     const { flags } = await this.parse(Regression);
 
-    const result = await runRegressionTest({
+    await runRegressionTest({
       name: flags.name,
       testsPath: flags.tests,
       referencePath: flags.reference,

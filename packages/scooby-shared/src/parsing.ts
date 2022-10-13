@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { HostedRegressionReport, HostedReport } from "./types";
+import { HostedReport } from "./types";
 
 const baseStatisticSchema = z.object({
   name: z.string(),
@@ -71,16 +71,36 @@ const regressionReportSchema = baseReportSchema.extend({
   }),
 });
 
+const fidelityTestEntrySchema = z.object({
+  id: z.string(),
+  groupId: z.string(),
+  tags: z.array(z.string()),
+  image: hostedResource,
+});
+
+const fidelityTestPairSchema = z.object({
+  expected: fidelityTestEntrySchema,
+  actual: fidelityTestEntrySchema,
+  comparison: z.object({
+    similarity: z.number(),
+    normalizedExpected: hostedResource,
+    normalizedActual: hostedResource,
+    diff: hostedResource,
+    overlap: hostedResource,
+  }),
+});
+
+const fidelityReportSchema = baseReportSchema.extend({
+  type: z.literal("fidelity"),
+  overallFidelityScore: z.number(),
+  pairs: z.array(fidelityTestPairSchema),
+});
+
+const reportSchema = z.discriminatedUnion("type", [
+  regressionReportSchema,
+  fidelityReportSchema,
+]);
+
 export function parseHostedReport(report: unknown): HostedReport {
-  const baseReport = baseReportSchema.parse(report);
-
-  if (baseReport.type === "regression") {
-    return parseRegressionReport(report);
-  }
-
-  throw new Error(`unable to parse report of type: ${baseReport.type}`);
-}
-
-function parseRegressionReport(report: unknown): HostedRegressionReport {
-  return regressionReportSchema.parse(report);
+  return reportSchema.parse(report);
 }

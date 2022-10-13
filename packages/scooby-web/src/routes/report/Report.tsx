@@ -4,6 +4,7 @@ import { EnhancedLink } from "../../components/EnhancedLink";
 import ErrorPanel from "../../components/ErrorPanel";
 import { StatsView } from "../../components/StatsView";
 import { SummaryBadge } from "../../components/SummaryBadge";
+import { FidelityReportController } from "./fidelity";
 import { RegressionReportController } from "./regression";
 
 type Props = {
@@ -16,9 +17,12 @@ export function Report({ report, repository, commit }: Props) {
   function getContent() {
     if (report.type === "regression") {
       return <RegressionReportController report={report} />;
+    } else if (report.type === "fidelity") {
+      return <FidelityReportController report={report} />;
     } else {
       return (
         <ErrorPanel
+          // @ts-ignore
           message={`No report handler has been set for type: ${report.type}`}
         />
       );

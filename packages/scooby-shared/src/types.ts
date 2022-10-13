@@ -15,6 +15,8 @@ export type BaseReport = {
   summary: Summary;
 };
 
+// Regression
+
 export type BaseRegressionReport<TResource extends Resource> = BaseReport & {
   type: "regression";
   baseCommitHash: string;
@@ -55,8 +57,44 @@ export type LocalRegressionReport = BaseRegressionReport<LocalResource>;
 export type HostedRegressionReport = BaseRegressionReport<HostedResource>;
 export type RegressionReport = LocalRegressionReport | HostedRegressionReport;
 
-export type Report = RegressionReport;
-export type HostedReport = HostedRegressionReport;
+// Fidelity
+
+export type BaseFidelityReport<TResource extends Resource> = BaseReport & {
+  type: "fidelity";
+  overallFidelityScore: number;
+  pairs: FidelityTestPair<TResource>[];
+};
+
+export type FidelityTestPair<TResource extends Resource> = {
+  expected: FidelityTestEntry<TResource>;
+  actual: FidelityTestEntry<TResource>;
+  comparison: {
+    similarity: number;
+    normalizedExpected: TResource;
+    normalizedActual: TResource;
+    diff: TResource;
+    overlap: TResource;
+  };
+};
+
+export type FidelityTestEntry<TResource extends Resource> = {
+  id: string;
+  groupId: string;
+  tags: string[];
+  image: TResource;
+};
+
+export type LocalFidelityTestPair = FidelityTestPair<LocalResource>;
+export type HostedFidelityTestPair = FidelityTestPair<HostedResource>;
+export type LocalFidelityTestEntry = FidelityTestEntry<LocalResource>;
+export type HostedFidelityTestEntry = FidelityTestEntry<HostedResource>;
+
+export type LocalFidelityReport = BaseFidelityReport<LocalResource>;
+export type HostedFidelityReport = BaseFidelityReport<HostedResource>;
+export type FidelityReport = LocalFidelityReport | HostedFidelityReport;
+
+export type Report = RegressionReport | FidelityReport;
+export type HostedReport = HostedRegressionReport | HostedFidelityReport;
 
 export type Summary = {
   result: "success" | "failure";
@@ -66,7 +104,7 @@ export type Summary = {
 export type BaseStatistic = {
   name: string;
   description?: string;
-  sentiment: "success" | "danger" | "warning" | "info";
+  sentiment: Sentiment;
 };
 
 export type GaugeStatistic = BaseStatistic & {
@@ -81,3 +119,5 @@ export type FractionStatistic = BaseStatistic & {
 };
 
 export type SummaryStatistic = GaugeStatistic | FractionStatistic;
+
+export type Sentiment = "success" | "danger" | "warning" | "info";

@@ -1,8 +1,6 @@
-import { SummaryStatistic } from "@animaapp/scooby-shared";
+import { Sentiment } from "@animaapp/scooby-shared";
 
-export function getColorForSentiment(
-  sentiment: SummaryStatistic["sentiment"]
-): string {
+export function getColorForSentiment(sentiment: Sentiment): string {
   switch (sentiment) {
     case "danger":
       return "red";

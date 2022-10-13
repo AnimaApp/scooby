@@ -1,5 +1,6 @@
 import { Card, Tag } from "antd";
 import { useEffect, useRef } from "react";
+import { getColorForSentiment } from "../../utils/colors";
 import { ImageEntry } from "./ImageEntryList";
 
 type Props = {
@@ -21,16 +22,16 @@ export const LargeImageEntryListItem = ({
     }
   }, [selected]);
 
+  const color = entry.sentiment
+    ? getColorForSentiment(entry.sentiment)
+    : "black";
+
   return (
     <Card
       ref={ref}
       hoverable
       title={entry.id}
-      extra={
-        entry.tag ? (
-          <Tag color={entry.changed ? "red" : "green"}>{entry.tag}</Tag>
-        ) : null
-      }
+      extra={entry.tag ? <Tag color={color}>{entry.tag}</Tag> : null}
       size="small"
       bodyStyle={{ padding: 0, position: "relative" }}
       style={{
@@ -46,9 +47,7 @@ export const LargeImageEntryListItem = ({
           bottom: 0,
           left: 0,
           right: 0,
-          boxShadow: `inset 0px 0px 0px ${selected ? 4 : 1}px ${
-            entry.changed ? "red" : "green"
-          }`,
+          boxShadow: `inset 0px 0px 0px ${selected ? 4 : 1}px ${color}`,
         }}
       ></div>
       <img

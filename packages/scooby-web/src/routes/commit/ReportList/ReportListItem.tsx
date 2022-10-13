@@ -56,7 +56,7 @@ export const ReportListItem = ({
   if (error || !report) {
     return (
       <Card {...commonCardProps} title={name}>
-        Unable to retrieve report data
+        Unable to retrieve report data: {String(error)}
       </Card>
     );
   }
