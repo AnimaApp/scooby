@@ -108,7 +108,7 @@ function generateSummaryStats({
 
   stats.push({
     type: "gauge",
-    name: "overall-fidelity",
+    name: "Overall Fidelity",
     value: overallFidelityScore,
     description: "The average fidelity score among test entries.",
     sentiment: "info",
@@ -116,7 +116,7 @@ function generateSummaryStats({
 
   stats.push({
     type: "gauge",
-    name: "tests-count",
+    name: "Test Counts",
     value: pairs.length,
     description: "The total number of test entries",
     sentiment: "info",

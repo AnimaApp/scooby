@@ -71,7 +71,6 @@ function getImageDataById(
       name: pair.actual.id,
       imageData: {
         type: "pair",
-        changed: false,
         actualUrl: pair.actual.image.url,
         expectedUrl: pair.expected.image.url,
         diffUrl: pair.comparison.diff.url,

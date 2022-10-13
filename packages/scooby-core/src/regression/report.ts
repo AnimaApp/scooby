@@ -102,7 +102,7 @@ function generateSummaryStats(
 
   stats.push({
     type: "fraction",
-    name: "changed",
+    name: "Changed",
     numerator: results.changed.length,
     denominator: totalEntryCount,
     description:
@@ -112,7 +112,7 @@ function generateSummaryStats(
 
   stats.push({
     type: "fraction",
-    name: "new",
+    name: "New",
     numerator: results.new.length,
     denominator: totalEntryCount,
     description:
@@ -122,7 +122,7 @@ function generateSummaryStats(
 
   stats.push({
     type: "fraction",
-    name: "removed",
+    name: "Removed",
     numerator: results.removed.length,
     denominator: totalEntryCount,
     description:
@@ -132,7 +132,7 @@ function generateSummaryStats(
 
   stats.push({
     type: "fraction",
-    name: "unchanged",
+    name: "Unchanged",
     numerator: results.unchanged.length,
     denominator: totalEntryCount,
     description:

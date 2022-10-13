@@ -24,16 +24,27 @@ export function RegressionReportController({ report }: Props) {
     return [
       ...report.results.changed
         .map(mapRegressionPairToImageEntry)
-        .map((entry) => ({ ...entry, changed: true, tag: "changed" })),
+        .map(
+          (entry) =>
+            ({ ...entry, sentiment: "danger", tag: "changed" } as const)
+        ),
       ...report.results.new
         .map(mapRegressionEntryToImageEntry)
-        .map((entry) => ({ ...entry, changed: true, tag: "new" })),
+        .map(
+          (entry) => ({ ...entry, sentiment: "danger", tag: "new" } as const)
+        ),
       ...report.results.removed
         .map(mapRegressionEntryToImageEntry)
-        .map((entry) => ({ ...entry, changed: true, tag: "removed" })),
+        .map(
+          (entry) =>
+            ({ ...entry, sentiment: "danger", tag: "removed" } as const)
+        ),
       ...report.results.unchanged
         .map(mapRegressionPairToImageEntry)
-        .map((entry) => ({ ...entry, changed: false, tag: "unchanged" })),
+        .map(
+          (entry) =>
+            ({ ...entry, sentiment: "success", tag: "unchanged" } as const)
+        ),
     ];
   }, [report.results]);
 
