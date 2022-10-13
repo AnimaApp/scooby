@@ -9,6 +9,8 @@ workflows:
 
       - run-scooby-regression-tests:
           context: anima-prod
+      - run-scooby-fidelity-tests:
+          context: anima-prod
 
       - deploy-scooby-web-ui:
           context: anima-prod
@@ -46,6 +48,16 @@ jobs:
       - run:
           name: "Run PNG regression test"
           command: "scooby regression --name 'png-regression' --tests sample-projects/ci-png-regression"
+
+  run-scooby-fidelity-tests:
+    docker:
+      - image: node:16
+    steps:
+      - setup-dependencies
+      - setup-scooby
+      - run:
+          name: "Run HTML fidelity test"
+          command: "scooby fidelity --name 'html-fidelity' --expected sample-projects/ci-html-fidelity/expected --actual sample-projects/ci-html-fidelity/actual"
 
   deploy-scooby-web-ui:
     docker:

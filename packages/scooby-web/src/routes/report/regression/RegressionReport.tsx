@@ -74,7 +74,8 @@ function getImageDataById(
       name: changed.actual.id,
       imageData: {
         type: "pair",
-        changed: true,
+        tag: "changed",
+        sentiment: "danger",
         actualUrl: changed.actual.image.url,
         expectedUrl: changed.expected.image.url,
         diffUrl: changed.comparison.diff.url,
@@ -92,7 +93,8 @@ function getImageDataById(
       name: unchanged.actual.id,
       imageData: {
         type: "pair",
-        changed: false,
+        tag: "unchanged",
+        sentiment: "success",
         actualUrl: unchanged.actual.image.url,
         expectedUrl: unchanged.expected.image.url,
         diffUrl: unchanged.comparison.diff.url,
@@ -109,6 +111,8 @@ function getImageDataById(
       imageData: {
         type: "new",
         newUrl: newEntry.image.url,
+        tag: "new",
+        sentiment: "danger",
       },
     };
   }
@@ -120,6 +124,8 @@ function getImageDataById(
       imageData: {
         type: "removed",
         removedUrl: removed.image.url,
+        tag: "removed",
+        sentiment: "danger",
       },
     };
   }

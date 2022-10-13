@@ -1,7 +1,7 @@
 import {
   buildReportJSONPath,
   buildReportsPath,
-  HostedRegressionReport,
+  HostedReport,
   parseHostedReport,
 } from "@animaapp/scooby-shared";
 import { S3 } from "@aws-sdk/client-s3";
@@ -32,7 +32,7 @@ export class S3ScoobyWebAPI implements ScoobyWebAPI {
     return subdirectories;
   }
 
-  async getReport(params: ReportContext): Promise<HostedRegressionReport> {
+  async getReport(params: ReportContext): Promise<HostedReport> {
     const key = buildReportJSONPath({
       commitHash: params.commit,
       reportName: params.reportName,

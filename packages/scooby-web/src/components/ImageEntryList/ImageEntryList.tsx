@@ -1,10 +1,11 @@
+import { Sentiment } from "@animaapp/scooby-shared";
 import { List } from "antd";
 import { LargeImageEntryListItem } from "./LargeImageEntryListItem";
 
 export type ImageEntry = {
   id: string;
   thumbnailUrl: string;
-  changed?: boolean;
+  sentiment?: Sentiment;
   tag?: string;
 };
 

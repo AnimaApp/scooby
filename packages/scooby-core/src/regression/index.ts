@@ -7,6 +7,7 @@ import { loadTestEntries } from "../loading";
 import { matchSources } from "../matching";
 import { generateImageSources } from "../source/image";
 import { TestEntry } from "../types";
+import { isRunningOnReferenceCommit } from "../utils/commit";
 import { calculateRegressions } from "./changes";
 import { printRegressionResults } from "./print";
 import { loadReferenceEntries } from "./reference";
@@ -140,11 +141,4 @@ async function performRegressionTest(
   });
 
   return report;
-}
-
-function isRunningOnReferenceCommit(
-  currentCommit: string,
-  baseCommit: string
-): boolean {
-  return currentCommit === baseCommit;
 }

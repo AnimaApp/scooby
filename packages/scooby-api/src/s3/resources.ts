@@ -1,6 +1,8 @@
 import {
+  HostedFidelityReport,
   HostedRegressionReport,
   HostedResource,
+  LocalFidelityReport,
   LocalRegressionReport,
   LocalResource,
 } from "@animaapp/scooby-shared";
@@ -107,4 +109,51 @@ function getResource(
   }
 
   return resource;
+}
+
+export function getAllLocalResourcesForFidelity(
+  report: LocalFidelityReport
+): LocalResource[] {
+  return [
+    ...report.pairs.flatMap((pair) => [
+      pair.actual.image,
+      pair.expected.image,
+      pair.comparison.diff,
+      pair.comparison.overlap,
+      pair.comparison.normalizedActual,
+      pair.comparison.normalizedExpected,
+    ]),
+  ];
+}
+
+export function buildHostedFidelityReport(
+  localReport: LocalFidelityReport,
+  resources: Record<string, HostedResource>
+): HostedFidelityReport {
+  return {
+    ...localReport,
+    pairs: localReport.pairs.map((pair) => ({
+      actual: {
+        ...pair.actual,
+        image: getResource(pair.actual.image.path, resources),
+      },
+      expected: {
+        ...pair.expected,
+        image: getResource(pair.expected.image.path, resources),
+      },
+      comparison: {
+        ...pair.comparison,
+        diff: getResource(pair.comparison.diff.path, resources),
+        overlap: getResource(pair.comparison.overlap.path, resources),
+        normalizedActual: getResource(
+          pair.comparison.normalizedActual.path,
+          resources
+        ),
+        normalizedExpected: getResource(
+          pair.comparison.normalizedExpected.path,
+          resources
+        ),
+      },
+    })),
+  };
 }

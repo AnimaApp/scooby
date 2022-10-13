@@ -1,5 +1,7 @@
 import {
+  HostedFidelityReport,
   HostedRegressionReport,
+  LocalFidelityReport,
   LocalRegressionReport,
 } from "@animaapp/scooby-shared";
 
@@ -8,6 +10,10 @@ export type ScoobyAPI = {
     context: UploadReportContext,
     report: LocalRegressionReport
   ) => Promise<HostedRegressionReport>;
+  uploadFidelityReport: (
+    context: UploadReportContext,
+    report: LocalFidelityReport
+  ) => Promise<HostedFidelityReport>;
 
   uploadSnapshotArchive: (
     context: SnapshotContext,

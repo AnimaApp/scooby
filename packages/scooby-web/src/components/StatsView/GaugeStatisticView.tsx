@@ -11,7 +11,7 @@ export const GaugeStatisticView = ({ statistic, compact }: Props) => {
     <StatisticView
       compact={compact}
       statistic={statistic}
-      value={statistic.value}
+      value={statistic.value.toFixed(8)}
     />
   );
 };

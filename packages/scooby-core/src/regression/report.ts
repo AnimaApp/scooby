@@ -10,6 +10,7 @@ import {
 import { BatchImageComparisonEntry } from "../comparison";
 import { MatchedSources } from "../matching";
 import { ImageSourceEntry } from "../types";
+import { convertPathToLocalResource } from "../utils/resource";
 import { RegressionCheckResult } from "./changes";
 
 export function generateReport(context: {
@@ -49,7 +50,7 @@ function convertImageSourceEntryToReportEntry(
   return {
     id: entry.id,
     groupId: entry.groupId,
-    image: convertToLocalResource(entry.path),
+    image: convertPathToLocalResource(entry.path),
     tags: entry.tags,
   };
 }
@@ -61,23 +62,16 @@ function convertRegressionEntryToReportEntry(
     actual: convertImageSourceEntryToReportEntry(entry.actual),
     expected: convertImageSourceEntryToReportEntry(entry.expected),
     comparison: {
-      diff: convertToLocalResource(entry.comparison.diffImagePath),
-      overlap: convertToLocalResource(entry.comparison.overlapImagePath),
-      normalizedActual: convertToLocalResource(
+      diff: convertPathToLocalResource(entry.comparison.diffImagePath),
+      overlap: convertPathToLocalResource(entry.comparison.overlapImagePath),
+      normalizedActual: convertPathToLocalResource(
         entry.comparison.normalizedActualPath
       ),
-      normalizedExpected: convertToLocalResource(
+      normalizedExpected: convertPathToLocalResource(
         entry.comparison.normalizedExpectedPath
       ),
       similarity: entry.comparison.similarity,
     },
-  };
-}
-
-function convertToLocalResource(path: string): LocalResource {
-  return {
-    type: "local",
-    path,
   };
 }
 
@@ -108,7 +102,7 @@ function generateSummaryStats(
 
   stats.push({
     type: "fraction",
-    name: "changed",
+    name: "Changed",
     numerator: results.changed.length,
     denominator: totalEntryCount,
     description:
@@ -118,7 +112,7 @@ function generateSummaryStats(
 
   stats.push({
     type: "fraction",
-    name: "new",
+    name: "New",
     numerator: results.new.length,
     denominator: totalEntryCount,
     description:
@@ -128,7 +122,7 @@ function generateSummaryStats(
 
   stats.push({
     type: "fraction",
-    name: "removed",
+    name: "Removed",
     numerator: results.removed.length,
     denominator: totalEntryCount,
     description:
@@ -138,7 +132,7 @@ function generateSummaryStats(
 
   stats.push({
     type: "fraction",
-    name: "unchanged",
+    name: "Unchanged",
     numerator: results.unchanged.length,
     denominator: totalEntryCount,
     description:

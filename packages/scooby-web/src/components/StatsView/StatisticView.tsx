@@ -2,7 +2,7 @@ import { SummaryStatistic } from "@animaapp/scooby-shared";
 import { Statistic, Tag, Tooltip } from "antd";
 import { ReactNode } from "react";
 import { capitalize } from "../../utils/capitalize";
-import { getColorForSentiment } from "./colors";
+import { getColorForSentiment } from "../../utils/colors";
 
 type Props = {
   statistic: SummaryStatistic;

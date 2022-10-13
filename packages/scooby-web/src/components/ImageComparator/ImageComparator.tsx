@@ -6,6 +6,7 @@ import {
 } from "@ant-design/icons";
 import { Button, Card, Tag, Tooltip, Image, Spin } from "antd";
 import { ReactNode } from "react";
+import { getColorForSentiment } from "../../utils/colors";
 import { ImageData } from "./ImageComparatorController";
 
 type Props = {
@@ -34,6 +35,38 @@ export const ImageComparator = (props: Props) => {
         return props.imageData.overlapUrl;
       }
     }
+  }
+
+  function getImageSources() {
+    if (props.imageData.type === "new") {
+      return [props.imageData.newUrl];
+    } else if (props.imageData.type === "removed") {
+      return [props.imageData.removedUrl];
+    } else {
+      return [
+        props.imageData.expectedUrl,
+        props.imageData.actualUrl,
+        props.imageData.diffUrl,
+        props.imageData.overlapUrl,
+      ];
+    }
+  }
+
+  function getImages() {
+    return getImageSources().map((source) => {
+      const displayStyle = getImageSource() === source ? undefined : "none";
+      return (
+        <Image
+          key={source}
+          style={{
+            maxWidth: "80vw",
+            display: displayStyle,
+          }}
+          src={source}
+          placeholder={<Spin style={{ display: displayStyle }} />}
+        />
+      );
+    });
   }
 
   return (
@@ -104,36 +137,26 @@ export const ImageComparator = (props: Props) => {
         flexDirection: "column",
       }}
     >
-      <Image
-        key={getImageSource()}
-        style={{ maxWidth: "80vw" }}
-        src={getImageSource()}
-        placeholder={<Spin />}
-      />
+      {getImages()}
     </Card>
   );
 };
 
 function getTitle(name: string, imageData: ImageData): ReactNode {
-  let message = "unchanged";
-  let color = "green";
-  if (imageData.type === "new") {
-    message = "new";
-    color = "orange";
-  } else if (imageData.type === "removed") {
-    message = "removed";
-    color = "orange";
-  } else if (imageData.type === "pair" && imageData.changed) {
-    message = "changed";
-    color = "red";
-  }
-
   return (
     <>
-      {name}
-      <Tag color={color} style={{ marginLeft: 8 }}>
-        {message}
-      </Tag>
+      <span style={{ marginRight: 8 }}>{name}</span>
+      {imageData.tag && (
+        <Tag
+          color={
+            imageData.sentiment
+              ? getColorForSentiment(imageData.sentiment)
+              : undefined
+          }
+        >
+          {imageData.tag}
+        </Tag>
+      )}
       {imageData.type === "pair" && (
         <Tag>Similarity: {imageData.similarity.toFixed(6)}</Tag>
       )}
