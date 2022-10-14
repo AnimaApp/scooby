@@ -156,6 +156,7 @@ jobs:
     docker:
       - image: node:16
     steps:
+      - checkout
       - run:
           name: "Install Ubuntu dependencies"
           command: |
