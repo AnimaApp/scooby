@@ -17,6 +17,7 @@ do
     --header 'Accept: application/vnd.github.v3+json' \
     --header "Authorization: Bearer $GITHUB_CI_BOT_TOKEN" > commit-statuses.json
 
+  cat commit-statuses.json
   cat commit-statuses.json | jq -r '.[].context' > commit-statuses.txt
   
   if grep -q "ci/circleci: $CIRCLECI_JOB_NAME" "commit-statuses.txt"; then
