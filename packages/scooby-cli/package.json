@@ -1,6 +1,6 @@
 {
   "name": "@animaapp/scooby-cli",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "A CLI to use Scooby, a visual and E2E testing framework",
   "author": "Federico Terzi @federico-terzi-anima",
   "bin": {
@@ -16,8 +16,8 @@
     "/oclif.manifest.json"
   ],
   "dependencies": {
-    "@animaapp/scooby-core": "1.0.0",
-    "@animaapp/scooby-github-status": "1.0.0",
+    "@animaapp/scooby-core": "^1.1.0",
+    "@animaapp/scooby-github-status": "^1.1.0",
     "@oclif/core": "^1.16.4",
     "@oclif/plugin-help": "^5",
     "@oclif/plugin-plugins": "^2.1.1",

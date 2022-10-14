@@ -1,6 +1,6 @@
 {
   "name": "@animaapp/scooby-github-status",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "This package contains the logic used to perform GitHub status updates",
   "main": "dist/src/index.js",
   "repository": "https://github.com/AnimaApp/scooby",
@@ -20,8 +20,8 @@
     "ts-jest": "^27.1.4"
   },
   "dependencies": {
-    "@animaapp/scooby-api": "*",
-    "@animaapp/scooby-context": "*",
-    "@animaapp/scooby-github-api": "*"
+    "@animaapp/scooby-api": "^1.1.0",
+    "@animaapp/scooby-context": "^1.1.0",
+    "@animaapp/scooby-github-api": "^1.1.0"
   }
 }
