@@ -13,14 +13,18 @@ import {
   buildSnapshotArchivePath,
   LocalFidelityReport,
   HostedFidelityReport,
+  buildReportsPath,
+  HostedReport,
+  parseHostedReport,
 } from "@animaapp/scooby-shared";
 import { readFile } from "fs/promises";
 import { ScoobyAPIOptions } from "../options";
 import {
   ScoobyAPI,
   SnapshotContext,
-  UploadReportContext,
-  UploadReportResourceContext,
+  CommitContext,
+  ReportContext,
+  ReportId,
 } from "../types";
 import {
   BucketOptions,
@@ -53,8 +57,30 @@ export class S3ScoobyAPI implements ScoobyAPI {
     console.log("using AWS S3 bucket: " + this.bucketOptions.bucket);
   }
 
+  async getReports(params: CommitContext): Promise<ReportId[]> {
+    const key = `${buildReportsPath({
+      commitHash: params.commitHash,
+      repository: this.options.repositoryName,
+    })}/`;
+
+    const subdirectories = await this.listSubdirectories(key);
+    return subdirectories;
+  }
+
+  async getReport(params: ReportContext): Promise<HostedReport> {
+    const key = buildReportJSONPath({
+      commitHash: params.commitHash,
+      reportName: params.reportName,
+      repository: this.options.repositoryName,
+    });
+
+    const body = await this.getJSONObject(key);
+
+    return parseHostedReport(body);
+  }
+
   async uploadRegressionReport(
-    context: UploadReportContext,
+    context: CommitContext,
     report: LocalRegressionReport
   ): Promise<HostedRegressionReport> {
     const resources = getAllLocalResourcesForRegression(report);
@@ -79,7 +105,7 @@ export class S3ScoobyAPI implements ScoobyAPI {
   }
 
   async uploadFidelityReport(
-    context: UploadReportContext,
+    context: CommitContext,
     report: LocalFidelityReport
   ): Promise<HostedFidelityReport> {
     const resources = getAllLocalResourcesForFidelity(report);
@@ -101,7 +127,7 @@ export class S3ScoobyAPI implements ScoobyAPI {
   }
 
   async uploadReportResources(
-    context: UploadReportResourceContext,
+    context: ReportContext,
     resources: LocalResource[]
   ): Promise<Record<string, HostedResource>> {
     const hostedResources: Record<string, HostedResource> = {};
@@ -117,7 +143,7 @@ export class S3ScoobyAPI implements ScoobyAPI {
   }
 
   async uploadReportResource(
-    context: UploadReportResourceContext,
+    context: ReportContext,
     resource: LocalResource
   ): Promise<HostedResource> {
     const randomId = uuidv4();
@@ -139,7 +165,7 @@ export class S3ScoobyAPI implements ScoobyAPI {
   }
 
   async uploadReportJSON(
-    context: UploadReportContext,
+    context: CommitContext,
     report: Report
   ): Promise<string> {
     const targetPath = buildReportJSONPath({
@@ -197,6 +223,45 @@ export class S3ScoobyAPI implements ScoobyAPI {
     }
   }
 
+  async listSubdirectories(key: string): Promise<string[]> {
+    const output = await this.client.listObjectsV2({
+      Bucket: this.bucketOptions.bucket,
+      Prefix: key,
+      Delimiter: "/",
+    });
+
+    if (!output.CommonPrefixes) {
+      throw new Error("unable to list objects, common prefixes are empty");
+    }
+
+    return output.CommonPrefixes.flatMap(({ Prefix }) => {
+      if (!Prefix) {
+        return [];
+      }
+
+      const tokens = Prefix.split("/");
+      const directory = tokens[tokens.length - 2];
+
+      if (!directory) {
+        return [];
+      }
+
+      return [directory];
+    });
+  }
+
+  async getJSONObject(key: string): Promise<unknown> {
+    const object = await this.client.getObject({
+      Bucket: this.bucketOptions.bucket,
+      Key: key,
+    });
+
+    const stream = getBody(object);
+    const string = await streamToString(stream);
+
+    return JSON.parse(string);
+  }
+
   async uploadBody(key: string, body: string): Promise<string> {
     await this.client.putObject({
       Bucket: this.bucketOptions.bucket,
@@ -223,8 +288,17 @@ export class S3ScoobyAPI implements ScoobyAPI {
 function getBody(response: GetObjectCommandOutput): Readable {
   const body = response.Body;
   if (!body) {
-    throw new Error("unable to download snapshot archive, body is empty");
+    throw new Error("unable to get object body, body field is empty");
   }
 
   return body && (body as Readable);
+}
+
+function streamToString(stream: Readable): Promise<string> {
+  const chunks: Buffer[] = [];
+  return new Promise((resolve, reject) => {
+    stream.on("data", (chunk) => chunks.push(Buffer.from(chunk)));
+    stream.on("error", (err) => reject(err));
+    stream.on("end", () => resolve(Buffer.concat(chunks).toString("utf8")));
+  });
 }

@@ -1,7 +1,7 @@
 import {
   BatchImageComparisonEntry,
   BatchImageComparisonResult,
-} from "../comparison";
+} from "../../comparison";
 
 export type RegressionCheckResult = {
   unchanged: BatchImageComparisonEntry[];

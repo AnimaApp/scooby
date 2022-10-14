@@ -13,3 +13,5 @@ export async function getScoobyAPI(
 
   throw new Error("could not initialize API, invalid configuration detected");
 }
+
+export type { ScoobyAPI } from "./types";

@@ -6,11 +6,11 @@ import {
   RegressionReportResults,
   Summary,
   SummaryStatistic,
-} from "../../../scooby-shared/src";
-import { BatchImageComparisonEntry } from "../comparison";
-import { MatchedSources } from "../matching";
-import { ImageSourceEntry } from "../types";
-import { convertPathToLocalResource } from "../utils/resource";
+} from "@animaapp/scooby-shared";
+import { BatchImageComparisonEntry } from "../../comparison";
+import { MatchedSources } from "../../matching";
+import { ImageSourceEntry } from "../../types";
+import { convertPathToLocalResource } from "../../utils/resource";
 import { RegressionCheckResult } from "./changes";
 
 export function generateReport(context: {

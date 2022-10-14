@@ -1,5 +1,5 @@
-import { MatchedSources } from "../matching";
-import { ImageSourceEntry } from "../types";
+import { MatchedSources } from "../../matching";
+import { ImageSourceEntry } from "../../types";
 import { RegressionCheckResult } from "./changes";
 
 export function printRegressionResults(

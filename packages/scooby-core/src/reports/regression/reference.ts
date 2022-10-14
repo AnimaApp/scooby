@@ -1,6 +1,6 @@
 import { ScoobyAPI } from "@animaapp/scooby-api/src/types";
-import { loadTestEntries } from "../loading";
-import { TestEntry } from "../types";
+import { loadTestEntries } from "../../loading";
+import { TestEntry } from "../../types";
 import { downloadTestSnapshot } from "./snapshot";
 
 export type LoadReferenceRequest = {

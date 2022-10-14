@@ -9,13 +9,13 @@
     "target": "es2019",
     "esModuleInterop": true,
     "paths": {
-      "@animaapp/scooby-core": ["../scooby-core"]
+      "@animaapp/scooby-core": ["../scooby-core"],
+      "@animaapp/scooby-github-status": ["../scooby-github-status"]
     }
   },
-  "include": [
-    "src/**/*"
-  ],
+  "include": ["src/**/*"],
   "references": [
-    {"path": "../scooby-core"}
+    { "path": "../scooby-core" },
+    { "path": "../scooby-github-status" }
   ]
 }

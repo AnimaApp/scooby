@@ -1,5 +1,6 @@
 import { getBaseCommitHash, getBranchName, getCurrentCommitHash } from "./git";
 import { getRepositoryName } from "./repositoryName";
+import { getRepositoryOwner } from "./repositoryOwner";
 
 export * from "./repositoryName";
 
@@ -9,6 +10,7 @@ export type Context = {
   branchName: string;
   isMainBranch: boolean;
   repositoryName: string;
+  repositoryOwner: string;
 };
 
 export async function getContext(): Promise<Context> {
@@ -23,5 +25,6 @@ export async function getContext(): Promise<Context> {
     branchName,
     isMainBranch,
     repositoryName: await getRepositoryName(),
+    repositoryOwner: await getRepositoryOwner(),
   };
 }
