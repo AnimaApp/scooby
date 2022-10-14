@@ -231,7 +231,7 @@ export class S3ScoobyAPI implements ScoobyAPI {
     });
 
     if (!output.CommonPrefixes) {
-      throw new Error("unable to list objects, common prefixes are empty");
+      return [];
     }
 
     return output.CommonPrefixes.flatMap(({ Prefix }) => {

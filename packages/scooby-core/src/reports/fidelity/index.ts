@@ -67,7 +67,7 @@ export async function runFidelityTest(
     context.currentCommitHash,
     context.baseCommitHash
   );
-  if (!runningOnReferenceCommit) {
+  if (!runningOnReferenceCommit || context.isMainBranch) {
     console.log("uploading fidelity report...");
     await api.uploadFidelityReport(
       { commitHash: context.currentCommitHash },
@@ -75,7 +75,7 @@ export async function runFidelityTest(
     );
   } else {
     console.warn(
-      `this regression test is running on the same commit used as reference (${context.baseCommitHash}), therefore no report will be uploaded to the API to avoid conflicts.`
+      `this fidelity test is running on the same commit used as base commit (${context.baseCommitHash}), therefore no report will be uploaded to the API to avoid conflicts.`
     );
   }
 }
