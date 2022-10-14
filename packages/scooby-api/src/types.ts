@@ -1,17 +1,21 @@
 import {
   HostedFidelityReport,
   HostedRegressionReport,
+  HostedReport,
   LocalFidelityReport,
   LocalRegressionReport,
 } from "@animaapp/scooby-shared";
 
 export type ScoobyAPI = {
+  getReports(params: CommitContext): Promise<ReportId[]>;
+  getReport(params: ReportContext): Promise<HostedReport>;
+
   uploadRegressionReport: (
-    context: UploadReportContext,
+    context: CommitContext,
     report: LocalRegressionReport
   ) => Promise<HostedRegressionReport>;
   uploadFidelityReport: (
-    context: UploadReportContext,
+    context: CommitContext,
     report: LocalFidelityReport
   ) => Promise<HostedFidelityReport>;
 
@@ -25,11 +29,11 @@ export type ScoobyAPI = {
   ) => Promise<boolean>;
 };
 
-export type UploadReportContext = {
+export type CommitContext = {
   commitHash: string;
 };
 
-export type UploadReportResourceContext = {
+export type ReportContext = {
   commitHash: string;
   reportName: string;
 };
@@ -38,3 +42,5 @@ export type SnapshotContext = {
   commitHash: string;
   snapshotName: string;
 };
+
+export type ReportId = string;

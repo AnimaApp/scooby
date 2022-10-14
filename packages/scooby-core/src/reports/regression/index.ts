@@ -2,7 +2,7 @@ import { getScoobyAPI } from "@animaapp/scooby-api";
 import { ScoobyAPI } from "@animaapp/scooby-api/src/types";
 import { LocalRegressionReport } from "@animaapp/scooby-shared";
 import { batchImageComparison } from "../../comparison";
-import { Context, getContext } from "../../context";
+import { Context, getContext } from "@animaapp/scooby-context";
 import { loadTestEntries } from "../../loading";
 import { matchSources } from "../../matching";
 import { generateImageSources } from "../../source/image";

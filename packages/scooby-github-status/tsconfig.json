@@ -16,13 +16,13 @@
     "paths": {
       "@animaapp/scooby-api": ["../scooby-api"],
       "@animaapp/scooby-context": ["../scooby-context"],
-      "@animaapp/scooby-shared": ["../scooby-shared"]
+      "@animaapp/scooby-github-api": ["../scooby-github-api"]
     }
   },
   "exclude": ["node_modules", "__tests__", "dist", "test"],
   "references": [
     { "path": "../scooby-api" },
     { "path": "../scooby-context" },
-    { "path": "../scooby-shared" }
+    { "path": "../scooby-github-api" }
   ]
 }

@@ -1,4 +1,4 @@
-import { runRegressionTest } from "@animaapp/scooby-core";
+import { updateGitHubStatus } from "@animaapp/scooby-github-status";
 import { Command } from "@oclif/core";
 
 export default class UpdateGitHubStatus extends Command {
@@ -10,8 +10,8 @@ export default class UpdateGitHubStatus extends Command {
   static flags = {};
 
   async run(): Promise<void> {
-    const { flags } = await this.parse(UpdateGitHubStatus);
+    await this.parse(UpdateGitHubStatus);
 
-    // TODO
+    await updateGitHubStatus();
   }
 }
