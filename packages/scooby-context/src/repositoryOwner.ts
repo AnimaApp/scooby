@@ -19,12 +19,11 @@ export async function extractRepositoryOwnerFromGitRemote(): Promise<
 > {
   const git = simpleGit();
   const remoteUrl = (await git.getConfig("remote.origin.url")).value;
-  console.log("REMOTE URL", remoteUrl);
   if (!remoteUrl) {
     return;
   }
 
-  const ownerRegex = /.*\/(.*)\/.*\.git$/;
+  const ownerRegex = /.*[\/:](.*)\/.*\.git$/;
   const match = ownerRegex.exec(remoteUrl);
   if (!match?.[1]) {
     return;
