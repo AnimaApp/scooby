@@ -1,6 +1,6 @@
 {
   "name": "@animaapp/scooby-context",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "A package to extract the contextual information for the current commit",
   "main": "dist/src/index.js",
   "repository": "https://github.com/AnimaApp/scooby",

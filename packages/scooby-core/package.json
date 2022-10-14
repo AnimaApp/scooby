@@ -1,6 +1,6 @@
 {
   "name": "@animaapp/scooby-core",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "This package contains the logic used to perform testing",
   "main": "dist/src/index.js",
   "repository": "https://github.com/AnimaApp/scooby",
@@ -23,9 +23,9 @@
     "ts-jest": "^27.1.4"
   },
   "dependencies": {
-    "@animaapp/scooby-api": "*",
-    "@animaapp/scooby-context": "*",
-    "@animaapp/scooby-shared": "*",
+    "@animaapp/scooby-api": "^1.1.0",
+    "@animaapp/scooby-context": "^1.1.0",
+    "@animaapp/scooby-shared": "^1.1.0",
     "archiver": "^5.3.1",
     "extract-zip": "^2.0.1",
     "fastq": "^1.13.0",
