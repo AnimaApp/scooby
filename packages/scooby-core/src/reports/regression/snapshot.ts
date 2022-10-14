@@ -1,6 +1,6 @@
 import { ScoobyAPI } from "@animaapp/scooby-api/src/types";
-import { archiveDirectory, extractArchive } from "../archive";
-import { createTemporaryFile } from "../utils/temp";
+import { archiveDirectory, extractArchive } from "../../archive";
+import { createTemporaryFile } from "../../utils/temp";
 
 export async function uploadTestSnapshot(
   snapshotName: string,

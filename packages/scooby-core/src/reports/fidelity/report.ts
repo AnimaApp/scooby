@@ -8,9 +8,9 @@ import {
 import {
   BatchImageComparisonEntry,
   BatchImageComparisonResult,
-} from "../comparison";
-import { ImageSourceEntry } from "../types";
-import { convertPathToLocalResource } from "../utils/resource";
+} from "../../comparison";
+import { ImageSourceEntry } from "../../types";
+import { convertPathToLocalResource } from "../../utils/resource";
 
 export function generateReport(context: {
   name: string;

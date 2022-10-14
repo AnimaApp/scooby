@@ -1,11 +1,11 @@
 import { getScoobyAPI } from "@animaapp/scooby-api";
-import { batchImageComparison } from "../comparison";
-import { getContext } from "../context";
-import { loadTestEntries } from "../loading";
-import { MatchedSources, matchSources } from "../matching";
-import { generateImageSources } from "../source/image";
-import { ImageSourceEntry } from "../types";
-import { isRunningOnReferenceCommit } from "../utils/commit";
+import { batchImageComparison } from "../../comparison";
+import { getContext } from "../../context";
+import { loadTestEntries } from "../../loading";
+import { MatchedSources, matchSources } from "../../matching";
+import { generateImageSources } from "../../source/image";
+import { ImageSourceEntry } from "../../types";
+import { isRunningOnReferenceCommit } from "../../utils/commit";
 import { printFidelityReport } from "./print";
 import { generateReport } from "./report";
 
