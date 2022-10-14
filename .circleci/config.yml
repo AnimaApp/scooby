@@ -170,7 +170,7 @@ jobs:
       - run:
           name: "Patching Approval status"
           command: |
-            ./scripts/patch_pending_circleci_approval.sh "request-npm-packages-deploy-approval"
+            ./scripts/patch_pending_circleci_approval.sh "scooby/request-npm-packages-deploy-approval"
 
 commands:
   setup-dependencies:
