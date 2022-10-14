@@ -49,27 +49,7 @@ async function computeReportStatuses(
     return computeMainBranchReportStatuses(context, reports);
   }
 
-  if (reports.every((report) => report.summary.result === "success")) {
-    console.log("all tests succeeded, reporting a successful result");
-    return computeAllSuccessfulReportStatuses(context, reports);
-  }
-
-  const associatedPR = await githubAPI.getAssociatedPR(
-    context.currentCommitHash
-  );
-  if (associatedPR === undefined) {
-    console.log("no associated PR found, reporting actual results");
-    return computeActualReportStatuses(context, reports);
-  }
-
-  const approvalStatus = await githubAPI.hasPRBeenApproved(associatedPR);
-  if (!approvalStatus.approved) {
-    console.log("no PR approval detected, reporting actual results");
-    return computeActualReportStatuses(context, reports);
-  }
-
-  console.log("PR approval detected, approving all tests");
-  return computeApprovedPRReportStatuses(context, reports, approvalStatus.user);
+  return computeActualReportStatuses(context, reports);
 }
 
 async function computeMainBranchReportStatuses(
@@ -81,20 +61,6 @@ async function computeMainBranchReportStatuses(
       name: report.name,
       state: "success",
       description: "Auto-approved as it's on main branch",
-      url: getURLForReport(context, report.name),
-    })
-  );
-}
-
-async function computeAllSuccessfulReportStatuses(
-  context: Context,
-  reports: HostedReport[]
-): Promise<ReportStatus[]> {
-  return reports.map(
-    (report): ReportStatus => ({
-      name: report.name,
-      state: "success",
-      description: "All tests passed!",
       url: getURLForReport(context, report.name),
     })
   );
@@ -112,23 +78,6 @@ async function computeActualReportStatuses(
         report.summary.result === "success"
           ? "All tests passed!"
           : "Some tests failed, for more information please see the report",
-      url: getURLForReport(context, report.name),
-    })
-  );
-}
-
-async function computeApprovedPRReportStatuses(
-  context: Context,
-  reports: HostedReport[],
-  user?: string
-): Promise<ReportStatus[]> {
-  return reports.map(
-    (report): ReportStatus => ({
-      name: report.name,
-      state: "success",
-      description: user
-        ? `Approved by @${user} (from PR review approval)`
-        : "Approved by anonymous reviewer",
       url: getURLForReport(context, report.name),
     })
   );
