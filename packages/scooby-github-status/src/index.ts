@@ -45,10 +45,12 @@ async function computeReportStatuses(
   reports: HostedReport[]
 ): Promise<ReportStatus[]> {
   if (context.isMainBranch) {
+    console.log("approving all statuses as we are on the main branch");
     return computeMainBranchReportStatuses(context, reports);
   }
 
   if (reports.every((report) => report.summary.result === "success")) {
+    console.log("all tests succeeded, reporting a successful result");
     return computeAllSuccessfulReportStatuses(context, reports);
   }
 
@@ -56,14 +58,17 @@ async function computeReportStatuses(
     context.currentCommitHash
   );
   if (associatedPR === undefined) {
+    console.log("no associated PR found, reporting actual results");
     return computeActualReportStatuses(context, reports);
   }
 
   const approvalStatus = await githubAPI.hasPRBeenApproved(associatedPR);
   if (!approvalStatus.approved) {
+    console.log("no PR approval detected, reporting actual results");
     return computeActualReportStatuses(context, reports);
   }
 
+  console.log("PR approval detected, approving all tests");
   return computeApprovedPRReportStatuses(context, reports, approvalStatus.user);
 }
 
@@ -152,9 +157,24 @@ async function fetchReports(
 }
 
 function getURLForReport(context: Context, reportName: string): string {
-  const baseUrl = process.env["SCOOBY_WEB_BASE_URL"];
-  const s3bucket = process.env["SCOOBY_AWS_S3_BUCKET"];
-  const s3region = process.env["SCOOBY_AWS_S3_REGION"];
+  const baseUrl = readEnvVariable("SCOOBY_WEB_BASE_URL");
+  const s3bucket = readEnvVariable("SCOOBY_AWS_S3_BUCKET");
+  const s3region = readEnvVariable("SCOOBY_AWS_S3_REGION");
+
+  if (!baseUrl) {
+    throw new Error();
+  }
 
   return `${baseUrl}/#/repo/${context.repositoryName}/commit/${context.currentCommitHash}/report/${reportName}/?_s3_region=${s3region}&_s3_bucket=${s3bucket}`;
+}
+
+function readEnvVariable(name: string): string {
+  const value = process.env[name];
+  if (!value) {
+    throw new Error(
+      `unable to read '${name}' env variable, please make sure to provide it`
+    );
+  }
+
+  return value;
 }
