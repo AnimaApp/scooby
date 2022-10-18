@@ -9,3 +9,22 @@ export function getTypeForEntry(path: string): TestEntryType {
 
   throw new Error("unsupported entry type: " + path);
 }
+
+export function getTestExtension(entries: string[]): string | undefined {
+  const htmlFile = entries.find((entry) => entry.endsWith(".html"));
+  if (htmlFile) {
+    return "html";
+  }
+
+  const pngFile = entries.find((entry) => entry.endsWith(".png"));
+  if (pngFile) {
+    return "png";
+  }
+
+  const jsonFile = entries.find(
+    (entry) => entry.endsWith(".json") && !entry.endsWith("scooby.json")
+  );
+  if (jsonFile) {
+    return "json";
+  }
+}

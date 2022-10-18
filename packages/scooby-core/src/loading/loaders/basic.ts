@@ -4,7 +4,7 @@ import { readdir } from "fs/promises";
 import { Loader } from ".";
 import { TestEntry } from "../../types";
 import { loadOptions } from "../options";
-import { getTypeForEntry } from "./util";
+import { getTestExtension, getTypeForEntry } from "./util";
 
 export const basicLoader: Loader = {
   async isCompatible(testsPath: string): Promise<boolean> {
@@ -54,22 +54,3 @@ export const basicLoader: Loader = {
     return entries;
   },
 };
-
-function getTestExtension(entries: string[]): string | undefined {
-  const htmlFile = entries.find((entry) => entry.endsWith(".html"));
-  if (htmlFile) {
-    return "html";
-  }
-
-  const pngFile = entries.find((entry) => entry.endsWith(".png"));
-  if (pngFile) {
-    return "png";
-  }
-
-  const jsonFile = entries.find(
-    (entry) => entry.endsWith(".json") && !entry.endsWith(".scooby.json")
-  );
-  if (jsonFile) {
-    return "json";
-  }
-}

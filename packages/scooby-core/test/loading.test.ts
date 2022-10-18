@@ -62,4 +62,60 @@ describe("loading test folders", () => {
       },
     ] as TestEntry[]);
   });
+
+  it("loads nested folders with multiple files correctly", async () => {
+    const testsPath = path.resolve(
+      __dirname,
+      "./data/loading/nested-multiple-files-test-structure"
+    );
+
+    const entries = await loadTestEntries(testsPath);
+
+    expect(entries).toEqual([
+      {
+        id: "test1-another",
+        type: "html",
+        path: path.join(testsPath, "./test1/another.html"),
+        options: {
+          viewports: [
+            {
+              width: 400,
+              height: 400,
+            },
+          ],
+        },
+      },
+      {
+        id: "test1-index",
+        type: "html",
+        path: path.join(testsPath, "./test1/index.html"),
+        options: {
+          viewports: [
+            {
+              width: 300,
+              height: 300,
+            },
+          ],
+        },
+      },
+      {
+        id: "test2-index",
+        type: "html",
+        path: path.join(testsPath, "./test2/index.html"),
+        options: {
+          viewports: [
+            {
+              width: 1920,
+              height: 1080,
+            },
+          ],
+        },
+      },
+      {
+        id: "test3-file",
+        type: "html",
+        path: path.join(testsPath, "./test3/file.html"),
+      },
+    ] as TestEntry[]);
+  });
 });
