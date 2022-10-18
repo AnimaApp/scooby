@@ -5,7 +5,7 @@ import { TestEntry } from "../../types";
 import { loadOptions } from "../options";
 import { getTestExtension, getTypeForEntry } from "./util";
 
-export const nestedLoader: Loader = {
+export const nestedMultipleFilesLoader: Loader = {
   async isCompatible(testsPath: string): Promise<boolean> {
     const entries = await readdir(testsPath, { withFileTypes: true });
 
@@ -19,21 +19,6 @@ export const nestedLoader: Loader = {
       });
 
       if (!subEntries.every((subEntry) => subEntry.isFile())) {
-        return false;
-      }
-
-      const testExtension = getTestExtension(
-        subEntries.map((subEntry) => subEntry.name)
-      );
-      if (!testExtension) {
-        return false;
-      }
-
-      // In this mode, we can only have one main file with the given extension
-      const numberOfFilesWithTestExtension = subEntries.filter(
-        (subEntry) => path.extname(subEntry.name) === `.${testExtension}`
-      ).length;
-      if (numberOfFilesWithTestExtension > 1) {
         return false;
       }
     }
@@ -52,38 +37,50 @@ export const nestedLoader: Loader = {
         withFileTypes: true,
       });
 
-      const mainFile = getMainFile(subEntries.map((entry) => entry.name));
-      if (!mainFile) {
-        throw new Error("could not find test file in path: " + dirPath);
+      const testExtension = getTestExtension(
+        subEntries.map((subEntry) => subEntry.name)
+      );
+      if (!testExtension) {
+        throw new Error(
+          "could not determine test extension in path: " + dirPath
+        );
       }
 
-      const optionsFile = subEntries.find(
+      const baseOptionsFile = subEntries.find(
         (entry) => entry.name === "scooby.json"
       );
-      const options = optionsFile
+      const baseOptions = baseOptionsFile
         ? await loadOptions(path.join(dirPath, "scooby.json"))
         : undefined;
 
-      entries.push({
-        id: dirEntry.name,
-        type: getTypeForEntry(mainFile),
-        path: path.join(dirPath, mainFile),
-        ...(options && { options }),
-      });
+      const testFiles = subEntries
+        .filter((subEntry) => subEntry.name.endsWith(testExtension))
+        .map((subEntry) => subEntry.name);
+
+      for (const testFile of testFiles) {
+        const name = path.parse(testFile).name;
+
+        const specificOptionsFile = subEntries.find(
+          (entry) => entry.name === `${name}.scooby.json`
+        );
+        const specificOptions = specificOptionsFile
+          ? await loadOptions(path.join(dirPath, `${name}.scooby.json`))
+          : undefined;
+
+        const options = {
+          ...baseOptions,
+          ...specificOptions,
+        };
+
+        entries.push({
+          id: `${dirEntry.name}-${name}`,
+          type: getTypeForEntry(testFile),
+          path: path.join(dirPath, testFile),
+          ...(options && Object.keys(options).length > 0 && { options }),
+        });
+      }
     }
 
     return entries;
   },
 };
-
-function getMainFile(entries: string[]): string | undefined {
-  const htmlFile = entries.find((entry) => entry.endsWith(".html"));
-  if (htmlFile) {
-    return htmlFile;
-  }
-
-  const imageFile = entries.find((entry) => entry.endsWith(".png"));
-  if (imageFile) {
-    return imageFile;
-  }
-}
