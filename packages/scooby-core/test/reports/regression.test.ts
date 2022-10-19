@@ -192,7 +192,7 @@ function mockDownloadSnapshotArchiveImplementation(
   (api.downloadSnapshotArchive as jest.Mock).mockImplementation(
     async (_, targetPath: string) => {
       const archivePath = await archiveDirectory(targetReferencePath);
-      fsExtra.copy(archivePath, targetPath);
+      await fsExtra.copy(archivePath, targetPath);
       return true;
     }
   );
