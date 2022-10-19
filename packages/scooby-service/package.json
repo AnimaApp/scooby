@@ -1,0 +1,29 @@
+{
+  "name": "@animaapp/scooby-service",
+  "version": "1.0.0",
+  "description": "The Web Service used by Scooby to perform some backend-side operations",
+  "main": "dist/src/index.js",
+  "repository": "https://github.com/AnimaApp/scooby",
+  "author": "Federico Terzi",
+  "private": true,
+  "scripts": {
+    "build": "tsc --build",
+    "dev": "yarn build && yarn start",
+    "clean": "rm -Rf ./dist",
+    "start": "node dist/src/index.js",
+    "test": "jest --passWithNoTests"
+  },
+  "devDependencies": {
+    "@types/jest": "^27.4.1",
+    "@types/node": "^18.8.2",
+    "jest": "^27.5.1",
+    "ts-jest": "^27.1.4"
+  },
+  "dependencies": {
+    "@animaapp/scooby-api": "*",
+    "@animaapp/scooby-github-api": "*",
+    "@animaapp/scooby-shared": "*",
+    "dotenv": "^16.0.3",
+    "fastify": "^4.9.2"
+  }
+}
