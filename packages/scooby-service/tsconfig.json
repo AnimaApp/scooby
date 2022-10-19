@@ -1,0 +1,28 @@
+{
+  "compilerOptions": {
+    "target": "es6",
+    "jsx": "react",
+    "moduleResolution": "node",
+    "module": "CommonJS",
+    "resolveJsonModule": true,
+    "outDir": "./dist",
+    "esModuleInterop": true,
+    "declaration": true,
+    "composite": true,
+    "strict": true,
+    "lib": ["es2019"],
+    "allowSyntheticDefaultImports": true,
+    "skipLibCheck": true,
+    "paths": {
+      "@animaapp/scooby-api": ["../scooby-api"],
+      "@animaapp/scooby-github-api": ["../scooby-github-api"],
+      "@animaapp/scooby-shared": ["../scooby-shared"]
+    }
+  },
+  "exclude": ["node_modules", "__tests__", "dist", "test"],
+  "references": [
+    { "path": "../scooby-api" },
+    { "path": "../scooby-github-api" },
+    { "path": "../scooby-shared" }
+  ]
+}
