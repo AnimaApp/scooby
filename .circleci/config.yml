@@ -11,7 +11,7 @@ workflows:
           context: anima-prod
       - run-scooby-fidelity-tests:
           context: anima-prod
-      - scooby-update-github-status:
+      - scooby-update-status:
           context: anima-prod
           requires:
             - run-scooby-regression-tests
@@ -106,7 +106,7 @@ jobs:
           name: "Run HTML fidelity test"
           command: "scooby fidelity --name 'html-fidelity' --expected sample-projects/ci-html-fidelity/expected --actual sample-projects/ci-html-fidelity/actual"
 
-  scooby-update-github-status:
+  scooby-update-status:
     docker:
       - image: node:16
     steps:
@@ -114,7 +114,7 @@ jobs:
       - setup-scooby
       - run:
           name: "Update GitHub status"
-          command: "scooby update-github-status"
+          command: "scooby update-status"
 
   deploy-scooby-web-ui:
     docker:
