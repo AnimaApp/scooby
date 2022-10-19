@@ -1,3 +1,5 @@
+import { ScoobyAPI } from "@animaapp/scooby-api";
+
 export type TestEntryType = "png" | "html";
 
 export type TestEntry = {
@@ -27,4 +29,26 @@ export type ImageSourceEntry = {
   groupId: string;
   tags: string[];
   path: string;
+};
+
+export type SourceEntry = ImageSourceEntry;
+
+// Reports
+
+export type Environment = {
+  currentCommitHash: string;
+  baseCommitHash: string;
+  branchName: string;
+  isMainBranch: boolean;
+  repositoryName: string;
+  repositoryOwner: string;
+};
+
+export type ReportContext = {
+  environment: Environment;
+  api: ScoobyAPI;
+};
+
+export type BaseReportParams = {
+  name: string;
 };
