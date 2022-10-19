@@ -3,5 +3,5 @@ module.exports = {
   preset: "ts-jest",
   testEnvironment: "node",
   testPathIgnorePatterns: ["/node_modules/", ".*shared.test.*"],
-  testTimeout: 60000,
+  testTimeout: 120000,
 };

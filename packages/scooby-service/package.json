@@ -1,6 +1,6 @@
 {
   "name": "@animaapp/scooby-service",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "The Web Service used by Scooby to perform some backend-side operations",
   "main": "dist/src/index.js",
   "repository": "https://github.com/AnimaApp/scooby",
@@ -20,9 +20,9 @@
     "ts-jest": "^29.0.3"
   },
   "dependencies": {
-    "@animaapp/scooby-api": "*",
-    "@animaapp/scooby-github-api": "*",
-    "@animaapp/scooby-shared": "*",
+    "@animaapp/scooby-api": "^1.2.0",
+    "@animaapp/scooby-github-api": "^1.2.0",
+    "@animaapp/scooby-shared": "^1.2.0",
     "dotenv": "^16.0.3",
     "fastify": "^4.9.2"
   }
