@@ -45,6 +45,28 @@ workflows:
           context: anima-prod
           requires:
             - request-npm-packages-deploy-approval
+
+  web-service:
+    jobs:
+      - build-and-test:
+          context: anima-prod
+      - anima-orb/build-push-image:
+          context: anima-prod
+          requires:
+            - build-and-test
+          filters:
+            branches:
+              only:
+                - main
+                - /^canary.*$/
+      - anima-orb/update-argocd-repo:
+          context: anima-prod
+          cluster-name: anima-cluster
+          requires:
+            - anima-orb/build-push-image
+          filters:
+            branches:
+              only: main
 jobs:
   build-and-test:
     docker:

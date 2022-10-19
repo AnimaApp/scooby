@@ -16,6 +16,7 @@
     "cli": "yarn workspace @animaapp/scooby-cli",
     "cli:run:dev": "yarn workspace @animaapp/scooby-cli build && ./packages/scooby-cli/bin/run",
     "core": "yarn workspace @animaapp/scooby-core",
+    "service": "yarn workspace @animaapp/scooby-service",
     "shared": "yarn workspace @animaapp/scooby-shared",
     "web": "yarn workspace @animaapp/scooby-web"
   },
