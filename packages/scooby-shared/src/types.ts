@@ -13,6 +13,7 @@ export type BaseReport = {
   createdAt: number;
   commitHash: string;
   summary: Summary;
+  items?: ReportItem[];
 };
 
 // Regression
@@ -122,3 +123,11 @@ export type FractionStatistic = BaseStatistic & {
 export type SummaryStatistic = GaugeStatistic | FractionStatistic;
 
 export type Sentiment = "success" | "danger" | "warning" | "info";
+
+export type ReportItem = {
+  id: string;
+  hash: string;
+  status: ReportItemStatus;
+};
+
+export type ReportItemStatus = "success" | "failure";

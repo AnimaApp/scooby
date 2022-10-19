@@ -43,7 +43,8 @@ export async function runFidelityReport(
   console.log("comparing tests...");
   const comparisonResult = await batchImageComparison(matchedSources.matching);
 
-  const report = generateReport({
+  console.log("generating report...");
+  const report = await generateReport({
     name: params.name,
     commitHash: context.environment.currentCommitHash,
     comparisonResult,
