@@ -1,19 +1,11 @@
+import { Environment } from "../types";
 import { getBaseCommitHash, getBranchName, getCurrentCommitHash } from "./git";
 import { getRepositoryName } from "./repositoryName";
 import { getRepositoryOwner } from "./repositoryOwner";
 
 export * from "./repositoryName";
 
-export type Context = {
-  currentCommitHash: string;
-  baseCommitHash: string;
-  branchName: string;
-  isMainBranch: boolean;
-  repositoryName: string;
-  repositoryOwner: string;
-};
-
-export async function getContext(): Promise<Context> {
+export async function getEnvironment(): Promise<Environment> {
   const baseCommitHash = await getBaseCommitHash();
   const currentCommitHash = await getCurrentCommitHash();
   const branchName = await getBranchName();

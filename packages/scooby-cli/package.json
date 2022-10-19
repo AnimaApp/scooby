@@ -17,7 +17,6 @@
   ],
   "dependencies": {
     "@animaapp/scooby-core": "^1.1.0",
-    "@animaapp/scooby-github-status": "^1.1.0",
     "@oclif/core": "^1.16.4",
     "@oclif/plugin-help": "^5",
     "@oclif/plugin-plugins": "^2.1.1",

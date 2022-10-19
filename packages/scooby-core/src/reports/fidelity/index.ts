@@ -1,41 +1,29 @@
-import { getScoobyAPI } from "@animaapp/scooby-api";
-import { getContext } from "@animaapp/scooby-context";
+import { LocalFidelityReport } from "@animaapp/scooby-shared";
 import { batchImageComparison } from "../../comparison";
 import { loadTestEntries } from "../../loading";
 import { MatchedSources, matchSources } from "../../matching";
 import { generateImageSources } from "../../source/image";
-import { ImageSourceEntry } from "../../types";
-import { isRunningOnReferenceCommit } from "../../utils/commit";
-import { printFidelityReport } from "./print";
+import { BaseReportParams, ImageSourceEntry, ReportContext } from "../../types";
 import { generateReport } from "./report";
 
-export type FidelityTestRequest = {
-  name: string;
+export type FidelityTestParams = BaseReportParams & {
   expectedPath: string;
   actualPath: string;
 };
 
-export async function runFidelityTest(
-  request: FidelityTestRequest
-): Promise<void> {
-  // TODO: validate name format (alphanumeric and dash)
-  const context = await getContext();
-  console.log("Loaded context: ", context);
-
+export async function runFidelityReport(
+  context: ReportContext,
+  params: FidelityTestParams
+): Promise<LocalFidelityReport> {
   console.log(
-    "loading expected test entries from path: " + request.expectedPath
+    "loading expected test entries from path: " + params.expectedPath
   );
-  const expectedEntries = await loadTestEntries(request.expectedPath);
+  const expectedEntries = await loadTestEntries(params.expectedPath);
   console.log(`found ${expectedEntries.length} expected test entries`);
 
-  console.log("loading actual test entries from path: " + request.actualPath);
-  const actualEntries = await loadTestEntries(request.actualPath);
+  console.log("loading actual test entries from path: " + params.actualPath);
+  const actualEntries = await loadTestEntries(params.actualPath);
   console.log(`found ${expectedEntries.length} actual test entries`);
-
-  console.log("initializing API...");
-  const api = await getScoobyAPI({
-    repositoryName: context.repositoryName,
-  });
 
   console.log("generating expected test sources...");
   const expectedSources = await generateImageSources(expectedEntries, {});
@@ -56,28 +44,12 @@ export async function runFidelityTest(
   const comparisonResult = await batchImageComparison(matchedSources.matching);
 
   const report = generateReport({
-    name: request.name,
-    commitHash: context.currentCommitHash,
+    name: params.name,
+    commitHash: context.environment.currentCommitHash,
     comparisonResult,
   });
 
-  printFidelityReport(report);
-
-  const runningOnReferenceCommit = isRunningOnReferenceCommit(
-    context.currentCommitHash,
-    context.baseCommitHash
-  );
-  if (!runningOnReferenceCommit || context.isMainBranch) {
-    console.log("uploading fidelity report...");
-    await api.uploadFidelityReport(
-      { commitHash: context.currentCommitHash },
-      report
-    );
-  } else {
-    console.warn(
-      `this fidelity test is running on the same commit used as base commit (${context.baseCommitHash}), therefore no report will be uploaded to the API to avoid conflicts.`
-    );
-  }
+  return report;
 }
 
 function validateMatchedSources(

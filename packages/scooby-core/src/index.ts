@@ -1,3 +1,3 @@
-export { runRegressionTest } from "./reports/regression";
-export { runFidelityTest } from "./reports/fidelity";
+export { runReport } from "./reports";
+export { updateStatus } from "./status";
 export * from "./types";

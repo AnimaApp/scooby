@@ -9,7 +9,7 @@ import {
 } from "@animaapp/scooby-shared";
 import { BatchImageComparisonEntry } from "../../comparison";
 import { MatchedSources } from "../../matching";
-import { ImageSourceEntry } from "../../types";
+import { ImageSourceEntry, SourceEntry } from "../../types";
 import { convertPathToLocalResource } from "../../utils/resource";
 import { RegressionCheckResult } from "./changes";
 
@@ -44,6 +44,32 @@ export function generateReport(context: {
   };
 }
 
+export function generateMainBranchReport(context: {
+  name: string;
+  commitHash: string;
+  entries: SourceEntry[];
+}): LocalRegressionReport {
+  const results: RegressionReportResults<LocalResource> = {
+    new: [],
+    removed: [],
+    changed: [],
+    unchanged: context.entries.map(convertSourceToMainBranchReportEntry),
+  };
+
+  return {
+    type: "regression",
+    name: context.name,
+    commitHash: context.commitHash,
+    baseCommitHash: context.commitHash,
+    createdAt: new Date().getTime(),
+    results,
+    summary: {
+      result: "success",
+      stats: [],
+    },
+  };
+}
+
 function convertImageSourceEntryToReportEntry(
   entry: ImageSourceEntry
 ): LocalRegressionTestEntry {
@@ -71,6 +97,22 @@ function convertRegressionEntryToReportEntry(
         entry.comparison.normalizedExpectedPath
       ),
       similarity: entry.comparison.similarity,
+    },
+  };
+}
+
+function convertSourceToMainBranchReportEntry(
+  entry: SourceEntry
+): LocalRegressionTestPair {
+  return {
+    actual: convertImageSourceEntryToReportEntry(entry),
+    expected: convertImageSourceEntryToReportEntry(entry),
+    comparison: {
+      diff: convertPathToLocalResource(entry.path),
+      overlap: convertPathToLocalResource(entry.path),
+      normalizedActual: convertPathToLocalResource(entry.path),
+      normalizedExpected: convertPathToLocalResource(entry.path),
+      similarity: 1,
     },
   };
 }

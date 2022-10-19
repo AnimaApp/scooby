@@ -1,4 +1,4 @@
-import { runFidelityTest } from "@animaapp/scooby-core";
+import { runReport } from "@animaapp/scooby-core";
 import { Command, Flags } from "@oclif/core";
 
 export default class Fidelity extends Command {
@@ -29,7 +29,7 @@ export default class Fidelity extends Command {
   async run(): Promise<void> {
     const { flags } = await this.parse(Fidelity);
 
-    await runFidelityTest({
+    await runReport("fidelity", {
       name: flags.name,
       actualPath: flags.actual,
       expectedPath: flags.expected,

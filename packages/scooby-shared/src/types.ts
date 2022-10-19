@@ -94,6 +94,7 @@ export type HostedFidelityReport = BaseFidelityReport<HostedResource>;
 export type FidelityReport = LocalFidelityReport | HostedFidelityReport;
 
 export type Report = RegressionReport | FidelityReport;
+export type LocalReport = LocalRegressionReport | LocalFidelityReport;
 export type HostedReport = HostedRegressionReport | HostedFidelityReport;
 
 export type Summary = {

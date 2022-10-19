@@ -1,59 +1,53 @@
-import { MatchedSources } from "../../matching";
-import { ImageSourceEntry } from "../../types";
-import { RegressionCheckResult } from "./changes";
+import { LocalRegressionReport } from "@animaapp/scooby-shared";
 
-export function printRegressionResults(
-  comparison: RegressionCheckResult,
-  matchedSources: MatchedSources<ImageSourceEntry>
-) {
+export function printRegressionReport(report: LocalRegressionReport) {
   console.log("################## REGRESSION TEST RESULTS ##################");
 
   if (
-    comparison.changed.length > 0 ||
-    matchedSources.new.length ||
-    matchedSources.removed.length
+    report.results.changed.length > 0 ||
+    report.results.new.length ||
+    report.results.removed.length
   ) {
-    printRegressionResultsWithChanges(comparison, matchedSources);
+    printRegressionReportWithChanges(report);
   } else {
     console.log("Yey, no changes detected!");
   }
 }
 
-export function printRegressionResultsWithChanges(
-  comparison: RegressionCheckResult,
-  matchedSources: MatchedSources<ImageSourceEntry>
+export function printRegressionReportWithChanges(
+  report: LocalRegressionReport
 ) {
   console.log("Some changes have been detected:");
 
-  if (comparison.changed.length) {
+  if (report.results.changed.length) {
     console.log("CHANGES:");
     console.table(
-      comparison.changed.map((change) => ({
+      report.results.changed.map((change) => ({
         name: change.actual.id,
         similarity: change.comparison.similarity.toFixed(10),
       }))
     );
   }
 
-  if (matchedSources.new.length) {
+  if (report.results.new.length) {
     console.log("NEW TESTS:");
     console.table(
-      matchedSources.new.map((source) => ({
+      report.results.new.map((source) => ({
         name: source.id,
       }))
     );
   }
 
-  if (matchedSources.removed.length) {
+  if (report.results.removed.length) {
     console.log("REMOVED TESTS:");
     console.table(
-      matchedSources.removed.map((source) => ({
+      report.results.removed.map((source) => ({
         name: source.id,
       }))
     );
   }
 
   console.log(
-    `SUMMARY: ${comparison.changed.length} changes, ${matchedSources.new.length} new tests, ${matchedSources.removed.length} removed tests and ${comparison.unchanged.length} unchanged tests`
+    `SUMMARY: ${report.results.changed.length} changes, ${report.results.new.length} new tests, ${report.results.removed.length} removed tests and ${report.results.unchanged.length} unchanged tests`
   );
 }

@@ -6,7 +6,7 @@ import type {
   ImageComparisonTaskRequest,
 } from "./types";
 
-async function runComparison(
+export default async function runComparison(
   request: ComparisonTaskRequest
 ): Promise<ComparisonTaskResult> {
   if (request.type === "image") {
