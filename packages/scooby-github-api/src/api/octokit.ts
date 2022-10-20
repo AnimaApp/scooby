@@ -45,6 +45,38 @@ export class OctokitGitHubAPI implements GitHubAPI {
     return sortedPRs[0]["number"];
   }
 
+  async getAssociatedCommits(commit: string): Promise<string[] | undefined> {
+    const associatedPR = await this.getAssociatedPR(commit);
+    if (!associatedPR) {
+      return;
+    }
+
+    const response = await this.octokit.request(
+      "GET /repos/{owner}/{repo}/pulls/{pull_number}/commits",
+      {
+        owner: this.options.owner,
+        repo: this.options.repository,
+        pull_number: associatedPR,
+        per_page: 100,
+      }
+    );
+
+    if (response.status !== 200) {
+      throw new Error(
+        "could not get associated commits, received status: " +
+          response.status +
+          " and body: " +
+          response.data
+      );
+    }
+
+    if (response.data.length === 0) {
+      return;
+    }
+
+    return response.data.map((commit) => commit.sha);
+  }
+
   async postCommitStatus(commit: string, status: CommitStatus): Promise<void> {
     const response = await this.octokit.request(
       "POST /repos/{owner}/{repo}/statuses/{sha}",

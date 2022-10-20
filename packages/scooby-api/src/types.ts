@@ -4,11 +4,13 @@ import {
   HostedReport,
   LocalFidelityReport,
   LocalRegressionReport,
+  Review,
 } from "@animaapp/scooby-shared";
 
 export type ScoobyAPI = {
   getReports(params: CommitContext): Promise<ReportId[]>;
   getReport(params: ReportContext): Promise<HostedReport>;
+  getReview(params: CommitContext): Promise<Review | undefined>;
 
   uploadRegressionReport: (
     context: CommitContext,

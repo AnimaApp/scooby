@@ -131,3 +131,24 @@ export type ReportItem = {
 };
 
 export type ReportItemStatus = "success" | "failure";
+
+export type Review = {
+  approvals: ReviewApproval[];
+  rejections: ReviewRejection[];
+};
+
+export type ReviewApproval = {
+  report: string;
+  id: string;
+  hash: string;
+  createdAt: number;
+  commitHash: string;
+};
+
+export type ReviewRejection = {
+  report: string;
+  id: string;
+  hash: string;
+  createdAt: number;
+  commitHash: string;
+};

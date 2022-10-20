@@ -16,6 +16,9 @@ import {
   buildReportsPath,
   HostedReport,
   parseHostedReport,
+  Review,
+  buildReviewJSONPath,
+  parseReview,
 } from "@animaapp/scooby-shared";
 import { readFile } from "fs/promises";
 import { ScoobyAPIOptions } from "../options";
@@ -77,6 +80,24 @@ export class S3ScoobyAPI implements ScoobyAPI {
     const body = await this.getJSONObject(key);
 
     return parseHostedReport(body);
+  }
+
+  async getReview(params: CommitContext): Promise<Review | undefined> {
+    const key = buildReviewJSONPath({
+      commitHash: params.commitHash,
+      repository: this.options.repositoryName,
+    });
+
+    try {
+      const body = await this.getJSONObject(key);
+      return parseReview(body);
+    } catch (error) {
+      if (error instanceof NoSuchKey) {
+        return;
+      }
+
+      throw error;
+    }
   }
 
   async uploadRegressionReport(

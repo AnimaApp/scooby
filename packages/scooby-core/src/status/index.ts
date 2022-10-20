@@ -1,8 +1,11 @@
 import { getScoobyAPI, ScoobyAPI } from "@animaapp/scooby-api";
 import { getGitHubAPI } from "@animaapp/scooby-github-api";
-import { HostedReport } from "@animaapp/scooby-shared";
+import { GitHubAPI } from "@animaapp/scooby-github-api/src/types";
 import { getEnvironment } from "../environment";
-import { Environment } from "../types";
+import { readEnvVariable } from "../utils/env";
+import { computeReportStatuses } from "./compute";
+import { fetchReports } from "./reports";
+import { getAggregatedReview } from "./review";
 
 export type ReportStatus = {
   name: string;
@@ -11,7 +14,7 @@ export type ReportStatus = {
   url: string;
 };
 
-export async function updateStatus() {
+export async function runUpdateStatus() {
   const environment = await getEnvironment();
   console.log("Loaded environment: ", environment);
 
@@ -21,114 +24,70 @@ export async function updateStatus() {
   });
 
   console.log("initializing GitHub API...");
-  const githubAPI = await getGitHubAPI({
+  const githubApi = await getGitHubAPI({
     repository: environment.repositoryName,
     owner: environment.repositoryOwner,
   });
 
-  console.log("fetching reports...");
-  const reports = await fetchReports(api, environment.currentCommitHash);
+  await updateStatus({
+    api,
+    githubApi,
+    commitHash: environment.currentCommitHash,
+    isMainBranch: environment.isMainBranch,
+    repositoryName: environment.repositoryName,
+    s3bucket: readEnvVariable("SCOOBY_AWS_S3_BUCKET"),
+    s3region: readEnvVariable("SCOOBY_AWS_S3_REGION"),
+    webBaseUrl: readEnvVariable("SCOOBY_WEB_BASE_URL"),
+  });
 
-  console.log("computing target github statuses...");
-  const statuses = await computeReportStatuses(environment, reports);
+  console.log("done!");
+}
+
+type UpdateStatusContext = {
+  isMainBranch: boolean;
+  commitHash: string;
+  repositoryName: string;
+
+  s3bucket: string;
+  s3region: string;
+  webBaseUrl: string;
+
+  api: ScoobyAPI;
+  githubApi: GitHubAPI;
+};
+
+export async function updateStatus(context: UpdateStatusContext) {
+  console.log("fetching reports...");
+  const reports = await fetchReports(context.api, context.commitHash);
+
+  console.log("getting aggregate review...");
+  const review = await getAggregatedReview(
+    context.commitHash,
+    context.api,
+    context.githubApi
+  );
+
+  console.log("computing statuses...");
+  const statuses = await computeReportStatuses(
+    {
+      commitHash: context.commitHash,
+      isMainBranch: context.isMainBranch,
+      repositoryName: context.repositoryName,
+      s3bucket: context.s3bucket,
+      s3region: context.s3region,
+      webBaseUrl: context.webBaseUrl,
+    },
+    reports,
+    review
+  );
 
   console.log("posting commit statuses on GitHub...");
   for (const status of statuses) {
-    await githubAPI.postCommitStatus(environment.currentCommitHash, {
+    await context.githubApi.postCommitStatus(context.commitHash, {
       name: status.name,
       description: status.description,
       state: status.state,
       targetUrl: status.url,
     });
   }
-
-  console.log("done!");
-}
-
-async function computeReportStatuses(
-  environment: Environment,
-  reports: HostedReport[]
-): Promise<ReportStatus[]> {
-  if (environment.isMainBranch) {
-    console.log("approving all statuses as we are on the main branch");
-    return computeMainBranchReportStatuses(environment, reports);
-  }
-
-  return computeActualReportStatuses(environment, reports);
-}
-
-async function computeMainBranchReportStatuses(
-  environment: Environment,
-  reports: HostedReport[]
-): Promise<ReportStatus[]> {
-  return reports.map(
-    (report): ReportStatus => ({
-      name: report.name,
-      state: "success",
-      description: "Auto-approved as it's on main branch",
-      url: getURLForReport(environment, report.name),
-    })
-  );
-}
-
-async function computeActualReportStatuses(
-  environment: Environment,
-  reports: HostedReport[]
-): Promise<ReportStatus[]> {
-  return reports.map(
-    (report): ReportStatus => ({
-      name: report.name,
-      state: report.summary.result === "success" ? "success" : "failure",
-      description:
-        report.summary.result === "success"
-          ? "All tests passed!"
-          : "Some tests failed, for more information please see the report",
-      url: getURLForReport(environment, report.name),
-    })
-  );
-}
-
-async function fetchReports(
-  api: ScoobyAPI,
-  commit: string
-): Promise<HostedReport[]> {
-  const reportsIds = await api.getReports({
-    commitHash: commit,
-  });
-
-  const reports: HostedReport[] = [];
-
-  for (const reportId of reportsIds) {
-    const report = await api.getReport({
-      commitHash: commit,
-      reportName: reportId,
-    });
-
-    reports.push(report);
-  }
-
-  return reports;
-}
-
-function getURLForReport(environment: Environment, reportName: string): string {
-  const baseUrl = readEnvVariable("SCOOBY_WEB_BASE_URL");
-  const s3bucket = readEnvVariable("SCOOBY_AWS_S3_BUCKET");
-  const s3region = readEnvVariable("SCOOBY_AWS_S3_REGION");
-
-  if (!baseUrl) {
-    throw new Error();
-  }
-
-  return `${baseUrl}/#/repo/${environment.repositoryName}/commit/${environment.currentCommitHash}/report/${reportName}/?_s3_region=${s3region}&_s3_bucket=${s3bucket}`;
-}
-
-function readEnvVariable(name: string): string {
-  const value = process.env[name];
-  if (!value) {
-    throw new Error(
-      `unable to read '${name}' env variable, please make sure to provide it`
-    );
-  }
-
-  return value;
 }

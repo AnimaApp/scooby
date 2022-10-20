@@ -1,3 +1,3 @@
 export { runReport } from "./reports";
-export { updateStatus } from "./status";
+export { updateStatus, runUpdateStatus } from "./status";
 export * from "./types";
