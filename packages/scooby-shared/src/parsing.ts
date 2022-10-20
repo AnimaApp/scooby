@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { HostedReport } from "./types";
+import { HostedReport, Review } from "./types";
 
 const baseStatisticSchema = z.object({
   name: z.string(),
@@ -103,4 +103,29 @@ const reportSchema = z.discriminatedUnion("type", [
 
 export function parseHostedReport(report: unknown): HostedReport {
   return reportSchema.parse(report);
+}
+
+const reviewSchema = z.object({
+  approvals: z.array(
+    z.object({
+      report: z.string(),
+      id: z.string(),
+      hash: z.string(),
+      commitHash: z.string(),
+      createdAt: z.number(),
+    })
+  ),
+  rejections: z.array(
+    z.object({
+      report: z.string(),
+      id: z.string(),
+      hash: z.string(),
+      commitHash: z.string(),
+      createdAt: z.number(),
+    })
+  ),
+});
+
+export function parseReview(review: unknown): Review {
+  return reviewSchema.parse(review);
 }

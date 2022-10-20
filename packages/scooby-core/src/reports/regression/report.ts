@@ -4,22 +4,25 @@ import {
   LocalRegressionTestPair,
   LocalResource,
   RegressionReportResults,
+  ReportItem,
+  ReportItemStatus,
   Summary,
   SummaryStatistic,
 } from "@animaapp/scooby-shared";
 import { BatchImageComparisonEntry } from "../../comparison";
 import { MatchedSources } from "../../matching";
 import { ImageSourceEntry, SourceEntry } from "../../types";
+import { calculateFileMD5 } from "../../utils/hash";
 import { convertPathToLocalResource } from "../../utils/resource";
 import { RegressionCheckResult } from "./changes";
 
-export function generateReport(context: {
+export async function generateReport(context: {
   name: string;
   commitHash: string;
   baseCommitHash: string;
   regressions: RegressionCheckResult;
   matchedSources: MatchedSources<ImageSourceEntry>;
-}): LocalRegressionReport {
+}): Promise<LocalRegressionReport> {
   const results = {
     new: context.matchedSources.new.map(convertImageSourceEntryToReportEntry),
     removed: context.matchedSources.removed.map(
@@ -41,14 +44,15 @@ export function generateReport(context: {
     createdAt: new Date().getTime(),
     results,
     summary: generateSummary(results),
+    items: await generateItems(results),
   };
 }
 
-export function generateMainBranchReport(context: {
+export async function generateMainBranchReport(context: {
   name: string;
   commitHash: string;
   entries: SourceEntry[];
-}): LocalRegressionReport {
+}): Promise<LocalRegressionReport> {
   const results: RegressionReportResults<LocalResource> = {
     new: [],
     removed: [],
@@ -63,6 +67,7 @@ export function generateMainBranchReport(context: {
     baseCommitHash: context.commitHash,
     createdAt: new Date().getTime(),
     results,
+    items: await generateItems(results),
     summary: {
       result: "success",
       stats: [],
@@ -194,4 +199,39 @@ function calculateTotalNumberOfEntries(
     results.changed.length +
     results.unchanged.length
   );
+}
+
+async function generateItems(
+  results: RegressionReportResults<LocalResource>
+): Promise<ReportItem[]> {
+  const items: ReportItem[] = [];
+
+  for (const item of results.new) {
+    items.push(await generateReportItem(item, "failure"));
+  }
+
+  for (const item of results.removed) {
+    items.push(await generateReportItem(item, "failure"));
+  }
+
+  for (const item of results.changed) {
+    items.push(await generateReportItem(item.actual, "failure"));
+  }
+
+  for (const item of results.unchanged) {
+    items.push(await generateReportItem(item.actual, "success"));
+  }
+
+  return items;
+}
+
+async function generateReportItem(
+  entry: LocalRegressionTestEntry,
+  status: ReportItemStatus
+): Promise<ReportItem> {
+  return {
+    id: entry.id,
+    status,
+    hash: await calculateFileMD5(entry.image.path),
+  };
 }

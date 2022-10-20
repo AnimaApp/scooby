@@ -1,4 +1,4 @@
-import { updateStatus } from "@animaapp/scooby-core";
+import { runUpdateStatus } from "@animaapp/scooby-core";
 import { Command } from "@oclif/core";
 
 export default class UpdateGitHubStatus extends Command {
@@ -12,6 +12,6 @@ export default class UpdateGitHubStatus extends Command {
   async run(): Promise<void> {
     await this.parse(UpdateGitHubStatus);
 
-    await updateStatus();
+    await runUpdateStatus();
   }
 }

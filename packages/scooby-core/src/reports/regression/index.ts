@@ -52,6 +52,7 @@ async function performMainBranchFlow(
     context.api
   );
 
+  console.log("generating report...");
   return generateMainBranchReport({
     name: params.name,
     commitHash: context.environment.currentCommitHash,
@@ -94,7 +95,8 @@ async function performFeatureBranchFlow(
   console.log("determining regressions...");
   const regressions = calculateRegressions(comparisonResult);
 
-  const report = generateReport({
+  console.log("generating report...");
+  const report = await generateReport({
     name: params.name,
     commitHash: context.environment.currentCommitHash,
     baseCommitHash: context.environment.baseCommitHash,

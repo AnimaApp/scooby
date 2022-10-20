@@ -32,6 +32,20 @@ export function buildReportJSONPath(context: {
   return `${buildReportPath(context)}/report.json`;
 }
 
+export function buildReviewJSONPath(context: {
+  repository: string;
+  commitHash: string;
+}): string {
+  return `${buildCommitPath(context)}/review.json`;
+}
+
+export function buildCommitStatusOverviewJSONPath(context: {
+  repository: string;
+  commitHash: string;
+}): string {
+  return `${buildCommitPath(context)}/status.json`;
+}
+
 export function buildSnapshotPath(context: {
   repository: string;
   commitHash: string;

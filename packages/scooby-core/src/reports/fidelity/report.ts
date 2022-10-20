@@ -2,6 +2,8 @@ import {
   LocalFidelityReport,
   LocalFidelityTestEntry,
   LocalFidelityTestPair,
+  ReportItem,
+  ReportItemStatus,
   Summary,
   SummaryStatistic,
 } from "@animaapp/scooby-shared";
@@ -10,13 +12,14 @@ import {
   BatchImageComparisonResult,
 } from "../../comparison";
 import { ImageSourceEntry } from "../../types";
+import { calculateFileMD5 } from "../../utils/hash";
 import { convertPathToLocalResource } from "../../utils/resource";
 
-export function generateReport(context: {
+export async function generateReport(context: {
   name: string;
   commitHash: string;
   comparisonResult: BatchImageComparisonResult;
-}): LocalFidelityReport {
+}): Promise<LocalFidelityReport> {
   const overallFidelityScore = calculateOverallFidelityScore(
     context.comparisonResult.comparisons
   );
@@ -29,6 +32,7 @@ export function generateReport(context: {
     createdAt: new Date().getTime(),
     overallFidelityScore,
     pairs,
+    items: await generateItems(pairs),
     summary: generateSummary({
       overallFidelityScore,
       pairs,
@@ -123,4 +127,27 @@ function generateSummaryStats({
   });
 
   return stats;
+}
+
+async function generateItems(
+  pairs: LocalFidelityTestPair[]
+): Promise<ReportItem[]> {
+  const items: ReportItem[] = [];
+
+  for (const pair of pairs) {
+    items.push(await generateReportItem(pair.actual, "success"));
+  }
+
+  return items;
+}
+
+async function generateReportItem(
+  entry: LocalFidelityTestEntry,
+  status: ReportItemStatus
+): Promise<ReportItem> {
+  return {
+    id: entry.id,
+    status,
+    hash: await calculateFileMD5(entry.image.path),
+  };
 }
