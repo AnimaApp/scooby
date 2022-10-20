@@ -4,6 +4,7 @@ import { EnhancedLink } from "../../components/EnhancedLink";
 import ErrorPanel from "../../components/ErrorPanel";
 import { StatsView } from "../../components/StatsView";
 import { SummaryBadge } from "../../components/SummaryBadge";
+import { ApproveButton } from "./ApproveButton";
 import { FidelityReportController } from "./fidelity";
 import { RegressionReportController } from "./regression";
 
@@ -36,7 +37,11 @@ export function Report({ report, repository, commit }: Props) {
         tags={
           <>
             <Tag color="blue">{report.type}</Tag>{" "}
-            <SummaryBadge summary={report.summary} />
+            <SummaryBadge
+              commit={commit}
+              reportName={report.name}
+              repository={repository}
+            />
           </>
         }
         breadcrumb={
@@ -59,7 +64,21 @@ export function Report({ report, repository, commit }: Props) {
           borderBottom: "1px solid #c9c9c9",
           marginBottom: "8px",
         }}
-        extra={<StatsView compact stats={report.summary.stats} />}
+        extra={
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+            }}
+          >
+            <StatsView compact stats={report.summary.stats} />
+            <ApproveButton
+              commit={commit}
+              report={report.name}
+              repository={repository}
+            />
+          </div>
+        }
       />
       {getContent()}
     </div>

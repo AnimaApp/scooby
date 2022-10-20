@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { HostedReport, Review } from "./types";
+import { CommitStatusOverview, HostedReport, Review } from "./types";
 
 const baseStatisticSchema = z.object({
   name: z.string(),
@@ -135,4 +135,20 @@ const reviewSchema = z.object({
 
 export function parseReview(review: unknown): Review {
   return reviewSchema.parse(review);
+}
+
+const commitStatusOverviewSchema = z.object({
+  createdAt: z.number(),
+  reports: z.record(
+    z.object({
+      status: z.enum(["success", "failure", "approved", "changes_requested"]),
+      message: z.string(),
+    })
+  ),
+});
+
+export function parseCommitStatusOverview(
+  overview: unknown
+): CommitStatusOverview {
+  return commitStatusOverviewSchema.parse(overview);
 }

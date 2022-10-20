@@ -1,10 +1,13 @@
 import {
+  buildCommitStatusOverviewJSONPath,
   buildReportJSONPath,
   buildReportsPath,
+  CommitStatusOverview,
   HostedReport,
+  parseCommitStatusOverview,
   parseHostedReport,
 } from "@animaapp/scooby-shared";
-import { S3 } from "@aws-sdk/client-s3";
+import { NoSuchKey, S3 } from "@aws-sdk/client-s3";
 import { APICreationOptions } from "..";
 import { CommitContext, ReportContext, ReportId, ScoobyWebAPI } from "../types";
 import { getS3Config, S3Config } from "./config";
@@ -42,6 +45,26 @@ export class S3ScoobyWebAPI implements ScoobyWebAPI {
     const body = await this.getJSONObject(key);
 
     return parseHostedReport(body);
+  }
+
+  async getCommitStatusOverview(
+    params: CommitContext
+  ): Promise<CommitStatusOverview | undefined> {
+    const key = buildCommitStatusOverviewJSONPath({
+      commitHash: params.commit,
+      repository: params.repository,
+    });
+
+    try {
+      const body = await this.getJSONObject(key);
+      return parseCommitStatusOverview(body);
+    } catch (error) {
+      if (error instanceof NoSuchKey) {
+        return;
+      }
+
+      throw error;
+    }
   }
 
   async getJSONObject(key: string): Promise<unknown> {

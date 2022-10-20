@@ -32,6 +32,8 @@ export const ReportListItemController = ({
       isLoading={isLoading}
       error={error}
       report={report}
+      repository={repository}
+      commit={commit}
       onReportSelect={handleReportSelection}
     />
   );
