@@ -36,8 +36,8 @@ async function computeMainBranchReportStatuses(
 ): Promise<ReportStatus[]> {
   return reports.map(
     (report): ReportStatus => ({
-      name: report.name,
-      state: "success",
+      report,
+      state: "approved",
       description: "Auto-approved because on main branch",
       url: getURLForReport({ ...context, reportName: report.name }),
     })
@@ -53,7 +53,7 @@ async function computeActualReportStatuses(
     const result = computeReportStatus(report, review);
 
     return {
-      name: report.name,
+      report,
       state: result.state,
       description: result.message,
       url: getURLForReport({ ...context, reportName: report.name }),
@@ -62,7 +62,7 @@ async function computeActualReportStatuses(
 }
 
 type ReportStatusResult = {
-  state: "success" | "failure";
+  state: "success" | "failure" | "approved" | "changes_requested";
   message: string;
 };
 
@@ -98,7 +98,7 @@ function computeReportStatus(
 
   if (rejectedItems.length > 0) {
     return {
-      state: "failure",
+      state: "changes_requested",
       message: `Changes requested on ${rejectedItems.length} items, please visit the report for more information.`,
     };
   } else if (failedItems.length > 0) {
@@ -107,10 +107,21 @@ function computeReportStatus(
       message: `${failedItems.length} items have unapproved failures, please visit the report for more information.`,
     };
   } else {
-    return {
-      state: "success",
-      message: "All tests passed!",
-    };
+    const hasFailedItems = report.items.some(
+      (item) => item.status === "failure"
+    );
+
+    if (hasFailedItems) {
+      return {
+        state: "approved",
+        message: "All changes have been approved!",
+      };
+    } else {
+      return {
+        state: "success",
+        message: "All tests passed!",
+      };
+    }
   }
 }
 

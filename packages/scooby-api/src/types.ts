@@ -1,4 +1,5 @@
 import {
+  CommitStatusOverview,
   HostedFidelityReport,
   HostedRegressionReport,
   HostedReport,
@@ -10,7 +11,18 @@ import {
 export type ScoobyAPI = {
   getReports(params: CommitContext): Promise<ReportId[]>;
   getReport(params: ReportContext): Promise<HostedReport>;
+
   getReview(params: CommitContext): Promise<Review | undefined>;
+  postReview(
+    context: CommitContext,
+    review: Review,
+    options?: PostReviewOptions
+  ): Promise<void>;
+
+  postCommitStatusOverview(
+    params: CommitContext,
+    overview: CommitStatusOverview
+  ): Promise<void>;
 
   uploadRegressionReport: (
     context: CommitContext,
@@ -43,6 +55,11 @@ export type ReportContext = {
 export type SnapshotContext = {
   commitHash: string;
   snapshotName: string;
+};
+
+export type PostReviewOptions = {
+  // If true, avoid merging reviews and override it directly
+  overwriteExisting?: boolean;
 };
 
 export type ReportId = string;

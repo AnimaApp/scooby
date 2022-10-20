@@ -53,14 +53,14 @@ describe("compute report status", () => {
     rejections: [],
   };
 
-  test("always report successful statuses on main", async () => {
+  test("always report approved statuses on main", async () => {
     const statuses = await computeReportStatuses(
       { ...defaultContext, isMainBranch: true },
       [mockReport],
       mockReview
     );
 
-    expect(statuses.map((status) => status.state)).toEqual(["success"]);
+    expect(statuses.map((status) => status.state)).toEqual(["approved"]);
   });
 
   test("pass if all failed tests are approved", async () => {
@@ -68,6 +68,61 @@ describe("compute report status", () => {
       { ...defaultContext },
       [mockReport],
       mockReview
+    );
+
+    expect(statuses.map((status) => status.state)).toEqual(["approved"]);
+  });
+
+  test("pass if all tests are successful (with approval)", async () => {
+    const report: HostedReport = {
+      ...mockReport,
+      items: [
+        {
+          id: "id-1",
+          hash: "hash-1",
+          status: "success",
+        },
+        {
+          id: "id-2",
+          hash: "hash-2",
+          status: "success",
+        },
+      ],
+    };
+
+    const statuses = await computeReportStatuses(
+      { ...defaultContext },
+      [report],
+      mockReview
+    );
+
+    expect(statuses.map((status) => status.state)).toEqual(["success"]);
+  });
+
+  test("pass if all tests are successful (without approval)", async () => {
+    const report: HostedReport = {
+      ...mockReport,
+      items: [
+        {
+          id: "id-1",
+          hash: "hash-1",
+          status: "success",
+        },
+        {
+          id: "id-2",
+          hash: "hash-2",
+          status: "success",
+        },
+      ],
+    };
+
+    const statuses = await computeReportStatuses(
+      { ...defaultContext },
+      [report],
+      {
+        approvals: [],
+        rejections: [],
+      }
     );
 
     expect(statuses.map((status) => status.state)).toEqual(["success"]);
@@ -135,6 +190,8 @@ describe("compute report status", () => {
       review
     );
 
-    expect(statuses.map((status) => status.state)).toEqual(["failure"]);
+    expect(statuses.map((status) => status.state)).toEqual([
+      "changes_requested",
+    ]);
   });
 });

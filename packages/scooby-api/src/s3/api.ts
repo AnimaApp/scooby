@@ -19,6 +19,8 @@ import {
   Review,
   buildReviewJSONPath,
   parseReview,
+  CommitStatusOverview,
+  buildCommitStatusOverviewJSONPath,
 } from "@animaapp/scooby-shared";
 import { readFile } from "fs/promises";
 import { ScoobyAPIOptions } from "../options";
@@ -28,6 +30,7 @@ import {
   CommitContext,
   ReportContext,
   ReportId,
+  PostReviewOptions,
 } from "../types";
 import {
   BucketOptions,
@@ -98,6 +101,41 @@ export class S3ScoobyAPI implements ScoobyAPI {
 
       throw error;
     }
+  }
+
+  async postReview(
+    context: CommitContext,
+    review: Review,
+    options?: PostReviewOptions | undefined
+  ): Promise<void> {
+    let baseReview: Review | undefined = undefined;
+    if (!options?.overwriteExisting) {
+      baseReview = await this.getReview(context);
+    }
+    if (!baseReview) {
+      baseReview = { approvals: [], rejections: [] };
+    }
+
+    baseReview.approvals.push(...review.approvals);
+    baseReview.rejections.push(...review.rejections);
+
+    const targetPath = buildReviewJSONPath({
+      commitHash: context.commitHash,
+      repository: this.options.repositoryName,
+    });
+    await this.uploadBody(targetPath, JSON.stringify(baseReview));
+  }
+
+  async postCommitStatusOverview(
+    context: CommitContext,
+    overview: CommitStatusOverview
+  ): Promise<void> {
+    const targetPath = buildCommitStatusOverviewJSONPath({
+      commitHash: context.commitHash,
+      repository: this.options.repositoryName,
+    });
+
+    await this.uploadBody(targetPath, JSON.stringify(overview));
   }
 
   async uploadRegressionReport(

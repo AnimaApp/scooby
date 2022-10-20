@@ -1,6 +1,11 @@
 import { getScoobyAPI, ScoobyAPI } from "@animaapp/scooby-api";
 import { getGitHubAPI } from "@animaapp/scooby-github-api";
 import { GitHubAPI } from "@animaapp/scooby-github-api/src/types";
+import {
+  CommitReportStatusOverview,
+  CommitStatusOverview,
+  Report,
+} from "@animaapp/scooby-shared";
 import { getEnvironment } from "../environment";
 import { readEnvVariable } from "../utils/env";
 import { computeReportStatuses } from "./compute";
@@ -8,8 +13,8 @@ import { fetchReports } from "./reports";
 import { getAggregatedReview } from "./review";
 
 export type ReportStatus = {
-  name: string;
-  state: "success" | "failure";
+  report: Report;
+  state: "success" | "failure" | "approved" | "changes_requested";
   description: string;
   url: string;
 };
@@ -81,13 +86,47 @@ export async function updateStatus(context: UpdateStatusContext) {
     review
   );
 
+  console.log("publishing commit statuses to API...");
+  const overview = generateCommitStatusOverview(statuses);
+  await context.api.postCommitStatusOverview(
+    { commitHash: context.commitHash },
+    overview
+  );
+
   console.log("posting commit statuses on GitHub...");
   for (const status of statuses) {
     await context.githubApi.postCommitStatus(context.commitHash, {
-      name: status.name,
+      name: status.report.name,
       description: status.description,
-      state: status.state,
+      state:
+        status.state === "success" || status.state === "approved"
+          ? "success"
+          : "failure",
       targetUrl: status.url,
     });
   }
+}
+
+function generateCommitStatusOverview(
+  statuses: ReportStatus[]
+): CommitStatusOverview {
+  return {
+    createdAt: new Date().getTime(),
+    reports: generateCommitReportStatusOverview(statuses),
+  };
+}
+
+function generateCommitReportStatusOverview(
+  statuses: ReportStatus[]
+): Record<string, CommitReportStatusOverview> {
+  const reports: Record<string, CommitReportStatusOverview> = {};
+
+  for (const status of statuses) {
+    reports[status.report.name] = {
+      status: status.state,
+      message: status.description,
+    };
+  }
+
+  return reports;
 }

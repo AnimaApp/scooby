@@ -152,3 +152,19 @@ export type ReviewRejection = {
   createdAt: number;
   commitHash: string;
 };
+
+export type CommitStatusOverview = {
+  createdAt: number;
+  reports: Record<string, CommitReportStatusOverview>;
+};
+
+export type CommitReportStatusOverview = {
+  status: CommitReportStatus;
+  message: string;
+};
+
+export type CommitReportStatus =
+  | "success"
+  | "failure"
+  | "approved"
+  | "changes_requested";
