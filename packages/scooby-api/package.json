@@ -22,7 +22,7 @@
   },
   "dependencies": {
     "@animaapp/scooby-shared": "^1.2.0",
-    "@aws-sdk/client-s3": "^3.186.0",
+    "@aws-sdk/client-s3": "3.186.0",
     "fastq": "^1.13.0",
     "uuid": "^9.0.0",
     "zod": "^3.19.1"
