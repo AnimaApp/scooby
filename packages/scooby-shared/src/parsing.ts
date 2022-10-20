@@ -28,12 +28,19 @@ const summarySchema = z.object({
   stats: z.array(statisticSchema),
 });
 
+const reportItem = z.object({
+  id: z.string(),
+  hash: z.string(),
+  status: z.enum(["success", "failure"]),
+});
+
 const baseReportSchema = z.object({
   name: z.string(),
   createdAt: z.number(),
   commitHash: z.string(),
   type: z.string(),
   summary: summarySchema,
+  items: z.array(reportItem),
 });
 
 const hostedResource = z.object({

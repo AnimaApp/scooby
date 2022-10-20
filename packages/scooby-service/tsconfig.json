@@ -15,6 +15,7 @@
     "skipLibCheck": true,
     "paths": {
       "@animaapp/scooby-api": ["../scooby-api"],
+      "@animaapp/scooby-core": ["../scooby-core"],
       "@animaapp/scooby-github-api": ["../scooby-github-api"],
       "@animaapp/scooby-shared": ["../scooby-shared"]
     }
@@ -22,6 +23,7 @@
   "exclude": ["node_modules", "__tests__", "dist", "test"],
   "references": [
     { "path": "../scooby-api" },
+    { "path": "../scooby-core" },
     { "path": "../scooby-github-api" },
     { "path": "../scooby-shared" }
   ]
