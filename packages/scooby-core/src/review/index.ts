@@ -62,7 +62,7 @@ type ApproveReportContext = CommonContext & {
 export async function generateReportApprovals(
   context: ApproveReportContext
 ): Promise<ReviewApproval[]> {
-  console.log("fetching report...");
+  console.log("fetching report:", context.reportName);
   const report = await context.api.getReport({
     commitHash: context.commitHash,
     reportName: context.reportName,
