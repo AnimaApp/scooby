@@ -3,15 +3,13 @@ require("dotenv").config({ path: require("find-config")(".env") });
 
 import fastify from "fastify";
 import { TypeBoxTypeProvider } from "@fastify/type-provider-typebox";
+import cors from "@fastify/cors";
 import apiRoute from "./api";
 
 const server = fastify({
-  logger: {
-    transport: {
-      target: "pino-pretty",
-    },
-  },
+  logger: true,
 }).withTypeProvider<TypeBoxTypeProvider>();
+server.register(cors);
 
 server.get("/", async () => {
   return { up: true };

@@ -9,6 +9,10 @@ import { APICreationOptions, createAPI } from "./data-fetching/api";
 
 import "antd/dist/antd.css";
 import "./index.css";
+import {
+  GlobalEnvironmentSetup,
+  parseGlobalEnvironmentSetup,
+} from "@animaapp/scooby-shared";
 
 const router = createHashRouter([
   {
@@ -33,19 +37,28 @@ function createAPIOptions(): APICreationOptions {
   const urlSearchParams = new URLSearchParams(router.state.location.search);
   const params = Object.fromEntries(urlSearchParams.entries());
 
+  let environment: GlobalEnvironmentSetup = {};
+
+  // Legacy compatibility mode
   const region = params["_s3_region"];
   const bucket = params["_s3_bucket"];
-
   if (region && bucket) {
-    return {
-      s3: {
-        region,
-        bucket,
-      },
+    environment.s3 = {
+      region,
+      bucket,
     };
   }
 
-  return {};
+  const serializedEnvironment = params["_env"];
+  if (serializedEnvironment) {
+    environment = parseGlobalEnvironmentSetup(
+      atob(JSON.parse(serializedEnvironment))
+    );
+  }
+
+  return {
+    environment,
+  };
 }
 
 const api = createAPI(createAPIOptions());

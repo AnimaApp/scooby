@@ -7,6 +7,8 @@ import { capitalize } from "../../../utils/capitalize";
 
 type Props = {
   name: string;
+  repository: string;
+  commit: string;
   isLoading?: boolean;
   error?: unknown;
   report?: HostedReport;
@@ -18,6 +20,8 @@ export const ReportListItem = ({
   isLoading,
   error,
   report,
+  repository,
+  commit,
   onReportSelect,
 }: Props) => {
   const handleClick = () => {
@@ -69,7 +73,11 @@ export const ReportListItem = ({
           <Typography.Text strong style={{ marginRight: 8 }}>
             {name}{" "}
           </Typography.Text>
-          <SummaryBadge summary={report.summary} />
+          <SummaryBadge
+            commit={commit}
+            repository={repository}
+            reportName={report.name}
+          />
           <Tag>{capitalize(report.type)}</Tag>
         </>
       }
@@ -80,10 +88,6 @@ export const ReportListItem = ({
           </Typography.Text>
         </>
       }
-      style={{
-        ...commonStyles,
-        borderColor: report.summary.result === "success" ? "green" : "red",
-      }}
     >
       <StatsView stats={report.summary.stats} />
     </Card>

@@ -1,9 +1,10 @@
-import { HostedReport } from "@animaapp/scooby-shared";
+import { HostedReport, Review } from "@animaapp/scooby-shared";
 import { Breadcrumb, PageHeader, Tag, Typography } from "antd";
 import { EnhancedLink } from "../../components/EnhancedLink";
 import ErrorPanel from "../../components/ErrorPanel";
 import { StatsView } from "../../components/StatsView";
 import { SummaryBadge } from "../../components/SummaryBadge";
+import { ApproveButton } from "./ApproveButton";
 import { FidelityReportController } from "./fidelity";
 import { RegressionReportController } from "./regression";
 
@@ -11,14 +12,15 @@ type Props = {
   report: HostedReport;
   repository: string;
   commit: string;
+  review: Review | undefined;
 };
 
-export function Report({ report, repository, commit }: Props) {
+export function Report({ report, repository, commit, review }: Props) {
   function getContent() {
     if (report.type === "regression") {
-      return <RegressionReportController report={report} />;
+      return <RegressionReportController report={report} review={review} />;
     } else if (report.type === "fidelity") {
-      return <FidelityReportController report={report} />;
+      return <FidelityReportController report={report} review={review} />;
     } else {
       return (
         <ErrorPanel
@@ -36,7 +38,11 @@ export function Report({ report, repository, commit }: Props) {
         tags={
           <>
             <Tag color="blue">{report.type}</Tag>{" "}
-            <SummaryBadge summary={report.summary} />
+            <SummaryBadge
+              commit={commit}
+              reportName={report.name}
+              repository={repository}
+            />
           </>
         }
         breadcrumb={
@@ -59,7 +65,21 @@ export function Report({ report, repository, commit }: Props) {
           borderBottom: "1px solid #c9c9c9",
           marginBottom: "8px",
         }}
-        extra={<StatsView compact stats={report.summary.stats} />}
+        extra={
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+            }}
+          >
+            <StatsView compact stats={report.summary.stats} />
+            <ApproveButton
+              commit={commit}
+              report={report.name}
+              repository={repository}
+            />
+          </div>
+        }
       />
       {getContent()}
     </div>

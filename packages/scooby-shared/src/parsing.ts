@@ -1,5 +1,10 @@
 import { z } from "zod";
-import { HostedReport, Review } from "./types";
+import {
+  CommitStatusOverview,
+  GlobalEnvironmentSetup,
+  HostedReport,
+  Review,
+} from "./types";
 
 const baseStatisticSchema = z.object({
   name: z.string(),
@@ -135,4 +140,41 @@ const reviewSchema = z.object({
 
 export function parseReview(review: unknown): Review {
   return reviewSchema.parse(review);
+}
+
+const commitStatusOverviewSchema = z.object({
+  createdAt: z.number(),
+  reports: z.record(
+    z.object({
+      status: z.enum(["success", "failure", "approved", "changes_requested"]),
+      message: z.string(),
+    })
+  ),
+});
+
+export function parseCommitStatusOverview(
+  overview: unknown
+): CommitStatusOverview {
+  return commitStatusOverviewSchema.parse(overview);
+}
+
+const globalEnviornmentSetupSchema = z.object({
+  s3: z.optional(
+    z.object({
+      bucket: z.string(),
+      region: z.string(),
+    })
+  ),
+  restApi: z.optional(
+    z.object({
+      baseUrl: z.string(),
+      accessToken: z.string(),
+    })
+  ),
+});
+
+export function parseGlobalEnvironmentSetup(
+  setup: unknown
+): GlobalEnvironmentSetup {
+  return globalEnviornmentSetupSchema.parse(setup);
 }

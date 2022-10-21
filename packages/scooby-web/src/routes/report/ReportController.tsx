@@ -1,5 +1,6 @@
 import ErrorPanel from "../../components/ErrorPanel";
 import Loader from "../../components/Loader";
+import { useAggregateReview } from "../../data-fetching/hooks/useAggregateReview";
 import { useReport } from "../../data-fetching/hooks/useReport";
 import { Report } from "./Report";
 
@@ -16,7 +17,12 @@ export function ReportController({ commit, reportName, repository }: Props) {
     repository,
   });
 
-  if (isLoading) {
+  const { review, isLoading: isReviewLoading } = useAggregateReview({
+    commit,
+    repository,
+  });
+
+  if (isLoading || isReviewLoading) {
     return <Loader />;
   }
 
@@ -28,5 +34,12 @@ export function ReportController({ commit, reportName, repository }: Props) {
     return <ErrorPanel message={"Unreachable report"} />;
   }
 
-  return <Report report={report} repository={repository} commit={commit} />;
+  return (
+    <Report
+      report={report}
+      repository={repository}
+      commit={commit}
+      review={review}
+    />
+  );
 }

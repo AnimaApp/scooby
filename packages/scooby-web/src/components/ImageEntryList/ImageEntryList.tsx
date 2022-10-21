@@ -7,7 +7,10 @@ export type ImageEntry = {
   thumbnailUrl: string;
   sentiment?: Sentiment;
   tag?: string;
+  status?: ImageEntryStatus;
 };
+
+export type ImageEntryStatus = "approved" | "changes_requested";
 
 type Props = {
   selectedEntryId?: string;
