@@ -9,7 +9,9 @@ import apiRoute from "./api";
 const server = fastify({
   logger: true,
 }).withTypeProvider<TypeBoxTypeProvider>();
-server.register(cors);
+server.register(cors, {
+  allowedHeaders: ["Content-Type", "Authorization"],
+});
 
 server.get("/", async () => {
   return { up: true };

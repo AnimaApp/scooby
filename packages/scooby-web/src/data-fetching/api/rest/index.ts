@@ -19,13 +19,14 @@ export class RestScoobyWebAPI implements ReviewScoobyWebAPI {
   }
 
   async postAPIRequest(endpoint: string, body: unknown): Promise<Response> {
-    const options = {
+    const options: RequestInit = {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${this.config.accessToken}`,
       },
       body: JSON.stringify(body),
+      credentials: "same-origin",
     };
 
     return fetch(`${this.config.baseUrl}${endpoint}`, options);
