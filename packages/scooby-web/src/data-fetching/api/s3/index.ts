@@ -62,7 +62,7 @@ export class S3ScoobyWebAPI implements ReadScoobyWebAPI {
     });
 
     try {
-      const body = await this.getJSONObject(key);
+      const body = await this.getJSONObject(key, { preventCaching: true });
       return parseReview(body);
     } catch (error) {
       if (error instanceof NoSuchKey) {
@@ -82,7 +82,7 @@ export class S3ScoobyWebAPI implements ReadScoobyWebAPI {
     });
 
     try {
-      const body = await this.getJSONObject(key);
+      const body = await this.getJSONObject(key, { preventCaching: true });
       return parseCommitStatusOverview(body);
     } catch (error) {
       if (error instanceof NoSuchKey) {
@@ -93,10 +93,16 @@ export class S3ScoobyWebAPI implements ReadScoobyWebAPI {
     }
   }
 
-  async getJSONObject(key: string): Promise<unknown> {
+  async getJSONObject(
+    key: string,
+    options?: { preventCaching?: boolean }
+  ): Promise<unknown> {
     const object = await this.client.getObject({
       Bucket: this.config.bucket,
       Key: key,
+      ...(options?.preventCaching && {
+        IfNoneMatch: "invalid",
+      }),
     });
 
     if (!object.Body) {
