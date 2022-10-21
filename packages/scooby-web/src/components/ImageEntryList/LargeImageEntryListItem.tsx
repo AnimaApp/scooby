@@ -1,7 +1,11 @@
-import { Card, Tag } from "antd";
+import {
+  CheckCircleFilled,
+  ExclamationCircleOutlined,
+} from "@ant-design/icons";
+import { Card, Tag, Tooltip } from "antd";
 import { useEffect, useRef } from "react";
 import { getColorForSentiment } from "../../utils/colors";
-import { ImageEntry } from "./ImageEntryList";
+import { ImageEntry, ImageEntryStatus } from "./ImageEntryList";
 
 type Props = {
   selected?: boolean;
@@ -31,7 +35,12 @@ export const LargeImageEntryListItem = ({
       ref={ref}
       hoverable
       title={entry.id}
-      extra={entry.tag ? <Tag color={color}>{entry.tag}</Tag> : null}
+      extra={
+        <div style={{ display: "flex", alignItems: "center" }}>
+          {entry.tag ? <Tag color={color}>{entry.tag}</Tag> : null}
+          {getStatusBadge(entry.status)}
+        </div>
+      }
       size="small"
       bodyStyle={{ padding: 0, position: "relative" }}
       style={{
@@ -64,3 +73,23 @@ export const LargeImageEntryListItem = ({
     </Card>
   );
 };
+
+function getStatusBadge(
+  status: ImageEntryStatus | undefined
+): JSX.Element | null {
+  if (status === "approved") {
+    return (
+      <Tooltip title="This entry has been approved">
+        <CheckCircleFilled style={{ color: "green" }} />
+      </Tooltip>
+    );
+  } else if (status === "changes_requested") {
+    return (
+      <Tooltip title="Changes have been requested for this entry">
+        <ExclamationCircleOutlined style={{ color: "red" }} />
+      </Tooltip>
+    );
+  }
+
+  return null;
+}

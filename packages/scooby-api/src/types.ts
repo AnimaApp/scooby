@@ -18,6 +18,7 @@ export type ScoobyAPI = {
     review: Review,
     options?: PostReviewOptions
   ): Promise<void>;
+  postAggregateReview(context: CommitContext, review: Review): Promise<void>;
 
   postCommitStatusOverview(
     params: CommitContext,

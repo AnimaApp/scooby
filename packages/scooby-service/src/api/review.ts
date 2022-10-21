@@ -4,6 +4,7 @@ import { FastifyPluginCallback } from "fastify";
 import { readEnvVariable } from "../env";
 
 export const ApproveRequest = Type.Object({
+  repositoryName: Type.String(),
   commitHash: Type.String(),
   reports: Type.Optional(Type.Array(Type.String())),
 });
@@ -19,7 +20,9 @@ export const reviewRoute: FastifyPluginCallback = (fastify, _, done) => {
       },
     },
     async (req) => {
-      const { api, githubApi, environment } = await req.prepareEnvironment();
+      const environment = req.getEnvironment();
+      const api = await req.getScoobyAPI();
+      const githubApi = await req.getGithubAPI();
 
       req.log.info(`approving report for commit: ${req.body.commitHash}`);
       await approveReports({
@@ -33,7 +36,7 @@ export const reviewRoute: FastifyPluginCallback = (fastify, _, done) => {
         api,
         commitHash: req.body.commitHash,
         githubApi,
-        repositoryName: environment.repositoryName,
+        repositoryName: req.body.repositoryName,
         s3bucket:
           environment.s3?.bucket ?? readEnvVariable("SCOOBY_AWS_S3_BUCKET"),
         s3region:
@@ -41,6 +44,8 @@ export const reviewRoute: FastifyPluginCallback = (fastify, _, done) => {
         webBaseUrl: readEnvVariable("SCOOBY_WEB_BASE_URL"),
         isMainBranch: false,
       });
+
+      return { approved: true };
     }
   );
 

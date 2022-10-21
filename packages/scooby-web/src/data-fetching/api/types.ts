@@ -1,12 +1,23 @@
-import { CommitStatusOverview, HostedReport } from "@animaapp/scooby-shared";
+import {
+  CommitStatusOverview,
+  HostedReport,
+  Review,
+} from "@animaapp/scooby-shared";
 
-export type ScoobyWebAPI = {
+export type ReadScoobyWebAPI = {
   getReports(params: CommitContext): Promise<ReportId[]>;
   getReport(params: ReportContext): Promise<HostedReport>;
   getCommitStatusOverview(
     params: CommitContext
   ): Promise<CommitStatusOverview | undefined>;
+  getAggregateReview(params: CommitContext): Promise<Review | undefined>;
 };
+
+export type ReviewScoobyWebAPI = {
+  approveReport(params: ReportContext): Promise<void>;
+};
+
+export type ScoobyWebAPI = ReadScoobyWebAPI & ReviewScoobyWebAPI;
 
 export type ReportId = string;
 

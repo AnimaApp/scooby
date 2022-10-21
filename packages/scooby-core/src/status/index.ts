@@ -93,6 +93,12 @@ export async function updateStatus(context: UpdateStatusContext) {
     overview
   );
 
+  console.log("publishing aggregate review...");
+  await context.api.postAggregateReview(
+    { commitHash: context.commitHash },
+    review
+  );
+
   console.log("posting commit statuses on GitHub...");
   for (const status of statuses) {
     await context.githubApi.postCommitStatus(context.commitHash, {

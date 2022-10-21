@@ -1,52 +1,27 @@
-import {
-  HostedRegressionTestEntry,
-  HostedRegressionReport,
-  HostedRegressionTestPair,
-} from "@animaapp/scooby-shared";
+import { HostedRegressionReport, Review } from "@animaapp/scooby-shared";
 import useHotkeys from "@reecelucas/react-use-hotkeys";
 import { useCallback, useEffect, useMemo } from "react";
 import { ImageEntry } from "../../../components/ImageEntryList";
 import { useQueryParams } from "../../hooks/useQueryParams";
 import { useUpdateParams } from "../../hooks/useUpdateParams";
 import { Action } from "./actions";
+import { generateImageEntries } from "./entries";
 import { RegressionReport } from "./RegressionReport";
 
 type Props = {
   report: HostedRegressionReport;
+  review: Review | undefined;
 };
 
 type QueryParams = {
   id?: string;
 };
 
-export function RegressionReportController({ report }: Props) {
-  const entries: ImageEntry[] = useMemo(() => {
-    return [
-      ...report.results.changed
-        .map(mapRegressionPairToImageEntry)
-        .map(
-          (entry) =>
-            ({ ...entry, sentiment: "danger", tag: "changed" } as const)
-        ),
-      ...report.results.new
-        .map(mapRegressionEntryToImageEntry)
-        .map(
-          (entry) => ({ ...entry, sentiment: "danger", tag: "new" } as const)
-        ),
-      ...report.results.removed
-        .map(mapRegressionEntryToImageEntry)
-        .map(
-          (entry) =>
-            ({ ...entry, sentiment: "danger", tag: "removed" } as const)
-        ),
-      ...report.results.unchanged
-        .map(mapRegressionPairToImageEntry)
-        .map(
-          (entry) =>
-            ({ ...entry, sentiment: "success", tag: "unchanged" } as const)
-        ),
-    ];
-  }, [report.results]);
+export function RegressionReportController({ report, review }: Props) {
+  const entries: ImageEntry[] = useMemo(
+    () => generateImageEntries(report, review),
+    [report, review]
+  );
 
   const params = useQueryParams<QueryParams>();
   const selectedId = params.id;
@@ -96,24 +71,6 @@ export function RegressionReportController({ report }: Props) {
       dispatchAction={handleAction}
     />
   );
-}
-
-function mapRegressionEntryToImageEntry(
-  entry: HostedRegressionTestEntry
-): ImageEntry {
-  return {
-    id: entry.id,
-    thumbnailUrl: entry.image.url,
-  };
-}
-
-function mapRegressionPairToImageEntry(
-  pair: HostedRegressionTestPair
-): ImageEntry {
-  return {
-    id: pair.actual.id,
-    thumbnailUrl: pair.comparison.diff.url,
-  };
 }
 
 function findFirstId(report: HostedRegressionReport): string {

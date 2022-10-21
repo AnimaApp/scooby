@@ -1,4 +1,5 @@
 import {
+  buildAggregateReviewJSONPath,
   buildCommitStatusOverviewJSONPath,
   buildReportJSONPath,
   buildReportsPath,
@@ -6,13 +7,20 @@ import {
   HostedReport,
   parseCommitStatusOverview,
   parseHostedReport,
+  parseReview,
+  Review,
 } from "@animaapp/scooby-shared";
 import { NoSuchKey, S3 } from "@aws-sdk/client-s3";
 import { APICreationOptions } from "..";
-import { CommitContext, ReportContext, ReportId, ScoobyWebAPI } from "../types";
+import {
+  CommitContext,
+  ReadScoobyWebAPI,
+  ReportContext,
+  ReportId,
+} from "../types";
 import { getS3Config, S3Config } from "./config";
 
-export class S3ScoobyWebAPI implements ScoobyWebAPI {
+export class S3ScoobyWebAPI implements ReadScoobyWebAPI {
   private client: S3;
   private config: S3Config;
 
@@ -45,6 +53,24 @@ export class S3ScoobyWebAPI implements ScoobyWebAPI {
     const body = await this.getJSONObject(key);
 
     return parseHostedReport(body);
+  }
+
+  async getAggregateReview(params: CommitContext): Promise<Review | undefined> {
+    const key = buildAggregateReviewJSONPath({
+      commitHash: params.commit,
+      repository: params.repository,
+    });
+
+    try {
+      const body = await this.getJSONObject(key);
+      return parseReview(body);
+    } catch (error) {
+      if (error instanceof NoSuchKey) {
+        return;
+      }
+
+      throw error;
+    }
   }
 
   async getCommitStatusOverview(

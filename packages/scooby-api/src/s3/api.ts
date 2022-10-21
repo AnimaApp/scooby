@@ -21,6 +21,7 @@ import {
   parseReview,
   CommitStatusOverview,
   buildCommitStatusOverviewJSONPath,
+  buildAggregateReviewJSONPath,
 } from "@animaapp/scooby-shared";
 import { readFile } from "fs/promises";
 import { ScoobyAPIOptions } from "../options";
@@ -124,6 +125,17 @@ export class S3ScoobyAPI implements ScoobyAPI {
       repository: this.options.repositoryName,
     });
     await this.uploadBody(targetPath, JSON.stringify(baseReview));
+  }
+
+  async postAggregateReview(
+    context: CommitContext,
+    review: Review
+  ): Promise<void> {
+    const targetPath = buildAggregateReviewJSONPath({
+      commitHash: context.commitHash,
+      repository: this.options.repositoryName,
+    });
+    await this.uploadBody(targetPath, JSON.stringify(review));
   }
 
   async postCommitStatusOverview(

@@ -39,6 +39,13 @@ export function buildReviewJSONPath(context: {
   return `${buildCommitPath(context)}/review.json`;
 }
 
+export function buildAggregateReviewJSONPath(context: {
+  repository: string;
+  commitHash: string;
+}): string {
+  return `${buildCommitPath(context)}/aggregate_review.json`;
+}
+
 export function buildCommitStatusOverviewJSONPath(context: {
   repository: string;
   commitHash: string;

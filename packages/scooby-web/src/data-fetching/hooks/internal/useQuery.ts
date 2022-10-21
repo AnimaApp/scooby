@@ -22,7 +22,7 @@ export function useQuery<TRequest extends APIRequest>(
   params: APIRequestParams<TRequest>
 ): APIQueryResponse<TRequest> {
   const { api } = useAPI();
-  const { data, error } = useSWR(
+  const { data, error, isValidating } = useSWR(
     serializeRequest(request, params),
     buildFetcher(api),
     {
@@ -35,7 +35,7 @@ export function useQuery<TRequest extends APIRequest>(
   return {
     data,
     error,
-    isLoading: !data && !error,
+    isLoading: isValidating,
   };
 }
 

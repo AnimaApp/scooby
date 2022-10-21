@@ -9,9 +9,10 @@ type Props = {
     | "approved"
     | "success"
     | "error";
+  onApprove: () => void;
 };
 
-export function ApproveButton({ status }: Props) {
+export function ApproveButton({ status, onApprove }: Props) {
   if (status === "loading") {
     return (
       <Button disabled loading>
@@ -25,6 +26,7 @@ export function ApproveButton({ status }: Props) {
           type="primary"
           icon={<CheckCircleFilled />}
           style={{ backgroundColor: "#27ae60", borderColor: "#27ae60" }}
+          onClick={onApprove}
         >
           Approve All
         </Button>

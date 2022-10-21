@@ -1,4 +1,4 @@
-import { HostedReport } from "@animaapp/scooby-shared";
+import { HostedReport, Review } from "@animaapp/scooby-shared";
 import { Breadcrumb, PageHeader, Tag, Typography } from "antd";
 import { EnhancedLink } from "../../components/EnhancedLink";
 import ErrorPanel from "../../components/ErrorPanel";
@@ -12,14 +12,15 @@ type Props = {
   report: HostedReport;
   repository: string;
   commit: string;
+  review: Review | undefined;
 };
 
-export function Report({ report, repository, commit }: Props) {
+export function Report({ report, repository, commit, review }: Props) {
   function getContent() {
     if (report.type === "regression") {
-      return <RegressionReportController report={report} />;
+      return <RegressionReportController report={report} review={review} />;
     } else if (report.type === "fidelity") {
-      return <FidelityReportController report={report} />;
+      return <FidelityReportController report={report} review={review} />;
     } else {
       return (
         <ErrorPanel

@@ -27,12 +27,14 @@
     "@animaapp/scooby-github-api": "^1.3.0",
     "@animaapp/scooby-shared": "^1.3.0",
     "@fastify/bearer-auth": "^8.0.1",
+    "@fastify/cors": "^8.1.0",
     "@fastify/type-provider-typebox": "^2.3.0",
     "@sinclair/typebox": "^0.24.47",
     "dotenv": "^16.0.3",
     "fastify": "^4.9.2",
     "fastify-plugin": "^4.3.0",
     "find-config": "^1.0.0",
-    "nodemon": "^2.0.20"
+    "nodemon": "^2.0.20",
+    "zod": "^3.19.1"
   }
 }

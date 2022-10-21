@@ -6,12 +6,12 @@ export type S3Config = {
 };
 
 export function getS3Config(options: APICreationOptions): S3Config {
-  if (!options.s3) {
+  if (!options.environment.s3) {
     throw new Error("missing S3 configuration options");
   }
 
   return {
-    region: options.s3.region,
-    bucket: options.s3.bucket,
+    region: options.environment.s3.region,
+    bucket: options.environment.s3.bucket,
   };
 }

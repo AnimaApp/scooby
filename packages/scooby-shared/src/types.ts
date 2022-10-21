@@ -168,3 +168,16 @@ export type CommitReportStatus =
   | "failure"
   | "approved"
   | "changes_requested";
+
+// Global
+
+export type GlobalEnvironmentSetup = {
+  s3?: {
+    bucket: string;
+    region: string;
+  };
+  restApi?: {
+    baseUrl: string;
+    accessToken: string;
+  };
+};
