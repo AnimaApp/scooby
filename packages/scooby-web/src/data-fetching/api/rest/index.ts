@@ -26,7 +26,6 @@ export class RestScoobyWebAPI implements ReviewScoobyWebAPI {
         Authorization: `Bearer ${this.config.accessToken}`,
       },
       body: JSON.stringify(body),
-      credentials: "same-origin",
     };
 
     return fetch(`${this.config.baseUrl}${endpoint}`, options);

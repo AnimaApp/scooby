@@ -11,6 +11,7 @@ const server = fastify({
 }).withTypeProvider<TypeBoxTypeProvider>();
 server.register(cors, {
   allowedHeaders: ["Content-Type", "Authorization"],
+  origin: "*",
 });
 
 server.get("/", async () => {
