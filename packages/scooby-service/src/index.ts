@@ -7,11 +7,7 @@ import cors from "@fastify/cors";
 import apiRoute from "./api";
 
 const server = fastify({
-  logger: {
-    transport: {
-      target: "pino-pretty",
-    },
-  },
+  logger: true,
 }).withTypeProvider<TypeBoxTypeProvider>();
 server.register(cors);
 
