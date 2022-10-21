@@ -15,7 +15,7 @@ export const contextProvider: FastifyPluginCallback = (fastify, _, done) => {
   fastify.decorateRequest("getEnvironment", () => Promise.resolve());
 
   const withEnvironment = z.object({
-    environment: z.object({}),
+    environment: z.unknown(),
   });
 
   const withRepositoryName = z.object({
