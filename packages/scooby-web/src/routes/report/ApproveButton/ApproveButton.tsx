@@ -33,9 +33,11 @@ export function ApproveButton({ status, onApprove }: Props) {
       </Tooltip>
     );
   } else if (status === "approving") {
-    <Button disabled loading>
-      Approving...
-    </Button>;
+    return (
+      <Button disabled loading>
+        Approving...
+      </Button>
+    );
   } else if (status === "approved") {
     return (
       <Tooltip title="All entries in current report have been approved">
