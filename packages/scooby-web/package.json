@@ -1,6 +1,6 @@
 {
   "name": "@animaapp/scooby-web",
-  "version": "1.3.0",
+  "version": "1.4.0",
   "description": "Web frontend for the Scooby project",
   "repository": "https://github.com/AnimaApp/scooby",
   "author": "Federico Terzi",
@@ -15,7 +15,7 @@
     "dev": "yarn prepare-build && yarn parcel src/index.html --cache-dir .parcel-cache"
   },
   "dependencies": {
-    "@animaapp/scooby-shared": "^1.3.0",
+    "@animaapp/scooby-shared": "^1.4.0",
     "@ant-design/icons": "^4.7.0",
     "@aws-sdk/client-s3": "^3.186.0",
     "@reecelucas/react-use-hotkeys": "^2.0.0",
