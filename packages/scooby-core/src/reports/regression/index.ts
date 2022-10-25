@@ -65,19 +65,21 @@ async function performFeatureBranchFlow(
   params: RegressionReportParams,
   testSources: ImageSourceEntry[]
 ): Promise<LocalRegressionReport> {
+  console.log("loading reference dataset...");
+  const { entries: referenceEntries, referenceCommitHash } =
+    await loadReferenceEntries({
+      currentCommit: context.environment.currentCommitHash,
+      latestMainBranchCommits: context.environment.latestMainBranchCommitHashes,
+      snapshotName: params.name,
+      localReferencePath: params.referencePath,
+      api: context.api,
+    });
+  console.log(`found ${referenceEntries.length} reference entries`);
+
   console.log(
     "this regression test will be compared against snapshot with git hash: " +
-      context.environment.baseCommitHash
+      referenceCommitHash
   );
-
-  console.log("loading reference dataset...");
-  const referenceEntries = await loadReferenceEntries({
-    baseCommitHash: context.environment.baseCommitHash,
-    snapshotName: params.name,
-    localReferencePath: params.referencePath,
-    api: context.api,
-  });
-  console.log(`found ${referenceEntries.length} reference entries`);
 
   console.log("generating reference sources...");
   const referenceSources = await generateImageSources(referenceEntries, {});
@@ -99,7 +101,7 @@ async function performFeatureBranchFlow(
   const report = await generateReport({
     name: params.name,
     commitHash: context.environment.currentCommitHash,
-    baseCommitHash: context.environment.baseCommitHash,
+    baseCommitHash: referenceCommitHash,
     regressions,
     matchedSources,
   });

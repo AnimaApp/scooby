@@ -30,3 +30,22 @@ export async function getDefaultBranch(): Promise<string> {
   // TODO: Might need to make it more generic in the future
   return "main";
 }
+
+export async function getLatestMainBranchCommitHashes(): Promise<string[]> {
+  const git = simpleGit({ trimmed: true });
+
+  const rawLatestCommits = await git.raw([
+    "--no-pager",
+    "log",
+    await getDefaultBranch(),
+    "--decorate=short",
+    "--format=%H",
+    "-n",
+    "30",
+  ]);
+
+  return rawLatestCommits
+    .split("\n")
+    .map((line) => line.trim())
+    .filter((line) => line.length > 0);
+}
