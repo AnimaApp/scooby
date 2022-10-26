@@ -31,7 +31,7 @@ export class UnixDiffComparator implements CodeComparator {
       );
     }
 
-    const result = await invokeDiff(expectedPath, actualPath);
+    const result = await invokeDiff(["-U", "-1", expectedPath, actualPath]);
     if (result.outcome === "identical") {
       return generateIdenticalComparisonResult(actualPath);
     }
@@ -87,31 +87,28 @@ async function generateDifferenceComparisonResult(
 }
 
 function invokeDiff(
-  expectedPath: string,
-  actualPath: string
+  args: string[]
 ): Promise<{ outcome: "identical" } | { outcome: "different"; diff: string }> {
   return new Promise((resolve, reject) => {
-    exec(
-      `diff -U -1 '${expectedPath}' '${actualPath}'`,
-      (error, stdout, stderr) => {
-        if (stderr) {
-          console.error(stderr);
-        }
+    const command = `diff ${args.map((arg) => `'${arg}'`).join(" ")}`;
+    exec(command, (error, stdout, stderr) => {
+      if (stderr) {
+        console.error(stderr);
+      }
 
-        if (error) {
-          if (error.code === 1) {
-            // There was a difference
-            resolve({ outcome: "different", diff: stdout });
-            return;
-          }
-
-          reject(error);
+      if (error) {
+        if (error.code === 1) {
+          // There was a difference
+          resolve({ outcome: "different", diff: stdout });
           return;
         }
 
-        resolve({ outcome: "identical" });
+        reject(error);
+        return;
       }
-    );
+
+      resolve({ outcome: "identical" });
+    });
   });
 }
 
@@ -120,8 +117,13 @@ async function generateUnifiedPatchDiff(
   actualPath: string,
   differenceFilePath: string
 ) {
-  const output = await execPromise(`diff -u '${expectedPath}' '${actualPath}'`);
-  await writeFile(differenceFilePath, output.stdout, "utf-8");
+  const result = await invokeDiff(["-u", expectedPath, actualPath]);
+  if (result.outcome === "identical") {
+    throw new Error(
+      "invariant violation, diff output should result in a difference when computing the unified diff patch"
+    );
+  }
+  await writeFile(differenceFilePath, result.diff, "utf-8");
 }
 
 // Adapted from: https://stackoverflow.com/questions/12453057/node-js-count-the-number-of-lines-in-a-file

@@ -69,6 +69,102 @@ describe("regression test", () => {
     expect(mockContext.api.uploadRegressionReport).toHaveBeenCalled();
   });
 
+  it("detects no regressions (JSON)", async () => {
+    const testsPath = path.resolve(
+      __dirname,
+      "../data/regression/json-no-regression/actual"
+    );
+    const referencePath = path.resolve(
+      __dirname,
+      "../data/regression/json-no-regression/expected"
+    );
+
+    mockDownloadSnapshotArchiveImplementation(mockContext.api, referencePath);
+
+    const report = await _processReport(
+      "regression",
+      { name: "test-regression", testsPath },
+      mockContext
+    );
+    if (report.type !== "regression") {
+      throw new Error("invalid report type received: " + report.type);
+    }
+
+    expect(report.name).toEqual("test-regression");
+    expect(report.commitHash).toEqual("feature-commit");
+    expect(report.summary.result).toEqual("success");
+    expect(report.results.new.length).toEqual(0);
+    expect(report.results.changed.length).toEqual(0);
+    expect(report.results.removed.length).toEqual(0);
+    expect(report.results.unchanged.length).toEqual(2);
+
+    expect(mockContext.api.uploadRegressionReport).toHaveBeenCalled();
+  });
+
+  it("detects no regressions with auto formatting (JSON)", async () => {
+    const testsPath = path.resolve(
+      __dirname,
+      "../data/regression/json-no-regression-if-formatted/actual"
+    );
+    const referencePath = path.resolve(
+      __dirname,
+      "../data/regression/json-no-regression-if-formatted/expected"
+    );
+
+    mockDownloadSnapshotArchiveImplementation(mockContext.api, referencePath);
+
+    const report = await _processReport(
+      "regression",
+      { name: "test-regression", testsPath },
+      mockContext
+    );
+    if (report.type !== "regression") {
+      throw new Error("invalid report type received: " + report.type);
+    }
+
+    expect(report.name).toEqual("test-regression");
+    expect(report.commitHash).toEqual("feature-commit");
+    expect(report.summary.result).toEqual("success");
+    expect(report.results.new.length).toEqual(0);
+    expect(report.results.changed.length).toEqual(0);
+    expect(report.results.removed.length).toEqual(0);
+    expect(report.results.unchanged.length).toEqual(2);
+
+    expect(mockContext.api.uploadRegressionReport).toHaveBeenCalled();
+  });
+
+  it("detects no regressions (JSX)", async () => {
+    const testsPath = path.resolve(
+      __dirname,
+      "../data/regression/jsx-no-regression/actual"
+    );
+    const referencePath = path.resolve(
+      __dirname,
+      "../data/regression/jsx-no-regression/expected"
+    );
+
+    mockDownloadSnapshotArchiveImplementation(mockContext.api, referencePath);
+
+    const report = await _processReport(
+      "regression",
+      { name: "test-regression", testsPath },
+      mockContext
+    );
+    if (report.type !== "regression") {
+      throw new Error("invalid report type received: " + report.type);
+    }
+
+    expect(report.name).toEqual("test-regression");
+    expect(report.commitHash).toEqual("feature-commit");
+    expect(report.summary.result).toEqual("success");
+    expect(report.results.new.length).toEqual(0);
+    expect(report.results.changed.length).toEqual(0);
+    expect(report.results.removed.length).toEqual(0);
+    expect(report.results.unchanged.length).toEqual(2);
+
+    expect(mockContext.api.uploadRegressionReport).toHaveBeenCalled();
+  });
+
   it("detects regressions (HTML)", async () => {
     const testsPath = path.resolve(
       __dirname,
@@ -122,6 +218,96 @@ describe("regression test", () => {
         },
       },
     ]);
+
+    expect(mockContext.api.uploadRegressionReport).toHaveBeenCalled();
+  });
+
+  it("detects regressions (JSON)", async () => {
+    const testsPath = path.resolve(
+      __dirname,
+      "../data/regression/json-with-regression/actual"
+    );
+    const referencePath = path.resolve(
+      __dirname,
+      "../data/regression/json-with-regression/expected"
+    );
+
+    mockDownloadSnapshotArchiveImplementation(mockContext.api, referencePath);
+
+    const report = await _processReport(
+      "regression",
+      { name: "test-regression", testsPath },
+      mockContext
+    );
+    if (report.type !== "regression") {
+      throw new Error("invalid report type received: " + report.type);
+    }
+
+    expect(report.name).toEqual("test-regression");
+    expect(report.commitHash).toEqual("feature-commit");
+    expect(report.summary.result).toEqual("failure");
+
+    expect(report.results.new.length).toEqual(1);
+    expect(report.results.changed.length).toEqual(1);
+    expect(report.results.removed.length).toEqual(1);
+    expect(report.results.unchanged.length).toEqual(1);
+    expect(report.results.new).toMatchObject([
+      {
+        id: "test4",
+      },
+    ]);
+    expect(report.results.removed).toMatchObject([
+      {
+        id: "test3",
+      },
+    ]);
+    expect(report.results.unchanged).toMatchObject([
+      {
+        actual: {
+          id: "test1",
+        },
+      },
+    ]);
+    expect(report.results.changed).toMatchObject([
+      {
+        actual: {
+          id: "test2",
+        },
+      },
+    ]);
+
+    expect(mockContext.api.uploadRegressionReport).toHaveBeenCalled();
+  });
+
+  it("detects regressions (JSX)", async () => {
+    const testsPath = path.resolve(
+      __dirname,
+      "../data/regression/jsx-with-regression/actual"
+    );
+    const referencePath = path.resolve(
+      __dirname,
+      "../data/regression/jsx-with-regression/expected"
+    );
+
+    mockDownloadSnapshotArchiveImplementation(mockContext.api, referencePath);
+
+    const report = await _processReport(
+      "regression",
+      { name: "test-regression", testsPath },
+      mockContext
+    );
+    if (report.type !== "regression") {
+      throw new Error("invalid report type received: " + report.type);
+    }
+
+    expect(report.name).toEqual("test-regression");
+    expect(report.commitHash).toEqual("feature-commit");
+    expect(report.summary.result).toEqual("failure");
+
+    expect(report.results.new.length).toEqual(0);
+    expect(report.results.changed.length).toEqual(2);
+    expect(report.results.removed.length).toEqual(0);
+    expect(report.results.unchanged.length).toEqual(0);
 
     expect(mockContext.api.uploadRegressionReport).toHaveBeenCalled();
   });

@@ -42,10 +42,13 @@ export function getTestExtension(entries: string[]): string | undefined {
     return "png";
   }
 
-  const jsonFile = entries.find(
-    (entry) => entry.endsWith(".json") && !entry.endsWith("scooby.json")
-  );
-  if (jsonFile) {
-    return "json";
+  for (const codeExtension of SUPPORTED_CODE_EXTENSIONS) {
+    const codeFile = entries.find(
+      (entry) =>
+        entry.endsWith(`.${codeExtension}`) && !entry.includes(".scooby.")
+    );
+    if (codeFile) {
+      return codeExtension;
+    }
   }
 }
