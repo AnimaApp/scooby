@@ -1,7 +1,7 @@
 import sharp from "sharp";
 import { NormalizationStrategy } from ".";
-import { ImageSize } from "../types";
-import { createTemporaryFile } from "../utils/temp";
+import { ImageSize } from "../../../types";
+import { createTemporaryFile } from "../../../utils/temp";
 
 export type NormalizationResult = {
   normalizedExpectedPath: string;

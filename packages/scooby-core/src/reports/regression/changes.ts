@@ -1,11 +1,13 @@
 import {
-  BatchImageComparisonEntry,
-  BatchImageComparisonResult,
-} from "../../comparison";
+  BatchComparisonEntry,
+  BatchComparisonResult,
+} from "../../comparison/types";
 
-export type RegressionCheckResult = {
-  unchanged: BatchImageComparisonEntry[];
-  changed: BatchImageComparisonEntry[];
+export type RegressionCheckResult<
+  TEntry extends BatchComparisonEntry = BatchComparisonEntry
+> = {
+  unchanged: TEntry[];
+  changed: TEntry[];
 };
 
 export type RegressionCheckOptions = {
@@ -17,9 +19,9 @@ const DEFAULT_OPTIONS: RegressionCheckOptions = {
 };
 
 export function calculateRegressions(
-  result: BatchImageComparisonResult,
+  result: BatchComparisonResult,
   options?: Partial<RegressionCheckOptions>
-) {
+): RegressionCheckResult<BatchComparisonEntry> {
   const effectiveOptions: RegressionCheckOptions = {
     ...DEFAULT_OPTIONS,
     ...options,
@@ -37,14 +39,14 @@ export function calculateRegressions(
 }
 
 function splitByChange(
-  results: BatchImageComparisonEntry[],
+  results: BatchComparisonEntry[],
   threshold: number
 ): {
-  changed: BatchImageComparisonEntry[];
-  unchanged: BatchImageComparisonEntry[];
+  changed: BatchComparisonEntry[];
+  unchanged: BatchComparisonEntry[];
 } {
-  const changed: BatchImageComparisonEntry[] = [];
-  const unchanged: BatchImageComparisonEntry[] = [];
+  const changed: BatchComparisonEntry[] = [];
+  const unchanged: BatchComparisonEntry[] = [];
 
   for (const result of results) {
     if (result.comparison.similarity < threshold) {

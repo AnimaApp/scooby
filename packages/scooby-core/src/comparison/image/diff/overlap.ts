@@ -1,5 +1,5 @@
 import sharp from "sharp";
-import { createTemporaryFile } from "../utils/temp";
+import { createTemporaryFile } from "../../../utils/temp";
 
 export type ImageOverlapResult = {
   overlapImagePath: string;

@@ -1,4 +1,4 @@
-import { compareImages } from "../image-diff";
+import { compareImages } from "./image/diff";
 import type {
   ComparisonTaskRequest,
   ComparisonTaskResult,

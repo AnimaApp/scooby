@@ -1,6 +1,16 @@
 import { ScoobyAPI } from "@animaapp/scooby-api";
 
-export type TestEntryType = "png" | "html";
+export type ImageTestEntryType = {
+  category: "image";
+  subtype: "png" | "html";
+};
+
+export type CodeTestEntryType = {
+  category: "code";
+  extension: string;
+};
+
+export type TestEntryType = ImageTestEntryType | CodeTestEntryType;
 
 export type TestEntry = {
   id: string;
@@ -24,14 +34,25 @@ export type ImageSize = {
   height: number;
 };
 
-export type ImageSourceEntry = {
+export type BaseSourceEntry = {
   id: string;
   groupId: string;
   tags: string[];
+};
+
+export type ImageSourceEntry = BaseSourceEntry & {
+  type: "image";
   path: string;
 };
 
-export type SourceEntry = ImageSourceEntry;
+export type CodeSourceEntry = BaseSourceEntry & {
+  type: "code";
+  path: string;
+};
+
+export type SourceEntry = ImageSourceEntry | CodeSourceEntry;
+
+export type Formatter = "prettier" | "json" | "none";
 
 // Reports
 

@@ -1,11 +1,11 @@
 import { LocalRegressionReport } from "@animaapp/scooby-shared";
-import { batchImageComparison } from "../../comparison";
+import { performBatchComparison } from "../../comparison";
 import { loadTestEntries } from "../../loading";
 import { matchSources } from "../../matching";
-import { generateImageSources } from "../../source/image";
+import { generateSources, GenerateSourcesOptions } from "../../source";
 import {
   BaseReportParams,
-  ImageSourceEntry,
+  Formatter,
   ReportContext,
   SourceEntry,
 } from "../../types";
@@ -17,6 +17,8 @@ import { uploadTestSnapshot } from "./snapshot";
 export type RegressionReportParams = BaseReportParams & {
   testsPath: string;
   referencePath?: string;
+  formatter?: Formatter;
+  maxThreads?: number;
 };
 
 export async function runRegressionReport(
@@ -28,13 +30,25 @@ export async function runRegressionReport(
   console.log(`found ${testEntries.length} test entries`);
 
   console.log("generating test sources...");
-  const testSources = await generateImageSources(testEntries, {});
+  const sourceGenerationOptions: GenerateSourcesOptions = {
+    maxThreads: params.maxThreads,
+    formatter: params.formatter,
+  };
+  const testSources = await generateSources(
+    testEntries,
+    sourceGenerationOptions
+  );
   console.log(`generated ${testSources.length} test sources`);
 
   if (context.environment.isMainBranch) {
     return performMainBranchFlow(context, params, testSources);
   } else {
-    return performFeatureBranchFlow(context, params, testSources);
+    return performFeatureBranchFlow(
+      context,
+      params,
+      testSources,
+      sourceGenerationOptions
+    );
   }
 }
 
@@ -63,7 +77,8 @@ async function performMainBranchFlow(
 async function performFeatureBranchFlow(
   context: ReportContext,
   params: RegressionReportParams,
-  testSources: ImageSourceEntry[]
+  testSources: SourceEntry[],
+  sourceGenerationOptions: GenerateSourcesOptions
 ): Promise<LocalRegressionReport> {
   console.log("loading reference dataset...");
   const { entries: referenceEntries, referenceCommitHash } =
@@ -82,7 +97,10 @@ async function performFeatureBranchFlow(
   );
 
   console.log("generating reference sources...");
-  const referenceSources = await generateImageSources(referenceEntries, {});
+  const referenceSources = await generateSources(
+    referenceEntries,
+    sourceGenerationOptions
+  );
   console.log(`generated ${referenceSources.length} reference sources`);
 
   console.log("matching datasets...");
@@ -92,7 +110,12 @@ async function performFeatureBranchFlow(
   );
 
   console.log("comparing tests...");
-  const comparisonResult = await batchImageComparison(matchedSources.matching);
+  const comparisonResult = await performBatchComparison(
+    matchedSources.matching,
+    {
+      maxThreads: params.maxThreads,
+    }
+  );
 
   console.log("determining regressions...");
   const regressions = calculateRegressions(comparisonResult);

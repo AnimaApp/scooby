@@ -1,4 +1,4 @@
-import { ImageSize } from "../types";
+import { ImageSize } from "../../../types";
 import { calculateImageDiff } from "./diffing";
 import { normalizeImages } from "./normalization";
 import { calculateImageOverlap } from "./overlap";

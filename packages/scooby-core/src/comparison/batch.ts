@@ -7,30 +7,34 @@ import {
 } from "./types";
 import runComparison from "./worker";
 
-export async function batchComparison(
-  requests: ComparisonTaskRequest[],
-  options?: BatchComparisonOptions
-): Promise<ComparisonTaskResult[]> {
+export async function runComparisonBatch<
+  TRequest extends ComparisonTaskRequest,
+  TResult extends ComparisonTaskResult
+>(requests: TRequest[], options?: BatchComparisonOptions): Promise<TResult[]> {
   // Some runtimes don't support running Typescript workers directly (such as Jest).
   // In such cases, we fall back to a serial mode
   if (doesRuntimeSupportWorkers()) {
-    return runBatchComparisonOnWorker(requests, options);
+    return runBatchOnWorker(requests, options);
   } else {
-    return runBatchComparisonMainProcess(requests);
+    return runBatchOnMainProcess(requests);
   }
 }
 
-async function runBatchComparisonOnWorker(
-  requests: ComparisonTaskRequest[],
-  options?: BatchComparisonOptions
-): Promise<ComparisonTaskResult[]> {
+async function runBatchOnWorker<
+  TRequest extends ComparisonTaskRequest,
+  TResult extends ComparisonTaskResult
+>(requests: TRequest[], options?: BatchComparisonOptions): Promise<TResult[]> {
   const piscina = new Piscina({
     filename: path.resolve(__dirname, "worker.js"),
     maxThreads: options?.maxThreads ?? 4,
   });
 
   const generationTasks = createGenerationTasks(requests, piscina);
-  return await Promise.all(generationTasks);
+  const results = await Promise.all(generationTasks);
+
+  validateResultCoherence(requests, results);
+
+  return results as TResult[];
 }
 
 function createGenerationTasks(
@@ -40,9 +44,10 @@ function createGenerationTasks(
   return requests.map((request) => piscina.run(request));
 }
 
-async function runBatchComparisonMainProcess(
-  requests: ComparisonTaskRequest[]
-): Promise<ComparisonTaskResult[]> {
+async function runBatchOnMainProcess<
+  TRequest extends ComparisonTaskRequest,
+  TResult extends ComparisonTaskResult
+>(requests: TRequest[]): Promise<TResult[]> {
   console.warn("FALLING BACK TO SLOWER SERIAL BATCH COMPARISON MODE");
 
   const results: ComparisonTaskResult[] = [];
@@ -52,7 +57,9 @@ async function runBatchComparisonMainProcess(
     results.push(result);
   }
 
-  return results;
+  validateResultCoherence(requests, results);
+
+  return results as TResult[];
 }
 
 function doesRuntimeSupportWorkers(): boolean {
@@ -62,5 +69,21 @@ function doesRuntimeSupportWorkers(): boolean {
     return true;
   } catch {
     return false;
+  }
+}
+
+function validateResultCoherence<
+  TRequest extends ComparisonTaskRequest,
+  TResult extends ComparisonTaskResult & { type: TRequest["type"] }
+>(requests: TRequest[], results: TResult[]) {
+  const requestType = requests?.[0].type;
+  if (!requestType) {
+    throw new Error("expected at least one request object");
+  }
+
+  if (!results.every((result) => result.type === requestType)) {
+    throw new Error(
+      `invalid results received from comparison batch, expected all results to be of type '${requestType}', but some entries have different values`
+    );
   }
 }

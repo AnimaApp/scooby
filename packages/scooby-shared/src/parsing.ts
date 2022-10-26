@@ -53,59 +53,90 @@ const hostedResource = z.object({
   url: z.string().url(),
 });
 
-const regressionTestEntrySchema = z.object({
+const baseReportEntrySchema = z.object({
   id: z.string(),
   groupId: z.string(),
   tags: z.array(z.string()),
+});
+const reportImageEntrySchema = baseReportEntrySchema.extend({
+  type: z.literal("image").default("image"),
   image: hostedResource,
 });
+const reportCodeEntrySchema = baseReportEntrySchema.extend({
+  type: z.literal("code"),
+  code: hostedResource,
+});
+const reportImageComparisonSchema = z.object({
+  type: z.literal("image").default("image"),
+  similarity: z.number(),
+  normalizedExpected: hostedResource,
+  normalizedActual: hostedResource,
+  diff: hostedResource,
+  overlap: hostedResource,
+});
+const reportCodeComparisonSchema = z.object({
+  type: z.literal("code"),
+  similarity: z.number(),
+  diff: z.optional(hostedResource),
+});
 
-const regressionTestPairSchema = z.object({
-  expected: regressionTestEntrySchema,
-  actual: regressionTestEntrySchema,
-  comparison: z.object({
-    similarity: z.number(),
-    normalizedExpected: hostedResource,
-    normalizedActual: hostedResource,
-    diff: hostedResource,
-    overlap: hostedResource,
-  }),
+const imageRegressionEntrySchema = reportImageEntrySchema;
+const codeRegressionEntrySchema = reportCodeEntrySchema;
+const imageRegressionTestPairSchema = z.object({
+  type: z.literal("image").default("image"),
+  expected: imageRegressionEntrySchema,
+  actual: imageRegressionEntrySchema,
+  comparison: reportImageComparisonSchema,
+});
+const codeRegressionTestPairSchema = z.object({
+  type: z.literal("code"),
+  expected: codeRegressionEntrySchema,
+  actual: codeRegressionEntrySchema,
+  comparison: reportCodeComparisonSchema,
 });
 
 const regressionReportSchema = baseReportSchema.extend({
   type: z.literal("regression"),
   baseCommitHash: z.string(),
-  results: z.object({
-    new: z.array(regressionTestEntrySchema),
-    removed: z.array(regressionTestEntrySchema),
-    changed: z.array(regressionTestPairSchema),
-    unchanged: z.array(regressionTestPairSchema),
-  }),
+  results: z.union([
+    z.object({
+      type: z.literal("image").default("image"),
+      new: z.array(imageRegressionEntrySchema),
+      removed: z.array(imageRegressionEntrySchema),
+      changed: z.array(imageRegressionTestPairSchema),
+      unchanged: z.array(imageRegressionTestPairSchema),
+    }),
+    z.object({
+      type: z.literal("code"),
+      new: z.array(codeRegressionEntrySchema),
+      removed: z.array(codeRegressionEntrySchema),
+      changed: z.array(codeRegressionTestPairSchema),
+      unchanged: z.array(codeRegressionTestPairSchema),
+    }),
+  ]),
 });
 
-const fidelityTestEntrySchema = z.object({
-  id: z.string(),
-  groupId: z.string(),
-  tags: z.array(z.string()),
-  image: hostedResource,
+const imageFidelityEntrySchema = reportImageEntrySchema;
+const codeFidelityEntrySchema = reportCodeEntrySchema;
+const imageFidelityTestPairSchema = z.object({
+  type: z.literal("image").default("image"),
+  expected: imageFidelityEntrySchema,
+  actual: imageFidelityEntrySchema,
+  comparison: reportImageComparisonSchema,
 });
-
-const fidelityTestPairSchema = z.object({
-  expected: fidelityTestEntrySchema,
-  actual: fidelityTestEntrySchema,
-  comparison: z.object({
-    similarity: z.number(),
-    normalizedExpected: hostedResource,
-    normalizedActual: hostedResource,
-    diff: hostedResource,
-    overlap: hostedResource,
-  }),
+const codeFidelityTestPairSchema = z.object({
+  type: z.literal("code"),
+  expected: codeFidelityEntrySchema,
+  actual: codeFidelityEntrySchema,
+  comparison: reportCodeComparisonSchema,
 });
 
 const fidelityReportSchema = baseReportSchema.extend({
   type: z.literal("fidelity"),
   overallFidelityScore: z.number(),
-  pairs: z.array(fidelityTestPairSchema),
+  pairs: z.array(
+    z.union([codeFidelityTestPairSchema, imageFidelityTestPairSchema])
+  ),
 });
 
 const reportSchema = z.discriminatedUnion("type", [

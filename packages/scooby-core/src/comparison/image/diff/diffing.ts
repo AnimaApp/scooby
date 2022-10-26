@@ -1,8 +1,8 @@
 import pixelmatch from "pixelmatch";
 import { PNG } from "pngjs";
 import { readFile, writeFile } from "fs/promises";
-import { ImageSize } from "../types";
-import { createTemporaryFile } from "../utils/temp";
+import { ImageSize } from "../../../types";
+import { createTemporaryFile } from "../../../utils/temp";
 
 export type ImageDiffingResult = {
   diffImagePath: string;
