@@ -1,5 +1,6 @@
 import { runReport } from "@animaapp/scooby-core";
 import { Command, Flags } from "@oclif/core";
+import { formatterFlag, maxThreadsFlag } from "../../common-flags";
 
 export default class Fidelity extends Command {
   static description = "Run a fidelity test";
@@ -24,6 +25,8 @@ export default class Fidelity extends Command {
       description: "Path to the folder containing the actual tests",
       required: true,
     }),
+    "max-threads": maxThreadsFlag,
+    formatter: formatterFlag,
   };
 
   async run(): Promise<void> {
@@ -33,6 +36,8 @@ export default class Fidelity extends Command {
       name: flags.name,
       actualPath: flags.actual,
       expectedPath: flags.expected,
+      maxThreads: flags["max-threads"],
+      formatter: flags.formatter,
     });
   }
 }

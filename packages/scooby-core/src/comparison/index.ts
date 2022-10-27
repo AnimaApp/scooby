@@ -8,6 +8,10 @@ export async function performBatchComparison(
   pairs: MatchedPair<SourceEntry>[],
   options?: Partial<BatchComparisonOptions>
 ): Promise<BatchComparisonResult> {
+  if (!pairs.length) {
+    return { type: "empty", comparisons: [] };
+  }
+
   checkPairCoherence(pairs);
 
   if (areImagePairs(pairs)) {
@@ -36,10 +40,7 @@ function areCodePairs(
 }
 
 function checkPairCoherence(pairs: MatchedPair<SourceEntry>[]) {
-  const entryType = pairs?.[0].actual.type;
-  if (!entryType) {
-    throw new Error("unable to determine dataset entry type, dataset is empty");
-  }
+  const entryType = pairs[0].actual.type;
 
   if (!pairs.every((pair) => pair.actual.type === entryType)) {
     throw new Error(
@@ -52,8 +53,6 @@ function checkPairCoherence(pairs: MatchedPair<SourceEntry>[]) {
       "comparison pairs are malformed, found different types in expected items"
     );
   }
-
-  return entryType;
 }
 
 export * from "./types";

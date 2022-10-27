@@ -4,13 +4,14 @@ import { TestEntry } from "../../types";
 import { downloadTestSnapshot } from "./snapshot";
 
 // Max number of commits that the system will read backwards to find a valid reference commit
-const MAX_REFERENCE_COMMIT_BACKTRACK = 20;
+const DEFAULT_MAX_REFERENCE_COMMIT_BACKTRACK = 20;
 
 export type LoadReferenceRequest = {
   snapshotName: string;
   currentCommit: string;
-  localReferencePath?: string;
   latestMainBranchCommits: string[];
+  localReferencePath?: string;
+  maxReferenceCommitBacktracking?: number;
   api: ScoobyAPI;
 };
 
@@ -37,12 +38,17 @@ async function loadRemoteReferenceEntries(
 ): Promise<LoadReferenceResult> {
   console.log("loading reference dataset from remote");
 
-  const maxAttempts = Math.min(
-    MAX_REFERENCE_COMMIT_BACKTRACK,
-    request.latestMainBranchCommits.length
+  const maxAttempts = Math.max(
+    request.maxReferenceCommitBacktracking ??
+      DEFAULT_MAX_REFERENCE_COMMIT_BACKTRACK,
+    0
   );
 
-  for (let i = 0; i < maxAttempts; i++) {
+  const iterationsCount = Math.min(
+    maxAttempts + 1,
+    request.latestMainBranchCommits.length
+  );
+  for (let i = 0; i < iterationsCount; i++) {
     const candidateHash = request.latestMainBranchCommits[i];
     console.log(
       `checking if candidate hash '${candidateHash}' can be the reference commit...`

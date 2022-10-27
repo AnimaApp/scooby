@@ -312,6 +312,72 @@ describe("regression test", () => {
     expect(mockContext.api.uploadRegressionReport).toHaveBeenCalled();
   });
 
+  it("detects regressions with no matching dataset items (JSON)", async () => {
+    const testsPath = path.resolve(
+      __dirname,
+      "../data/regression/json-no-matching/actual"
+    );
+    const referencePath = path.resolve(
+      __dirname,
+      "../data/regression/json-no-matching/expected"
+    );
+
+    mockDownloadSnapshotArchiveImplementation(mockContext.api, referencePath);
+
+    const report = await _processReport(
+      "regression",
+      { name: "test-regression", testsPath },
+      mockContext
+    );
+    if (report.type !== "regression") {
+      throw new Error("invalid report type received: " + report.type);
+    }
+
+    expect(report.name).toEqual("test-regression");
+    expect(report.commitHash).toEqual("feature-commit");
+    expect(report.summary.result).toEqual("failure");
+
+    expect(report.results.new.length).toEqual(1);
+    expect(report.results.changed.length).toEqual(0);
+    expect(report.results.removed.length).toEqual(2);
+    expect(report.results.unchanged.length).toEqual(0);
+
+    expect(mockContext.api.uploadRegressionReport).toHaveBeenCalled();
+  });
+
+  it("detects regressions with no matching dataset items (HTML)", async () => {
+    const testsPath = path.resolve(
+      __dirname,
+      "../data/regression/html-no-matching/actual"
+    );
+    const referencePath = path.resolve(
+      __dirname,
+      "../data/regression/html-no-matching/expected"
+    );
+
+    mockDownloadSnapshotArchiveImplementation(mockContext.api, referencePath);
+
+    const report = await _processReport(
+      "regression",
+      { name: "test-regression", testsPath },
+      mockContext
+    );
+    if (report.type !== "regression") {
+      throw new Error("invalid report type received: " + report.type);
+    }
+
+    expect(report.name).toEqual("test-regression");
+    expect(report.commitHash).toEqual("feature-commit");
+    expect(report.summary.result).toEqual("failure");
+
+    expect(report.results.new.length).toEqual(1);
+    expect(report.results.changed.length).toEqual(0);
+    expect(report.results.removed.length).toEqual(2);
+    expect(report.results.unchanged.length).toEqual(0);
+
+    expect(mockContext.api.uploadRegressionReport).toHaveBeenCalled();
+  });
+
   it("uploads snapshot on main branch", async () => {
     const testsPath = path.resolve(
       __dirname,

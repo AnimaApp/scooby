@@ -85,6 +85,9 @@ export type CodeBatchComparisonResult =
   BaseBatchComparisonResult<CodeBatchComparisonEntry> & {
     type: "code";
   };
+export type EmptyBatchComparisonResult = { type: "empty"; comparisons: [] };
+
 export type BatchComparisonResult =
   | ImageBatchComparisonResult
-  | CodeBatchComparisonResult;
+  | CodeBatchComparisonResult
+  | EmptyBatchComparisonResult;
