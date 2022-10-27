@@ -28,6 +28,7 @@
     "@animaapp/scooby-api": "^1.4.0",
     "@animaapp/scooby-github-api": "^1.4.0",
     "@animaapp/scooby-shared": "^1.4.0",
+    "@monaco-editor/react": "^4.4.6",
     "archiver": "^5.3.1",
     "extract-zip": "^2.0.1",
     "fastq": "^1.13.0",

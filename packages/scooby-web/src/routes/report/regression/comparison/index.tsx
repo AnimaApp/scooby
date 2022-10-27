@@ -1,5 +1,6 @@
 import { HostedRegressionReport } from "@animaapp/scooby-shared";
 import ErrorPanel from "../../../../components/ErrorPanel";
+import { CodeComparisonView } from "./CodeComparisonView";
 import { ImageComparisonView } from "./ImageComparisonView";
 
 type Props = {
@@ -17,10 +18,9 @@ export const ComparisonView = ({ selectedId, report }: Props) => {
       <ImageComparisonView results={report.results} selectedId={selectedId} />
     );
   } else if (report.results.type === "code") {
-    // TODO
-    // return (
-    //   <ImageComparisonView results={report.results} selectedId={selectedId} />
-    // );
+    return (
+      <CodeComparisonView results={report.results} selectedId={selectedId} />
+    );
   }
 
   return (
