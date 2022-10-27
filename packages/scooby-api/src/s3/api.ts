@@ -38,13 +38,8 @@ import {
   getAWSBucketOptions,
   getAWSCredentials,
 } from "./awsConfig";
-import {
-  buildHostedFidelityReport,
-  buildHostedRegressionReport,
-  getAllLocalResourcesForFidelity,
-  getAllLocalResourcesForRegression,
-} from "./resources";
 import { Readable } from "stream";
+import { buildHostedReport, getAllLocalResources } from "./resources";
 
 export class S3ScoobyAPI implements ScoobyAPI {
   private options: ScoobyAPIOptions;
@@ -154,7 +149,7 @@ export class S3ScoobyAPI implements ScoobyAPI {
     context: CommitContext,
     report: LocalRegressionReport
   ): Promise<HostedRegressionReport> {
-    const resources = getAllLocalResourcesForRegression(report);
+    const resources = getAllLocalResources(report);
 
     console.log("uploading resources...");
     const hostedResourcesMap = await this.uploadReportResources(
@@ -165,7 +160,7 @@ export class S3ScoobyAPI implements ScoobyAPI {
       resources
     );
 
-    const hostedReport = buildHostedRegressionReport(
+    const hostedReport = buildHostedReport<HostedRegressionReport>(
       report,
       hostedResourcesMap
     );
@@ -179,7 +174,7 @@ export class S3ScoobyAPI implements ScoobyAPI {
     context: CommitContext,
     report: LocalFidelityReport
   ): Promise<HostedFidelityReport> {
-    const resources = getAllLocalResourcesForFidelity(report);
+    const resources = getAllLocalResources(report);
 
     console.log("uploading resources...");
     const hostedResourcesMap = await this.uploadReportResources(
@@ -190,7 +185,10 @@ export class S3ScoobyAPI implements ScoobyAPI {
       resources
     );
 
-    const hostedReport = buildHostedFidelityReport(report, hostedResourcesMap);
+    const hostedReport = buildHostedReport<HostedFidelityReport>(
+      report,
+      hostedResourcesMap
+    );
 
     await this.uploadReportJSON(context, hostedReport);
 

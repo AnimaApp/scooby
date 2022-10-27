@@ -78,6 +78,118 @@ describe("fidelity test", () => {
     expect(mockContext.api.uploadFidelityReport).toHaveBeenCalled();
   });
 
+  it("handles perfect fidelity report (JSON)", async () => {
+    const actualPath = path.resolve(
+      __dirname,
+      "../data/fidelity/json-perfect-fidelity/actual"
+    );
+    const expectedPath = path.resolve(
+      __dirname,
+      "../data/fidelity/json-perfect-fidelity/expected"
+    );
+
+    const report = await _processReport(
+      "fidelity",
+      { name: "test-fidelity", actualPath, expectedPath },
+      mockContext
+    );
+    if (report.type !== "fidelity") {
+      throw new Error("invalid report type received: " + report.type);
+    }
+
+    expect(report.name).toEqual("test-fidelity");
+    expect(report.commitHash).toEqual("feature-commit");
+    expect(report.summary.result).toEqual("success");
+    expect(report.overallFidelityScore).toEqual(1);
+    expect(report.pairs.length).toEqual(2);
+
+    expect(mockContext.api.uploadFidelityReport).toHaveBeenCalled();
+  });
+
+  it("handles perfect fidelity report (JSX)", async () => {
+    const actualPath = path.resolve(
+      __dirname,
+      "../data/fidelity/jsx-perfect-fidelity/actual"
+    );
+    const expectedPath = path.resolve(
+      __dirname,
+      "../data/fidelity/jsx-perfect-fidelity/expected"
+    );
+
+    const report = await _processReport(
+      "fidelity",
+      { name: "test-fidelity", actualPath, expectedPath },
+      mockContext
+    );
+    if (report.type !== "fidelity") {
+      throw new Error("invalid report type received: " + report.type);
+    }
+
+    expect(report.name).toEqual("test-fidelity");
+    expect(report.commitHash).toEqual("feature-commit");
+    expect(report.summary.result).toEqual("success");
+    expect(report.overallFidelityScore).toEqual(1);
+    expect(report.pairs.length).toEqual(2);
+
+    expect(mockContext.api.uploadFidelityReport).toHaveBeenCalled();
+  });
+
+  it("automatically formats code if formatter is not disabled (JSON)", async () => {
+    const actualPath = path.resolve(
+      __dirname,
+      "../data/fidelity/unformatted-equal-json/actual"
+    );
+    const expectedPath = path.resolve(
+      __dirname,
+      "../data/fidelity/unformatted-equal-json/expected"
+    );
+
+    const report = await _processReport(
+      "fidelity",
+      { name: "test-fidelity", actualPath, expectedPath },
+      mockContext
+    );
+    if (report.type !== "fidelity") {
+      throw new Error("invalid report type received: " + report.type);
+    }
+
+    expect(report.name).toEqual("test-fidelity");
+    expect(report.commitHash).toEqual("feature-commit");
+    expect(report.summary.result).toEqual("success");
+    expect(report.overallFidelityScore).toEqual(1);
+    expect(report.pairs.length).toEqual(2);
+
+    expect(mockContext.api.uploadFidelityReport).toHaveBeenCalled();
+  });
+
+  it("doesn't format code if formatter is disabled (JSON)", async () => {
+    const actualPath = path.resolve(
+      __dirname,
+      "../data/fidelity/unformatted-equal-json/actual"
+    );
+    const expectedPath = path.resolve(
+      __dirname,
+      "../data/fidelity/unformatted-equal-json/expected"
+    );
+
+    const report = await _processReport(
+      "fidelity",
+      { name: "test-fidelity", actualPath, expectedPath, formatter: "none" },
+      mockContext
+    );
+    if (report.type !== "fidelity") {
+      throw new Error("invalid report type received: " + report.type);
+    }
+
+    expect(report.name).toEqual("test-fidelity");
+    expect(report.commitHash).toEqual("feature-commit");
+    expect(report.summary.result).toEqual("success");
+    expect(report.overallFidelityScore).toBeLessThan(1);
+    expect(report.pairs.length).toEqual(2);
+
+    expect(mockContext.api.uploadFidelityReport).toHaveBeenCalled();
+  });
+
   it("handles fidelity report with differences (HTML)", async () => {
     const actualPath = path.resolve(
       __dirname,
@@ -102,6 +214,68 @@ describe("fidelity test", () => {
     expect(report.summary.result).toEqual("success");
     expect(report.overallFidelityScore).toBeLessThan(1);
     expect(report.pairs.length).toEqual(3);
+
+    expect(mockContext.api.uploadFidelityReport).toHaveBeenCalled();
+  });
+
+  it("handles fidelity report with differences (JSON)", async () => {
+    const actualPath = path.resolve(
+      __dirname,
+      "../data/fidelity/json-with-differences/actual"
+    );
+    const expectedPath = path.resolve(
+      __dirname,
+      "../data/fidelity/json-with-differences/expected"
+    );
+
+    const report = await _processReport(
+      "fidelity",
+      { name: "test-fidelity", actualPath, expectedPath },
+      mockContext
+    );
+    if (report.type !== "fidelity") {
+      throw new Error("invalid report type received: " + report.type);
+    }
+
+    expect(report.name).toEqual("test-fidelity");
+    expect(report.commitHash).toEqual("feature-commit");
+    expect(report.summary.result).toEqual("success");
+    expect(report.overallFidelityScore).toBeLessThan(1);
+    expect(report.pairs.length).toEqual(2);
+    expect(
+      (report.pairs as any[]).every((pair) => pair.comparison.similarity < 1)
+    ).toEqual(true);
+
+    expect(mockContext.api.uploadFidelityReport).toHaveBeenCalled();
+  });
+
+  it("handles fidelity report with differences (JSX)", async () => {
+    const actualPath = path.resolve(
+      __dirname,
+      "../data/fidelity/jsx-with-differences/actual"
+    );
+    const expectedPath = path.resolve(
+      __dirname,
+      "../data/fidelity/jsx-with-differences/expected"
+    );
+
+    const report = await _processReport(
+      "fidelity",
+      { name: "test-fidelity", actualPath, expectedPath },
+      mockContext
+    );
+    if (report.type !== "fidelity") {
+      throw new Error("invalid report type received: " + report.type);
+    }
+
+    expect(report.name).toEqual("test-fidelity");
+    expect(report.commitHash).toEqual("feature-commit");
+    expect(report.summary.result).toEqual("success");
+    expect(report.overallFidelityScore).toBeLessThan(1);
+    expect(report.pairs.length).toEqual(2);
+    expect(
+      (report.pairs as any[]).every((pair) => pair.comparison.similarity < 1)
+    ).toEqual(true);
 
     expect(mockContext.api.uploadFidelityReport).toHaveBeenCalled();
   });

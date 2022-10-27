@@ -1,25 +1,27 @@
 import {
+  CodeRegressionTestEntry,
+  CodeRegressionTestPair,
   HostedRegressionReport,
   HostedRegressionTestEntry,
   HostedRegressionTestPair,
+  HostedResource,
+  ImageRegressionTestEntry,
+  ImageRegressionTestPair,
   Review,
   Sentiment,
 } from "@animaapp/scooby-shared";
-import {
-  ImageEntry,
-  ImageEntryStatus,
-} from "../../../components/ImageEntryList";
+import { CodeEntry, Entry, EntryStatus, ImageEntry } from "../../../types";
 import { getRankForSentiment } from "../../../utils/rank";
 import {
   computeReportItemsReviewStatuses,
   ItemStatus,
 } from "../../../utils/review";
 
-export function generateImageEntries(
+export function generateEntries(
   report: HostedRegressionReport,
   review: Review | undefined
-): ImageEntry[] {
-  const entries: ImageEntry[] = [];
+): Entry[] {
+  const entries: Entry[] = [];
   if (!review) {
     entries.push(...generateImageEntriesWithoutReview(report));
   } else {
@@ -37,23 +39,23 @@ export function generateImageEntries(
 
 function generateImageEntriesWithoutReview(
   report: HostedRegressionReport
-): ImageEntry[] {
+): Entry[] {
   return [
     ...report.results.changed
-      .map(mapRegressionPairToImageEntry)
+      .map(mapRegressionPairToEntry)
       .map(
         (entry) => ({ ...entry, sentiment: "danger", tag: "changed" } as const)
       ),
     ...report.results.new
-      .map(mapRegressionEntryToImageEntry)
+      .map(mapRegressionEntryToEntry)
       .map((entry) => ({ ...entry, sentiment: "danger", tag: "new" } as const)),
     ...report.results.removed
-      .map(mapRegressionEntryToImageEntry)
+      .map(mapRegressionEntryToEntry)
       .map(
         (entry) => ({ ...entry, sentiment: "danger", tag: "removed" } as const)
       ),
     ...report.results.unchanged
-      .map(mapRegressionPairToImageEntry)
+      .map(mapRegressionPairToEntry)
       .map(
         (entry) =>
           ({ ...entry, sentiment: "success", tag: "unchanged" } as const)
@@ -64,14 +66,14 @@ function generateImageEntriesWithoutReview(
 function generateImageEntriesWithReview(
   report: HostedRegressionReport,
   review: Review
-): ImageEntry[] {
+): Entry[] {
   const itemStatuses = computeReportItemsReviewStatuses(
     report.items ?? [],
     review
   );
 
   return [
-    ...report.results.changed.map(mapRegressionPairToImageEntry).map(
+    ...report.results.changed.map(mapRegressionPairToEntry).map(
       (entry) =>
         ({
           ...entry,
@@ -80,7 +82,7 @@ function generateImageEntriesWithReview(
           status: getEntryStatus(itemStatuses[entry.id]),
         } as const)
     ),
-    ...report.results.new.map(mapRegressionEntryToImageEntry).map(
+    ...report.results.new.map(mapRegressionEntryToEntry).map(
       (entry) =>
         ({
           ...entry,
@@ -89,7 +91,7 @@ function generateImageEntriesWithReview(
           status: getEntryStatus(itemStatuses[entry.id]),
         } as const)
     ),
-    ...report.results.removed.map(mapRegressionEntryToImageEntry).map(
+    ...report.results.removed.map(mapRegressionEntryToEntry).map(
       (entry) =>
         ({
           ...entry,
@@ -98,7 +100,7 @@ function generateImageEntriesWithReview(
           status: getEntryStatus(itemStatuses[entry.id]),
         } as const)
     ),
-    ...report.results.unchanged.map(mapRegressionPairToImageEntry).map(
+    ...report.results.unchanged.map(mapRegressionPairToEntry).map(
       (entry) =>
         ({
           ...entry,
@@ -110,21 +112,63 @@ function generateImageEntriesWithReview(
   ];
 }
 
+function mapRegressionEntryToEntry(entry: HostedRegressionTestEntry): Entry {
+  switch (entry.type) {
+    case "code":
+      return mapRegressionEntryToCodeEntry(entry);
+    case "image":
+      return mapRegressionEntryToImageEntry(entry);
+  }
+}
+
 function mapRegressionEntryToImageEntry(
-  entry: HostedRegressionTestEntry
+  entry: ImageRegressionTestEntry<HostedResource>
 ): ImageEntry {
   return {
+    type: "image",
     id: entry.id,
     thumbnailUrl: entry.image.url,
+    path: entry.path,
   };
 }
 
+function mapRegressionEntryToCodeEntry(
+  entry: CodeRegressionTestEntry<HostedResource>
+): CodeEntry {
+  return {
+    type: "code",
+    id: entry.id,
+    path: entry.path,
+  };
+}
+
+function mapRegressionPairToEntry(pair: HostedRegressionTestPair): Entry {
+  switch (pair.type) {
+    case "code":
+      return mapRegressionPairToCodeEntry(pair);
+    case "image":
+      return mapRegressionPairToImageEntry(pair);
+  }
+}
+
 function mapRegressionPairToImageEntry(
-  pair: HostedRegressionTestPair
+  pair: ImageRegressionTestPair<HostedResource>
 ): ImageEntry {
   return {
+    type: "image",
     id: pair.actual.id,
     thumbnailUrl: pair.comparison.diff.url,
+    path: pair.actual.path,
+  };
+}
+
+function mapRegressionPairToCodeEntry(
+  pair: CodeRegressionTestPair<HostedResource>
+): CodeEntry {
+  return {
+    type: "code",
+    id: pair.actual.id,
+    path: pair.actual.path,
   };
 }
 
@@ -141,7 +185,7 @@ function getSentimentForStatus(status: ItemStatus): Sentiment {
   }
 }
 
-function getEntryStatus(status: ItemStatus): ImageEntryStatus | undefined {
+function getEntryStatus(status: ItemStatus): EntryStatus | undefined {
   switch (status) {
     case "approved":
       return "approved";

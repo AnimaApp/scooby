@@ -1,8 +1,9 @@
-import { ImageSourceEntry, TestEntry, TestEntryType } from "../../types";
+import { ImageSourceEntry, TestEntry, ImageTestEntryType } from "../../types";
 import { generateHTMLImageSources } from "./html";
 import { generatePNGImageSources } from "./png";
 
 export type GenerateImageSourcesOptions = {
+  datasetType: ImageTestEntryType;
   maxThreads?: number;
 };
 
@@ -10,36 +11,27 @@ export async function generateImageSources(
   entries: TestEntry[],
   options: GenerateImageSourcesOptions
 ): Promise<ImageSourceEntry[]> {
-  if (entries.length === 0) {
-    return [];
+  if (
+    !entries.every(
+      (entry) =>
+        entry.type.category === "image" &&
+        entry.type.subtype === options.datasetType.subtype
+    )
+  ) {
+    throw new Error(
+      "dataset is malformed, found different types of image test entries. Expected all to be: " +
+        options.datasetType.subtype
+    );
   }
 
-  const datasetType = getDatasetType(entries);
-
-  if (datasetType === "png") {
+  if (options.datasetType.subtype === "png") {
     return generatePNGImageSources(entries);
-  } else if (datasetType === "html") {
+  } else if (options.datasetType.subtype === "html") {
     return generateHTMLImageSources(entries, options);
   }
 
   throw new Error(
     "cannot generate image sources, there is no handler for dataset type: " +
-      datasetType
+      options.datasetType
   );
-}
-
-export function getDatasetType(entries: TestEntry[]): TestEntryType {
-  const entryType = entries?.[0].type;
-  if (!entryType) {
-    throw new Error("unable to determine dataset entry type, dataset is empty");
-  }
-
-  if (!entries.every((entry) => entry.type === entryType)) {
-    throw new Error(
-      "dataset is malformed, found different types of test entries. Expected all to be: " +
-        entryType
-    );
-  }
-
-  return entryType;
 }

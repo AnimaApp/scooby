@@ -95,6 +95,12 @@ jobs:
       - run:
           name: "Run PNG regression test"
           command: "scooby regression --name 'png-regression' --tests sample-projects/ci-png-regression"
+      - run:
+          name: "Run JSON regression test"
+          command: "scooby regression --name 'json-regression' --tests sample-projects/ci-json-regression"
+      - run:
+          name: "Run JSX regression test"
+          command: "scooby regression --name 'jsx-regression' --tests sample-projects/ci-jsx-regression"
 
   run-scooby-fidelity-tests:
     docker:
@@ -105,6 +111,15 @@ jobs:
       - run:
           name: "Run HTML fidelity test"
           command: "scooby fidelity --name 'html-fidelity' --expected sample-projects/ci-html-fidelity/expected --actual sample-projects/ci-html-fidelity/actual"
+      - run:
+          name: "Run JSON fidelity test"
+          command: "scooby fidelity --name 'json-fidelity' --expected sample-projects/ci-json-fidelity/expected --actual sample-projects/ci-json-fidelity/actual"
+      - run:
+          name: "Run JSX fidelity test"
+          command: "scooby fidelity --name 'jsx-fidelity' --expected sample-projects/ci-jsx-fidelity/expected --actual sample-projects/ci-jsx-fidelity/actual"
+      - run:
+          name: "Run nested JSX fidelity test"
+          command: "scooby fidelity --name 'nested-jsx-fidelity' --expected sample-projects/ci-nested-jsx-fidelity/expected --actual sample-projects/ci-nested-jsx-fidelity/actual"
 
   scooby-update-status:
     docker:

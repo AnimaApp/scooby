@@ -27,10 +27,12 @@ export async function generateHTMLImageSources(
       }
 
       return {
+        type: "image",
         id: result.id,
         groupId: result.groupId,
         path: result.screenshotPath,
         tags: matchedEntry.options?.tags ?? [],
+        relativePath: matchedEntry.relativePath,
       };
     });
   });
@@ -92,6 +94,7 @@ async function takeScreenshot(
   request: ScreenshotTaskRequest
 ): Promise<ScreenshotTaskResult> {
   // @ts-ignore
+  // eslint-disable-next-line @typescript-eslint/no-this-alias
   const browser: Browser = this;
 
   return await withPage(browser, async (page: Page) => {

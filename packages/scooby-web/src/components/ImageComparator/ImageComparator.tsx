@@ -84,7 +84,7 @@ export const ImageComparator = (props: Props) => {
               <CaretLeftOutlined /> Expected
             </Button>
           </Tooltip>
-          <Tooltip title="(⭢) Show actual image, the one produced by this test run">
+          <Tooltip title="(→) Show actual image, the one produced by this test run">
             <Button
               disabled={props.imageData.type === "removed"}
               type={props.mode === "actual" ? "primary" : "default"}

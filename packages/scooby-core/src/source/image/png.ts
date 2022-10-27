@@ -6,16 +6,19 @@ export async function generatePNGImageSources(
   const output: ImageSourceEntry[] = [];
 
   for (const entry of entries) {
-    if (entry.type !== "png") {
+    if (entry.type.category !== "image" || entry.type.subtype !== "png") {
       throw new Error(
-        "unable to load PNG test entry, found found entry type: " + entry.type
+        "unable to load PNG test entry, found found entry type: " +
+          JSON.stringify(entry.type)
       );
     }
 
     output.push({
+      type: "image",
       id: entry.id,
       groupId: entry.id,
       path: entry.path,
+      relativePath: entry.relativePath,
       tags: entry.options?.tags ?? [],
     });
   }

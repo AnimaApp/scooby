@@ -17,17 +17,18 @@ type Props = {
 
 export function Report({ report, repository, commit, review }: Props) {
   function getContent() {
-    if (report.type === "regression") {
-      return <RegressionReportController report={report} review={review} />;
-    } else if (report.type === "fidelity") {
-      return <FidelityReportController report={report} review={review} />;
-    } else {
-      return (
-        <ErrorPanel
-          // @ts-ignore
-          message={`No report handler has been set for type: ${report.type}`}
-        />
-      );
+    switch (report.type) {
+      case "regression":
+        return <RegressionReportController report={report} review={review} />;
+      case "fidelity":
+        return <FidelityReportController report={report} review={review} />;
+      default:
+        return (
+          <ErrorPanel
+            // @ts-ignore
+            message={`No report handler has been set for type: ${report.type}`}
+          />
+        );
     }
   }
 

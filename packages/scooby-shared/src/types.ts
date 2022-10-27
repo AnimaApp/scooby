@@ -16,6 +16,36 @@ export type BaseReport = {
   items?: ReportItem[];
 };
 
+export type BaseReportEntry = {
+  id: string;
+  groupId: string;
+  tags: string[];
+  path: string;
+};
+export type ReportImageTestEntry<TResource extends Resource> =
+  BaseReportEntry & {
+    type: "image";
+    image: TResource;
+  };
+export type ReportCodeTestEntry<TResource extends Resource> =
+  BaseReportEntry & {
+    type: "code";
+    code: TResource;
+  };
+export type ReportImageComparison<TResource extends Resource> = {
+  type: "image";
+  similarity: number;
+  normalizedExpected: TResource;
+  normalizedActual: TResource;
+  diff: TResource;
+  overlap: TResource;
+};
+export type ReportCodeComparison<TResource extends Resource> = {
+  type: "code";
+  similarity: number;
+  diff?: TResource;
+};
+
 // Regression
 
 export type BaseRegressionReport<TResource extends Resource> = BaseReport & {
@@ -24,31 +54,78 @@ export type BaseRegressionReport<TResource extends Resource> = BaseReport & {
   results: RegressionReportResults<TResource>;
 };
 
-export type RegressionReportResults<TResource extends Resource> = {
-  new: RegressionTestEntry<TResource>[];
-  removed: RegressionTestEntry<TResource>[];
-  unchanged: RegressionTestPair<TResource>[];
-  changed: RegressionTestPair<TResource>[];
+export type BaseRegressionReportResults<
+  TResource extends Resource,
+  TEntry extends RegressionTestEntry<TResource>,
+  TPair extends RegressionTestPair<TResource>
+> = {
+  new: TEntry[];
+  removed: TEntry[];
+  unchanged: TPair[];
+  changed: TPair[];
 };
 
-export type RegressionTestPair<TResource extends Resource> = {
-  expected: RegressionTestEntry<TResource>;
-  actual: RegressionTestEntry<TResource>;
-  comparison: {
-    similarity: number;
-    normalizedExpected: TResource;
-    normalizedActual: TResource;
-    diff: TResource;
-    overlap: TResource;
+export type ImageRegressionReportResults<TResource extends Resource> =
+  BaseRegressionReportResults<
+    TResource,
+    ImageRegressionTestEntry<TResource>,
+    ImageRegressionTestPair<TResource>
+  > & {
+    type: "image";
   };
+
+export type CodeRegressionReportResults<TResource extends Resource> =
+  BaseRegressionReportResults<
+    TResource,
+    CodeRegressionTestEntry<TResource>,
+    CodeRegressionTestPair<TResource>
+  > & {
+    type: "code";
+  };
+export type RegressionReportResults<TResource extends Resource> =
+  | ImageRegressionReportResults<TResource>
+  | CodeRegressionReportResults<TResource>;
+
+export type BaseRegressionTestPair<
+  TResource extends Resource,
+  TEntry extends RegressionTestEntry<TResource>,
+  TComparison
+> = {
+  expected: TEntry;
+  actual: TEntry;
+  comparison: TComparison;
 };
 
-export type RegressionTestEntry<TResource extends Resource> = {
-  id: string;
-  groupId: string;
-  tags: string[];
-  image: TResource;
-};
+export type ImageRegressionTestPair<TResource extends Resource> =
+  BaseRegressionTestPair<
+    TResource,
+    ImageRegressionTestEntry<TResource>,
+    ReportImageComparison<TResource>
+  > & {
+    type: "image";
+  };
+
+export type CodeRegressionTestPair<TResource extends Resource> =
+  BaseRegressionTestPair<
+    TResource,
+    CodeRegressionTestEntry<TResource>,
+    ReportCodeComparison<TResource>
+  > & {
+    type: "code";
+  };
+
+export type RegressionTestPair<TResource extends Resource> =
+  | ImageRegressionTestPair<TResource>
+  | CodeRegressionTestPair<TResource>;
+
+export type ImageRegressionTestEntry<TResource extends Resource> =
+  ReportImageTestEntry<TResource>;
+export type CodeRegressionTestEntry<TResource extends Resource> =
+  ReportCodeTestEntry<TResource>;
+export type RegressionTestEntry<TResource extends Resource> =
+  | ImageRegressionTestEntry<TResource>
+  | CodeRegressionTestEntry<TResource>;
+
 export type LocalRegressionTestPair = RegressionTestPair<LocalResource>;
 export type HostedRegressionTestPair = RegressionTestPair<HostedResource>;
 export type LocalRegressionTestEntry = RegressionTestEntry<LocalResource>;
@@ -66,24 +143,45 @@ export type BaseFidelityReport<TResource extends Resource> = BaseReport & {
   pairs: FidelityTestPair<TResource>[];
 };
 
-export type FidelityTestPair<TResource extends Resource> = {
-  expected: FidelityTestEntry<TResource>;
-  actual: FidelityTestEntry<TResource>;
-  comparison: {
-    similarity: number;
-    normalizedExpected: TResource;
-    normalizedActual: TResource;
-    diff: TResource;
-    overlap: TResource;
-  };
+export type BaseFidelityTestPair<
+  TResource extends Resource,
+  TEntry extends FidelityTestEntry<TResource>,
+  TComparison
+> = {
+  expected: TEntry;
+  actual: TEntry;
+  comparison: TComparison;
 };
 
-export type FidelityTestEntry<TResource extends Resource> = {
-  id: string;
-  groupId: string;
-  tags: string[];
-  image: TResource;
-};
+export type ImageFidelityTestPair<TResource extends Resource> =
+  BaseFidelityTestPair<
+    TResource,
+    ImageFidelityTestEntry<TResource>,
+    ReportImageComparison<TResource>
+  > & {
+    type: "image";
+  };
+
+export type CodeFidelityTestPair<TResource extends Resource> =
+  BaseFidelityTestPair<
+    TResource,
+    CodeFidelityTestEntry<TResource>,
+    ReportCodeComparison<TResource>
+  > & {
+    type: "code";
+  };
+
+export type FidelityTestPair<TResource extends Resource> =
+  | ImageFidelityTestPair<TResource>
+  | CodeFidelityTestPair<TResource>;
+
+export type ImageFidelityTestEntry<TResource extends Resource> =
+  ReportImageTestEntry<TResource>;
+export type CodeFidelityTestEntry<TResource extends Resource> =
+  ReportCodeTestEntry<TResource>;
+export type FidelityTestEntry<TResource extends Resource> =
+  | ImageFidelityTestEntry<TResource>
+  | CodeFidelityTestEntry<TResource>;
 
 export type LocalFidelityTestPair = FidelityTestPair<LocalResource>;
 export type HostedFidelityTestPair = FidelityTestPair<HostedResource>;

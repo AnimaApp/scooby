@@ -1,24 +1,29 @@
 import {
+  CodeFidelityTestEntry,
+  ImageFidelityTestEntry,
   LocalFidelityReport,
   LocalFidelityTestEntry,
   LocalFidelityTestPair,
+  LocalResource,
   ReportItem,
   ReportItemStatus,
   Summary,
   SummaryStatistic,
 } from "@animaapp/scooby-shared";
 import {
-  BatchImageComparisonEntry,
-  BatchImageComparisonResult,
+  BatchComparisonEntry,
+  BatchComparisonResult,
+  CodeBatchComparisonEntry,
+  ImageBatchComparisonEntry,
 } from "../../comparison";
-import { ImageSourceEntry } from "../../types";
+import { CodeSourceEntry, ImageSourceEntry } from "../../types";
 import { calculateFileMD5 } from "../../utils/hash";
 import { convertPathToLocalResource } from "../../utils/resource";
 
 export async function generateReport(context: {
   name: string;
   commitHash: string;
-  comparisonResult: BatchImageComparisonResult;
+  comparisonResult: BatchComparisonResult;
 }): Promise<LocalFidelityReport> {
   const overallFidelityScore = calculateOverallFidelityScore(
     context.comparisonResult.comparisons
@@ -41,7 +46,7 @@ export async function generateReport(context: {
 }
 
 function calculateOverallFidelityScore(
-  comparisons: BatchImageComparisonEntry[]
+  comparisons: BatchComparisonEntry[]
 ): number {
   if (comparisons.length === 0) {
     return 0;
@@ -55,29 +60,31 @@ function calculateOverallFidelityScore(
 }
 
 function generatePairs(
-  comparisons: BatchImageComparisonEntry[]
+  comparisons: BatchComparisonEntry[]
 ): LocalFidelityTestPair[] {
   return comparisons.map(convertComparisonEntryToReportEntry);
 }
 
-function convertImageSourceEntryToReportEntry(
-  entry: ImageSourceEntry
-): LocalFidelityTestEntry {
-  return {
-    id: entry.id,
-    groupId: entry.groupId,
-    image: convertPathToLocalResource(entry.path),
-    tags: entry.tags,
-  };
+function convertComparisonEntryToReportEntry(
+  entry: BatchComparisonEntry
+): LocalFidelityTestPair {
+  switch (entry.type) {
+    case "code":
+      return convertCodeComparisonEntryToReportEntry(entry);
+    case "image":
+      return convertImageComparisonEntryToReportEntry(entry);
+  }
 }
 
-function convertComparisonEntryToReportEntry(
-  entry: BatchImageComparisonEntry
+function convertImageComparisonEntryToReportEntry(
+  entry: ImageBatchComparisonEntry
 ): LocalFidelityTestPair {
   return {
+    type: "image",
     actual: convertImageSourceEntryToReportEntry(entry.actual),
     expected: convertImageSourceEntryToReportEntry(entry.expected),
     comparison: {
+      type: "image",
       diff: convertPathToLocalResource(entry.comparison.diffImagePath),
       overlap: convertPathToLocalResource(entry.comparison.overlapImagePath),
       normalizedActual: convertPathToLocalResource(
@@ -88,6 +95,49 @@ function convertComparisonEntryToReportEntry(
       ),
       similarity: entry.comparison.similarity,
     },
+  };
+}
+
+function convertCodeComparisonEntryToReportEntry(
+  entry: CodeBatchComparisonEntry
+): LocalFidelityTestPair {
+  return {
+    type: "code",
+    actual: convertCodeSourceEntryToReportEntry(entry.actual),
+    expected: convertCodeSourceEntryToReportEntry(entry.expected),
+    comparison: {
+      type: "code",
+      similarity: entry.comparison.similarity,
+      ...(entry.comparison.differenceFilePath && {
+        diff: convertPathToLocalResource(entry.comparison.differenceFilePath),
+      }),
+    },
+  };
+}
+
+function convertImageSourceEntryToReportEntry(
+  entry: ImageSourceEntry
+): ImageFidelityTestEntry<LocalResource> {
+  return {
+    type: "image",
+    id: entry.id,
+    groupId: entry.groupId,
+    image: convertPathToLocalResource(entry.path),
+    tags: entry.tags,
+    path: entry.relativePath,
+  };
+}
+
+function convertCodeSourceEntryToReportEntry(
+  entry: CodeSourceEntry
+): CodeFidelityTestEntry<LocalResource> {
+  return {
+    type: "code",
+    id: entry.id,
+    groupId: entry.groupId,
+    code: convertPathToLocalResource(entry.path),
+    tags: entry.tags,
+    path: entry.relativePath,
   };
 }
 
@@ -148,6 +198,15 @@ async function generateReportItem(
   return {
     id: entry.id,
     status,
-    hash: await calculateFileMD5(entry.image.path),
+    hash: await calculateHash(entry),
   };
+}
+
+async function calculateHash(entry: LocalFidelityTestEntry): Promise<string> {
+  switch (entry.type) {
+    case "code":
+      return calculateFileMD5(entry.code.path);
+    case "image":
+      return calculateFileMD5(entry.image.path);
+  }
 }

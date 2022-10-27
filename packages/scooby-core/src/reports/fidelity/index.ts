@@ -1,14 +1,21 @@
 import { LocalFidelityReport } from "@animaapp/scooby-shared";
-import { batchImageComparison } from "../../comparison";
+import { performBatchComparison } from "../../comparison";
 import { loadTestEntries } from "../../loading";
 import { MatchedSources, matchSources } from "../../matching";
-import { generateImageSources } from "../../source/image";
-import { BaseReportParams, ImageSourceEntry, ReportContext } from "../../types";
+import { generateSources, GenerateSourcesOptions } from "../../source";
+import {
+  BaseReportParams,
+  Formatter,
+  ReportContext,
+  SourceEntry,
+} from "../../types";
 import { generateReport } from "./report";
 
 export type FidelityTestParams = BaseReportParams & {
   expectedPath: string;
   actualPath: string;
+  formatter?: Formatter;
+  maxThreads?: number;
 };
 
 export async function runFidelityReport(
@@ -25,12 +32,22 @@ export async function runFidelityReport(
   const actualEntries = await loadTestEntries(params.actualPath);
   console.log(`found ${expectedEntries.length} actual test entries`);
 
+  const sourceGenerationOptions: GenerateSourcesOptions = {
+    formatter: params.formatter,
+    maxThreads: params.maxThreads,
+  };
   console.log("generating expected test sources...");
-  const expectedSources = await generateImageSources(expectedEntries, {});
+  const expectedSources = await generateSources(
+    expectedEntries,
+    sourceGenerationOptions
+  );
   console.log(`generated ${expectedSources.length} expected test sources`);
 
   console.log("generating actual test sources...");
-  const actualSources = await generateImageSources(actualEntries, {});
+  const actualSources = await generateSources(
+    actualEntries,
+    sourceGenerationOptions
+  );
   console.log(`generated ${actualSources.length} actual test sources`);
 
   console.log("matching datasets...");
@@ -41,7 +58,9 @@ export async function runFidelityReport(
   console.log(`found ${matchedSources.matching.length} matched tests`);
 
   console.log("comparing tests...");
-  const comparisonResult = await batchImageComparison(matchedSources.matching);
+  const comparisonResult = await performBatchComparison(
+    matchedSources.matching
+  );
 
   console.log("generating report...");
   const report = await generateReport({
@@ -53,9 +72,7 @@ export async function runFidelityReport(
   return report;
 }
 
-function validateMatchedSources(
-  matchedSources: MatchedSources<ImageSourceEntry>
-) {
+function validateMatchedSources(matchedSources: MatchedSources<SourceEntry>) {
   if (matchedSources.new.length > 0) {
     console.warn(
       "INVALID DATASET, detected actual entries not present in the expected dataset: ",

@@ -47,6 +47,7 @@ export const basicLoader: Loader = {
         id,
         type: getTypeForEntry(dirEntry.name),
         path: path.join(testsPath, dirEntry.name),
+        relativePath: dirEntry.name,
         ...(options && { options }),
       });
     }

@@ -64,10 +64,13 @@ export const nestedLoader: Loader = {
         ? await loadOptions(path.join(dirPath, "scooby.json"))
         : undefined;
 
+      const absolutePath = path.join(dirPath, mainFile);
+
       entries.push({
         id: dirEntry.name,
         type: getTypeForEntry(mainFile),
-        path: path.join(dirPath, mainFile),
+        path: absolutePath,
+        relativePath: path.relative(testsPath, absolutePath),
         ...(options && { options }),
       });
     }
