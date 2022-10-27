@@ -10,7 +10,7 @@
   "scripts": {
     "build": "yarn prepare-build && tsc -b && rm -Rf dist/ && yarn parcel build src/index.html --public-url .",
     "prepare-env-variables": "node ./scripts/prepare-env-variables.js",
-    "prepare-build": "yarn prepare-env-variables",
+    "prepare-build": "yarn prepare-env-variables && tsc -b",
     "clean": "rm -Rf ./dist && rm -f tsconfig.tsbuildinfo && rm -Rf .parcel-cache",
     "dev": "yarn prepare-build && yarn parcel src/index.html --cache-dir .parcel-cache",
     "test": "jest"
@@ -23,6 +23,7 @@
     "@reecelucas/react-use-hotkeys": "^2.0.0",
     "antd": "^4.23.5",
     "jest": "^29.2.1",
+    "js-confetti": "^0.11.0",
     "parcel": "^2.7.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",

@@ -1,12 +1,14 @@
 import { useMemo, useState } from "react";
 import { useAPI } from "../../../data-fetching/api/provider";
 import { useCommitStatusOverview } from "../../../data-fetching/hooks/useCommitStatusOverview";
+import { useFeedback } from "../../../providers/feedback";
 import { ApproveButton } from "./ApproveButton";
 
 type Props = { commit: string; repository: string; report: string };
 
 export function ApproveButtonController({ commit, repository, report }: Props) {
   const { api } = useAPI();
+  const { confetti } = useFeedback();
   const [requestState, setRequestState] = useState<
     "idle" | "loading" | "success" | "error"
   >("idle");
@@ -46,6 +48,7 @@ export function ApproveButtonController({ commit, repository, report }: Props) {
         repository,
       });
       setRequestState("success");
+      confetti();
 
       // TODO: invalidate SWR status to show actual approved status
     } catch (error) {
