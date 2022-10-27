@@ -224,7 +224,7 @@ async function generateItems(
   const items: ReportItem[] = [];
 
   for (const pair of pairs) {
-    items.push(await generateReportItem(pair.actual, "success"));
+    items.push(await generateReportItem(pair.actual, pair.outcome));
   }
 
   return items;
