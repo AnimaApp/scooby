@@ -11,7 +11,11 @@ export const GaugeStatisticView = ({ statistic, compact }: Props) => {
     <StatisticView
       compact={compact}
       statistic={statistic}
-      value={statistic.value.toFixed(8)}
+      value={
+        Number.isInteger(statistic.value)
+          ? statistic.value.toFixed(0)
+          : statistic.value.toFixed(8)
+      }
     />
   );
 };
