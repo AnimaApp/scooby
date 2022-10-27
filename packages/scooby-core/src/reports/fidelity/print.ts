@@ -14,6 +14,13 @@ export function printFidelityReport(report: LocalFidelityReport) {
     sortedPairs.map((pair) => ({
       id: pair.actual.id,
       fidelity: pair.comparison.similarity,
+      outcome: pair.outcome,
     }))
   );
+
+  if (report.pairs.some((pair) => pair.outcome === "failure")) {
+    console.log(
+      "\nDETECTED FAILED ENTRIES! See the table above for more information"
+    );
+  }
 }

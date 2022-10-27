@@ -121,12 +121,14 @@ const imageFidelityEntrySchema = reportImageEntrySchema;
 const codeFidelityEntrySchema = reportCodeEntrySchema;
 const imageFidelityTestPairSchema = z.object({
   type: z.literal("image").default("image"),
+  outcome: z.enum(["success", "failure"]).default("success"),
   expected: imageFidelityEntrySchema,
   actual: imageFidelityEntrySchema,
   comparison: reportImageComparisonSchema,
 });
 const codeFidelityTestPairSchema = z.object({
   type: z.literal("code"),
+  outcome: z.enum(["success", "failure"]).default("success"),
   expected: codeFidelityEntrySchema,
   actual: codeFidelityEntrySchema,
   comparison: reportCodeComparisonSchema,

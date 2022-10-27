@@ -148,6 +148,7 @@ export type BaseFidelityTestPair<
   TEntry extends FidelityTestEntry<TResource>,
   TComparison
 > = {
+  outcome: "success" | "failure";
   expected: TEntry;
   actual: TEntry;
   comparison: TComparison;
