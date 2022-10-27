@@ -7,6 +7,8 @@ import { Browser, Page } from "puppeteer";
 import { withBrowser, withPage } from "./runtime";
 import { createTemporaryFile } from "../../../utils/temp";
 
+const MAX_SCREENSHOT_ATTEMPTS = 3;
+
 export async function generateHTMLImageSources(
   entries: TestEntry[],
   options: GenerateImageSourcesOptions
@@ -16,7 +18,7 @@ export async function generateHTMLImageSources(
       Browser,
       ScreenshotTaskRequest,
       ScreenshotTaskResult
-    >(browser, takeScreenshot, options.maxThreads ?? 4);
+    >(browser, takeScreenshotWithRetries, options.maxThreads ?? 4);
     const generationTasks = createGenerationTasks(entries, queue);
     const results = await Promise.all(generationTasks);
 
@@ -90,13 +92,34 @@ function serializeViewport(viewport: Viewport): string {
   return `${viewport.width}x${viewport.height}`;
 }
 
-async function takeScreenshot(
+async function takeScreenshotWithRetries(
   request: ScreenshotTaskRequest
 ): Promise<ScreenshotTaskResult> {
   // @ts-ignore
   // eslint-disable-next-line @typescript-eslint/no-this-alias
   const browser: Browser = this;
 
+  let error;
+  for (let attempt = 0; attempt < MAX_SCREENSHOT_ATTEMPTS; attempt++) {
+    try {
+      const result = await takeScreenshot(browser, request);
+      return result;
+    } catch (currentError) {
+      console.error(
+        "experienced error while taking screenshot, trying again: " +
+          currentError
+      );
+      error = currentError;
+    }
+  }
+
+  throw error;
+}
+
+async function takeScreenshot(
+  browser: Browser,
+  request: ScreenshotTaskRequest
+): Promise<ScreenshotTaskResult> {
   return await withPage(browser, async (page: Page) => {
     await page.setViewport(request.viewport);
     await page.goto(url.pathToFileURL(request.htmlPath).toString(), {
