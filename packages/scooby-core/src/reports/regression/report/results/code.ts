@@ -34,6 +34,7 @@ function convertCodeSourceEntryToReportEntry(
     groupId: entry.groupId,
     code: convertPathToLocalResource(entry.path),
     tags: entry.tags,
+    path: entry.relativePath,
   };
 }
 

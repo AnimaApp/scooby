@@ -72,10 +72,13 @@ export const nestedMultipleFilesLoader: Loader = {
           ...specificOptions,
         };
 
+        const absolutePath = path.join(dirPath, testFile);
+
         entries.push({
           id: `${dirEntry.name}-${name}`,
           type: getTypeForEntry(testFile),
-          path: path.join(dirPath, testFile),
+          path: absolutePath,
+          relativePath: path.relative(testsPath, absolutePath),
           ...(options && Object.keys(options).length > 0 && { options }),
         });
       }

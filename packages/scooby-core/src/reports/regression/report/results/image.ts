@@ -52,6 +52,7 @@ function convertImageSourceEntryToReportEntry(
     groupId: entry.groupId,
     image: convertPathToLocalResource(entry.path),
     tags: entry.tags,
+    path: entry.relativePath,
   };
 }
 

@@ -16,6 +16,7 @@ export type TestEntry = {
   id: string;
   type: TestEntryType;
   path: string;
+  relativePath: string;
   options?: TestEntryOptions;
 };
 
@@ -38,6 +39,7 @@ export type BaseSourceEntry = {
   id: string;
   groupId: string;
   tags: string[];
+  relativePath: string;
 };
 
 export type ImageSourceEntry = BaseSourceEntry & {

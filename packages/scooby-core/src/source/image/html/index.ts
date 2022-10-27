@@ -32,6 +32,7 @@ export async function generateHTMLImageSources(
         groupId: result.groupId,
         path: result.screenshotPath,
         tags: matchedEntry.options?.tags ?? [],
+        relativePath: matchedEntry.relativePath,
       };
     });
   });

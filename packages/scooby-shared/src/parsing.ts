@@ -57,6 +57,7 @@ const baseReportEntrySchema = z.object({
   id: z.string(),
   groupId: z.string(),
   tags: z.array(z.string()),
+  path: z.string().default("path"),
 });
 const reportImageEntrySchema = baseReportEntrySchema.extend({
   type: z.literal("image").default("image"),

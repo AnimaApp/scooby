@@ -20,6 +20,7 @@ export type BaseReportEntry = {
   id: string;
   groupId: string;
   tags: string[];
+  path: string;
 };
 export type ReportImageTestEntry<TResource extends Resource> =
   BaseReportEntry & {

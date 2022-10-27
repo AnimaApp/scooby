@@ -48,6 +48,7 @@ export async function generateCodeSources(
       groupId: matchedTestEntry.id,
       path: result.preparedSourcePath,
       tags: matchedTestEntry.options?.tags ?? [],
+      relativePath: matchedTestEntry.relativePath,
     };
   });
 }

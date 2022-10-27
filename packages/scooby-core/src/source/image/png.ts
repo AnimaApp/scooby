@@ -18,6 +18,7 @@ export async function generatePNGImageSources(
       id: entry.id,
       groupId: entry.id,
       path: entry.path,
+      relativePath: entry.relativePath,
       tags: entry.options?.tags ?? [],
     });
   }
