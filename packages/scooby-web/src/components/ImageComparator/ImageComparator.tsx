@@ -53,7 +53,7 @@ export const ImageComparator = (props: Props) => {
   }
 
   function getImages() {
-    return getImageSources().map((source) => {
+    return [...new Set(getImageSources())].map((source) => {
       const displayStyle = getImageSource() === source ? undefined : "none";
       return (
         <Image

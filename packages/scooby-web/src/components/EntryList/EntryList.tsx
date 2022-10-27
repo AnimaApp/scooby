@@ -31,7 +31,7 @@ export const EntryList = ({
   return (
     <div
       style={{
-        flex: 1,
+        height: "100%",
         display: "flex",
         flexDirection: "column",
         padding: "0 8px 0 8px",
@@ -45,7 +45,7 @@ export const EntryList = ({
         {candidateModes.map((mode) => {
           const Icon = ENTRY_LIST_MODES[mode].icon;
           return (
-            <Tooltip title={ENTRY_LIST_MODES[mode].description}>
+            <Tooltip title={ENTRY_LIST_MODES[mode].description} key={mode}>
               <Radio.Button value={mode}>
                 <Icon />
               </Radio.Button>

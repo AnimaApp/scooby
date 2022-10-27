@@ -8,16 +8,28 @@ type Props = {
 };
 
 export const StatsView = (props: Props) => {
+  if (props.stats.length === 0) {
+    return <span>No statistics have been generated for this report.</span>;
+  }
+
   return (
     <div style={{ display: "flex", gap: props.compact ? 0 : 32 }}>
       {props.stats.map((stat) => {
         if (stat.type === "fraction") {
           return (
-            <FractionStatisticView statistic={stat} compact={props.compact} />
+            <FractionStatisticView
+              key={stat.name}
+              statistic={stat}
+              compact={props.compact}
+            />
           );
         } else if (stat.type === "gauge") {
           return (
-            <GaugeStatisticView statistic={stat} compact={props.compact} />
+            <GaugeStatisticView
+              key={stat.name}
+              statistic={stat}
+              compact={props.compact}
+            />
           );
         }
       })}
