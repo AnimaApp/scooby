@@ -68,17 +68,12 @@ function generatePairs(
 function convertComparisonEntryToReportEntry(
   entry: BatchComparisonEntry
 ): LocalFidelityTestPair {
-  if (entry.type === "code") {
-    return convertCodeComparisonEntryToReportEntry(entry);
-  } else if (entry.type === "image") {
-    return convertImageComparisonEntryToReportEntry(entry);
+  switch (entry.type) {
+    case "code":
+      return convertCodeComparisonEntryToReportEntry(entry);
+    case "image":
+      return convertImageComparisonEntryToReportEntry(entry);
   }
-
-  throw new Error(
-    "unable to generate pair for report, as there is no handler registered for type: " +
-      // @ts-ignore
-      entry.type
-  );
 }
 
 function convertImageComparisonEntryToReportEntry(
@@ -208,15 +203,10 @@ async function generateReportItem(
 }
 
 async function calculateHash(entry: LocalFidelityTestEntry): Promise<string> {
-  if (entry.type === "image") {
-    return calculateFileMD5(entry.image.path);
-  } else if (entry.type === "code") {
-    return calculateFileMD5(entry.code.path);
+  switch (entry.type) {
+    case "code":
+      return calculateFileMD5(entry.code.path);
+    case "image":
+      return calculateFileMD5(entry.image.path);
   }
-
-  throw new Error(
-    "unable to calculate entry hash, no handler registered for type: " +
-      // @ts-ignore
-      entry.type
-  );
 }

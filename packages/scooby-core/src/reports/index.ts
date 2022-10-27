@@ -98,27 +98,19 @@ async function uploadReport(
   report: LocalReport,
   api: ScoobyAPI
 ): Promise<HostedReport> {
-  if (report.type === "regression") {
-    return api.uploadRegressionReport(context, report);
-  } else if (report.type === "fidelity") {
-    return api.uploadFidelityReport(context, report);
+  switch (report.type) {
+    case "fidelity":
+      return api.uploadFidelityReport(context, report);
+    case "regression":
+      return api.uploadRegressionReport(context, report);
   }
-
-  throw new Error(
-    // @ts-ignore
-    `unable to upload report, received unsupported type: ${report.type}`
-  );
 }
 
 function printReport(report: LocalReport) {
-  if (report.type === "regression") {
-    return printRegressionReport(report);
-  } else if (report.type === "fidelity") {
-    return printFidelityReport(report);
+  switch (report.type) {
+    case "fidelity":
+      return printFidelityReport(report);
+    case "regression":
+      return printRegressionReport(report);
   }
-
-  throw new Error(
-    // @ts-ignore
-    `unable to print report, received unsupported type: ${report.type}`
-  );
 }

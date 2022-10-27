@@ -43,15 +43,10 @@ async function generateReportItem(
 }
 
 async function calculateHash(entry: LocalRegressionTestEntry): Promise<string> {
-  if (entry.type === "image") {
-    return calculateFileMD5(entry.image.path);
-  } else if (entry.type === "code") {
-    return calculateFileMD5(entry.code.path);
+  switch (entry.type) {
+    case "image":
+      return calculateFileMD5(entry.image.path);
+    case "code":
+      return calculateFileMD5(entry.code.path);
   }
-
-  throw new Error(
-    "unable to calculate entry hash, no handler registered for type: " +
-      // @ts-ignore
-      entry.type
-  );
 }

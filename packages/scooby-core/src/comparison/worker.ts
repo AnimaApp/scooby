@@ -12,14 +12,12 @@ import type {
 export default async function runComparison(
   request: ComparisonTaskRequest
 ): Promise<ComparisonTaskResult> {
-  if (request.type === "image") {
-    return runImageComparison(request);
-  } else if (request.type === "code") {
-    return runCodeComparison(request);
+  switch (request.type) {
+    case "image":
+      return runImageComparison(request);
+    case "code":
+      return runCodeComparison(request);
   }
-
-  // @ts-ignore
-  throw new Error("invalid comparison request type: " + request.type);
 }
 
 async function runImageComparison(
