@@ -38,7 +38,6 @@ export const ListItem = ({ selected, entry, onClick }: Props) => {
       }
       className="clickable-list-item"
       style={{
-        width: "200px",
         backgroundColor: "white",
         boxShadow: `inset 0px 0px 0px ${selected ? 3 : 1}px ${color}`,
       }}

@@ -40,7 +40,6 @@ export const ListItem = ({ selected, entry, onClick }: Props) => {
       size="small"
       bodyStyle={{ padding: 0, position: "relative" }}
       style={{
-        width: "200px",
         marginBottom: 8,
       }}
       onClick={onClick}
