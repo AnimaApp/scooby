@@ -1,5 +1,7 @@
 import { DataNode } from "antd/lib/tree";
 import { Entry } from "../../../../types";
+import { getColorForSentiment } from "../../../../utils/colors";
+import { getStatusBadge } from "../badge";
 
 export function convertToTreeData(entries: Entry[]): DataNode[] {
   const nodes: DataNode[] = [];
@@ -55,6 +57,15 @@ function addEntryToTreeRecursively(
       entry,
       matchingNode.children
     );
+  }
+
+  if (isLeaf) {
+    const color = entry.sentiment
+      ? getColorForSentiment(entry.sentiment)
+      : undefined;
+
+    matchingNode.icon = getStatusBadge(entry.status);
+    matchingNode.style = { color };
   }
 
   nodes.sort((a, b) => (a.key as string).localeCompare(b.key as string));

@@ -1,11 +1,8 @@
-import {
-  CheckCircleFilled,
-  ExclamationCircleOutlined,
-} from "@ant-design/icons";
-import { Card, Tag, Tooltip } from "antd";
+import { Card, Tag } from "antd";
 import { useEffect, useRef } from "react";
-import { EntryStatus, ImageEntry } from "../../../../types";
+import { ImageEntry } from "../../../../types";
 import { getColorForSentiment } from "../../../../utils/colors";
+import { getStatusBadge } from "../badge";
 
 type Props = {
   selected?: boolean;
@@ -68,21 +65,3 @@ export const ListItem = ({ selected, entry, onClick }: Props) => {
     </Card>
   );
 };
-
-function getStatusBadge(status: EntryStatus | undefined): JSX.Element | null {
-  if (status === "approved") {
-    return (
-      <Tooltip title="This entry has been approved">
-        <CheckCircleFilled style={{ color: "green" }} />
-      </Tooltip>
-    );
-  } else if (status === "changes_requested") {
-    return (
-      <Tooltip title="Changes have been requested for this entry">
-        <ExclamationCircleOutlined style={{ color: "red" }} />
-      </Tooltip>
-    );
-  }
-
-  return null;
-}
