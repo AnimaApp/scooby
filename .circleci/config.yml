@@ -117,6 +117,9 @@ jobs:
       - run:
           name: "Run JSX fidelity test"
           command: "scooby fidelity --name 'jsx-fidelity' --expected sample-projects/ci-jsx-fidelity/expected --actual sample-projects/ci-jsx-fidelity/actual"
+      - run:
+          name: "Run nested JSX fidelity test"
+          command: "scooby fidelity --name 'nested-jsx-fidelity' --expected sample-projects/ci-nested-jsx-fidelity/expected --actual sample-projects/ci-nested-jsx-fidelity/actual"
 
   scooby-update-status:
     docker:
