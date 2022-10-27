@@ -17,7 +17,6 @@ export default function Root() {
             display: "flex",
             flexDirection: "column",
             height: "calc(100vh - 64px)",
-            overflow: "hidden",
           }}
         >
           <Outlet />

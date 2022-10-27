@@ -96,7 +96,7 @@ function mapFidelityPairToEntry(pair: HostedFidelityTestPair): EnrichedEntry {
 
 function mapFidelityPairToBaseEntry(pair: FidelityTestPair<HostedResource>) {
   let sentiment: Sentiment = "success";
-  if (pair.comparison.similarity < 0.5) {
+  if (pair.outcome === "failure") {
     sentiment = "danger";
   } else if (pair.comparison.similarity < 1) {
     sentiment = "warning";

@@ -110,7 +110,7 @@ jobs:
       - setup-scooby
       - run:
           name: "Run HTML fidelity test"
-          command: "scooby fidelity --name 'html-fidelity' --expected sample-projects/ci-html-fidelity/expected --actual sample-projects/ci-html-fidelity/actual --threshold=1"
+          command: "scooby fidelity --name 'html-fidelity' --expected sample-projects/ci-html-fidelity/expected --actual sample-projects/ci-html-fidelity/actual --threshold=0.5"
       - run:
           name: "Run JSON fidelity test"
           command: "scooby fidelity --name 'json-fidelity' --expected sample-projects/ci-json-fidelity/expected --actual sample-projects/ci-json-fidelity/actual"
