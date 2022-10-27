@@ -11,6 +11,7 @@ import { CodeData } from "./CodeComparatorController";
 import { Sources } from "./useSource";
 import Editor from "@monaco-editor/react";
 import { DiffEditor } from "@monaco-editor/react";
+import { getLanguageForFile } from "./language";
 
 type Props = {
   sources: Sources;
@@ -26,6 +27,7 @@ export const CodeComparator = (props: Props) => {
   function getEditor() {
     const commonEditorProps = {
       height: "90vh",
+      language: getLanguageForFile(props.data.filePath),
       options: {
         readOnly: true,
       },

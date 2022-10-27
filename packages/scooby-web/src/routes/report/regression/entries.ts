@@ -128,6 +128,7 @@ function mapRegressionEntryToImageEntry(
     type: "image",
     id: entry.id,
     thumbnailUrl: entry.image.url,
+    path: entry.path,
   };
 }
 
@@ -137,6 +138,7 @@ function mapRegressionEntryToCodeEntry(
   return {
     type: "code",
     id: entry.id,
+    path: entry.path,
   };
 }
 
@@ -156,6 +158,7 @@ function mapRegressionPairToImageEntry(
     type: "image",
     id: pair.actual.id,
     thumbnailUrl: pair.comparison.diff.url,
+    path: pair.actual.path,
   };
 }
 
@@ -165,6 +168,7 @@ function mapRegressionPairToCodeEntry(
   return {
     type: "code",
     id: pair.actual.id,
+    path: pair.actual.path,
   };
 }
 

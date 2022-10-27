@@ -16,6 +16,7 @@ export type BaseEntry = {
   sentiment?: Sentiment;
   tag?: string;
   status?: EntryStatus;
+  path?: string;
 };
 
 export type EntryStatus = "approved" | "changes_requested";

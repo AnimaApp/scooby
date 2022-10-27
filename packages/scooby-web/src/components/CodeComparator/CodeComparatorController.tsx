@@ -20,6 +20,7 @@ export type CodeData = BaseCodeData &
     | {
         type: "pair";
         similarity: number;
+        filePath: string;
         expectedUrl: string;
         actualUrl: string;
         rawDiffUrl?: string;
@@ -27,10 +28,12 @@ export type CodeData = BaseCodeData &
     | {
         type: "new";
         newUrl: string;
+        filePath: string;
       }
     | {
         type: "removed";
         removedUrl: string;
+        filePath: string;
       }
   );
 

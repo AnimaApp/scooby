@@ -49,6 +49,7 @@ function getCodeDataById(
         expectedUrl: changed.expected.code.url,
         rawDiffUrl: changed.comparison.diff?.url,
         similarity: changed.comparison.similarity,
+        filePath: changed.actual.path,
       },
     };
   }
@@ -65,6 +66,7 @@ function getCodeDataById(
         expectedUrl: unchanged.expected.code.url,
         rawDiffUrl: unchanged.comparison.diff?.url,
         similarity: unchanged.comparison.similarity,
+        filePath: unchanged.actual.path,
       },
     };
   }
@@ -78,6 +80,7 @@ function getCodeDataById(
         newUrl: newEntry.code.url,
         tag: "new",
         sentiment: "danger",
+        filePath: newEntry.path,
       },
     };
   }
@@ -91,6 +94,7 @@ function getCodeDataById(
         removedUrl: removed.code.url,
         tag: "removed",
         sentiment: "danger",
+        filePath: removed.path,
       },
     };
   }

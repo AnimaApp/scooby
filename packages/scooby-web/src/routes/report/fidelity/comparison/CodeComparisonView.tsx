@@ -15,6 +15,7 @@ export const CodeComparisonView = ({ pair }: Props) => {
         actualUrl: pair.actual.code.url,
         expectedUrl: pair.expected.code.url,
         rawDiffUrl: pair.comparison.diff?.url,
+        filePath: pair.actual.path,
       } as const),
     [pair]
   );

@@ -120,6 +120,7 @@ function mapFidelityPairToImageEntry(
       pair.comparison.similarity === 1
         ? pair.comparison.normalizedActual.url
         : pair.comparison.diff.url,
+    path: pair.actual.path,
   };
 }
 
@@ -129,5 +130,6 @@ function mapFidelityPairToCodeEntry(
   return {
     ...mapFidelityPairToBaseEntry(pair),
     type: "code",
+    path: pair.actual.path,
   };
 }

@@ -16,12 +16,12 @@ export const EntryList = ({
 }: Props) => {
   const candidateModes: Mode[] = useMemo((): Mode[] => {
     if (entries.every((entry) => entry.type === "image")) {
-      return ["image", "basic"];
+      return ["image", "basic", "fileTree"];
     } else if (entries.every((entry) => entry.type === "code")) {
-      return ["basic"];
+      return ["basic", "fileTree"];
     }
 
-    return ["basic"];
+    return ["basic", "fileTree"];
   }, [entries]);
 
   const [currentMode, setCurrentMode] = useState<Mode>(candidateModes[0]);
