@@ -61,3 +61,19 @@ npx @animaapp/scooby-cli fidelity --name "fidelity-name" --expected /path/to/exp
 ```
 
 # Developer guide
+
+# Troubleshooting
+
+## Error: Could not find expected browser (chrome) locally. Run `npm install` to download the correct Chromium revision (1045629).
+
+If you are on macOS you might experience the following error when running Scooby:
+
+```
+Error: Could not find expected browser (chrome) locally. Run `npm install` to download the correct Chromium revision (1045629).
+```
+
+To solve it, you can force a chromium installation with:
+
+```
+node node_modules/puppeteer/install.js
+```

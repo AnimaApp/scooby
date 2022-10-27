@@ -7,4 +7,12 @@ const oclif = require("@oclif/core");
 oclif
   .run()
   .then(require("@oclif/core/flush"))
-  .catch(require("@oclif/core/handle"));
+  .catch((e) => {
+    console.error("");
+    console.error("######################## FULL STACKTRACE #####################")
+    console.error(e);
+    console.error("##############################################################");
+    console.error("");
+
+    require("@oclif/errors/handle")(e)
+  });
