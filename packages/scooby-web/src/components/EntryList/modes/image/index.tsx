@@ -1,16 +1,6 @@
-import { Sentiment } from "@animaapp/scooby-shared";
 import { List } from "antd";
-import { LargeImageEntryListItem } from "./LargeImageEntryListItem";
-
-export type ImageEntry = {
-  id: string;
-  thumbnailUrl: string;
-  sentiment?: Sentiment;
-  tag?: string;
-  status?: ImageEntryStatus;
-};
-
-export type ImageEntryStatus = "approved" | "changes_requested";
+import { ImageEntry } from "../../../../types";
+import { ListItem } from "./ListItem";
 
 type Props = {
   selectedEntryId?: string;
@@ -24,13 +14,13 @@ export const ImageEntryList = ({
   onEntrySelected,
 }: Props) => {
   return (
-    <div style={{ flex: 1, overflowY: "scroll", padding: "0 8px" }}>
+    <div style={{ flex: 1, overflowY: "scroll" }}>
       <List
         itemLayout="horizontal"
         dataSource={entries}
         style={{ flex: 1 }}
         renderItem={(entry) => (
-          <LargeImageEntryListItem
+          <ListItem
             entry={entry}
             key={entry.id}
             selected={selectedEntryId === entry.id}

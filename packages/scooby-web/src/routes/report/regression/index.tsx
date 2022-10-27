@@ -1,11 +1,11 @@
 import { HostedRegressionReport, Review } from "@animaapp/scooby-shared";
 import useHotkeys from "@reecelucas/react-use-hotkeys";
 import { useCallback, useEffect, useMemo } from "react";
-import { ImageEntry } from "../../../components/ImageEntryList";
+import { Entry } from "../../../types";
 import { useQueryParams } from "../../hooks/useQueryParams";
 import { useUpdateParams } from "../../hooks/useUpdateParams";
 import { Action } from "./actions";
-import { generateImageEntries } from "./entries";
+import { generateEntries } from "./entries";
 import { RegressionReport } from "./RegressionReport";
 
 type Props = {
@@ -18,8 +18,8 @@ type QueryParams = {
 };
 
 export function RegressionReportController({ report, review }: Props) {
-  const entries: ImageEntry[] = useMemo(
-    () => generateImageEntries(report, review),
+  const entries: Entry[] = useMemo(
+    () => generateEntries(report, review),
     [report, review]
   );
 

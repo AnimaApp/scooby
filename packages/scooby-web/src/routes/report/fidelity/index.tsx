@@ -1,11 +1,11 @@
 import { HostedFidelityReport, Review } from "@animaapp/scooby-shared";
 import useHotkeys from "@reecelucas/react-use-hotkeys";
 import { useCallback, useEffect, useMemo } from "react";
-import { ImageEntry } from "../../../components/ImageEntryList";
+import { Entry } from "../../../types";
 import { useQueryParams } from "../../hooks/useQueryParams";
 import { useUpdateParams } from "../../hooks/useUpdateParams";
 import { Action } from "./actions";
-import { generateImageEntries } from "./entries";
+import { generateEntries } from "./entries";
 import { FidelityReport } from "./FidelityReport";
 
 type Props = {
@@ -18,8 +18,8 @@ type QueryParams = {
 };
 
 export function FidelityReportController({ report, review }: Props) {
-  const entries: ImageEntry[] = useMemo(() => {
-    return generateImageEntries(report, review);
+  const entries: Entry[] = useMemo(() => {
+    return generateEntries(report, review);
   }, [report, review]);
 
   const params = useQueryParams<QueryParams>();
@@ -72,7 +72,7 @@ export function FidelityReportController({ report, review }: Props) {
   );
 }
 
-function findFirstId(entries: ImageEntry[]): string {
+function findFirstId(entries: Entry[]): string {
   const firstId = entries?.[0];
   if (firstId) {
     return firstId.id;

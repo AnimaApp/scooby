@@ -5,3 +5,8 @@
 .ant-image-preview-img-wrapper {
   padding: 60px
 }
+
+.clickable-list-item:hover {
+  background-color:#a7d6f5 !important;
+  cursor: pointer;
+}

@@ -98,7 +98,7 @@ export type BaseRegressionTestPair<
 export type ImageRegressionTestPair<TResource extends Resource> =
   BaseRegressionTestPair<
     TResource,
-    RegressionTestEntry<TResource>,
+    ImageRegressionTestEntry<TResource>,
     ReportImageComparison<TResource>
   > & {
     type: "image";
@@ -107,7 +107,7 @@ export type ImageRegressionTestPair<TResource extends Resource> =
 export type CodeRegressionTestPair<TResource extends Resource> =
   BaseRegressionTestPair<
     TResource,
-    RegressionTestEntry<TResource>,
+    CodeRegressionTestEntry<TResource>,
     ReportCodeComparison<TResource>
   > & {
     type: "code";
@@ -155,7 +155,7 @@ export type BaseFidelityTestPair<
 export type ImageFidelityTestPair<TResource extends Resource> =
   BaseFidelityTestPair<
     TResource,
-    FidelityTestEntry<TResource>,
+    ImageFidelityTestEntry<TResource>,
     ReportImageComparison<TResource>
   > & {
     type: "image";
@@ -164,15 +164,15 @@ export type ImageFidelityTestPair<TResource extends Resource> =
 export type CodeFidelityTestPair<TResource extends Resource> =
   BaseFidelityTestPair<
     TResource,
-    FidelityTestEntry<TResource>,
+    CodeFidelityTestEntry<TResource>,
     ReportCodeComparison<TResource>
   > & {
     type: "code";
   };
 
 export type FidelityTestPair<TResource extends Resource> =
-  | ImageRegressionTestPair<TResource>
-  | CodeRegressionTestPair<TResource>;
+  | ImageFidelityTestPair<TResource>
+  | CodeFidelityTestPair<TResource>;
 
 export type ImageFidelityTestEntry<TResource extends Resource> =
   ReportImageTestEntry<TResource>;

@@ -1,22 +1,26 @@
 import {
+  CodeFidelityTestPair,
+  FidelityTestPair,
   HostedFidelityReport,
   HostedFidelityTestPair,
+  HostedResource,
+  ImageFidelityTestPair,
   Review,
   Sentiment,
 } from "@animaapp/scooby-shared";
-import { ImageEntry } from "../../../components/ImageEntryList";
+import { CodeEntry, Entry, ImageEntry } from "../../../types";
 import { getRankForSentiment } from "../../../utils/rank";
 import { computeReportItemsReviewStatuses } from "../../../utils/review";
 
-type EnrichedImageEntry = ImageEntry & {
+type EnrichedEntry<TEntry extends Entry = Entry> = TEntry & {
   fidelityPair: HostedFidelityTestPair;
 };
 
-export function generateImageEntries(
+export function generateEntries(
   report: HostedFidelityReport,
   review: Review | undefined
-): ImageEntry[] {
-  const entries: EnrichedImageEntry[] = [];
+): Entry[] {
+  const entries: EnrichedEntry[] = [];
   if (!review) {
     entries.push(...generateImageEntriesWithoutReview(report));
   } else {
@@ -42,20 +46,20 @@ export function generateImageEntries(
 
 function generateImageEntriesWithoutReview(
   report: HostedFidelityReport
-): EnrichedImageEntry[] {
-  return report.pairs.map(mapFidelityPairToImageEntry);
+): EnrichedEntry[] {
+  return report.pairs.map(mapFidelityPairToEntry);
 }
 
 function generateImageEntriesWithReview(
   report: HostedFidelityReport,
   review: Review
-): EnrichedImageEntry[] {
+): EnrichedEntry[] {
   const itemStatuses = computeReportItemsReviewStatuses(
     report.items ?? [],
     review
   );
 
-  return report.pairs.map(mapFidelityPairToImageEntry).map((entry) => {
+  return report.pairs.map(mapFidelityPairToEntry).map((entry) => {
     const status = itemStatuses[entry.id];
 
     if (status === "changes_requested") {
@@ -76,9 +80,21 @@ function generateImageEntriesWithReview(
   });
 }
 
-function mapFidelityPairToImageEntry(
-  pair: HostedFidelityTestPair
-): EnrichedImageEntry {
+function mapFidelityPairToEntry(pair: HostedFidelityTestPair): EnrichedEntry {
+  if (pair.type === "image") {
+    return mapFidelityPairToImageEntry(pair);
+  } else if (pair.type === "code") {
+    return mapFidelityPairToCodeEntry(pair);
+  }
+
+  throw new Error(
+    "unable to generate entry, no handler is defined for pair type: " +
+      // @ts-ignore
+      pair.type
+  );
+}
+
+function mapFidelityPairToBaseEntry(pair: FidelityTestPair<HostedResource>) {
   let sentiment: Sentiment = "success";
   if (pair.comparison.similarity < 0.5) {
     sentiment = "danger";
@@ -88,12 +104,30 @@ function mapFidelityPairToImageEntry(
 
   return {
     id: pair.actual.id,
+    sentiment,
+    tag: pair.comparison.similarity.toFixed(6),
+    fidelityPair: pair,
+  };
+}
+
+function mapFidelityPairToImageEntry(
+  pair: ImageFidelityTestPair<HostedResource>
+): EnrichedEntry<ImageEntry> {
+  return {
+    ...mapFidelityPairToBaseEntry(pair),
+    type: "image",
     thumbnailUrl:
       pair.comparison.similarity === 1
         ? pair.comparison.normalizedActual.url
         : pair.comparison.diff.url,
-    sentiment,
-    tag: pair.comparison.similarity.toFixed(6),
-    fidelityPair: pair,
+  };
+}
+
+function mapFidelityPairToCodeEntry(
+  pair: CodeFidelityTestPair<HostedResource>
+): EnrichedEntry<CodeEntry> {
+  return {
+    ...mapFidelityPairToBaseEntry(pair),
+    type: "code",
   };
 }

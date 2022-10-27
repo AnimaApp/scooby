@@ -2,22 +2,18 @@ import {
   CheckCircleFilled,
   ExclamationCircleOutlined,
 } from "@ant-design/icons";
-import { Card, Tag, Tooltip } from "antd";
+import { List, Tag, Tooltip } from "antd";
 import { useEffect, useRef } from "react";
-import { getColorForSentiment } from "../../utils/colors";
-import { ImageEntry, ImageEntryStatus } from "./ImageEntryList";
+import { EntryStatus, Entry } from "../../../../types";
+import { getColorForSentiment } from "../../../../utils/colors";
 
 type Props = {
   selected?: boolean;
-  entry: ImageEntry;
+  entry: Entry;
   onClick: () => void;
 };
 
-export const LargeImageEntryListItem = ({
-  selected,
-  entry,
-  onClick,
-}: Props) => {
+export const ListItem = ({ selected, entry, onClick }: Props) => {
   const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -31,9 +27,8 @@ export const LargeImageEntryListItem = ({
     : "black";
 
   return (
-    <Card
+    <List.Item
       ref={ref}
-      hoverable
       title={entry.id}
       extra={
         <div style={{ display: "flex", alignItems: "center" }}>
@@ -41,42 +36,20 @@ export const LargeImageEntryListItem = ({
           {getStatusBadge(entry.status)}
         </div>
       }
-      size="small"
-      bodyStyle={{ padding: 0, position: "relative" }}
+      className="clickable-list-item"
       style={{
         width: "200px",
-        marginBottom: 8,
+        backgroundColor: "white",
+        boxShadow: `inset 0px 0px 0px ${selected ? 3 : 1}px ${color}`,
       }}
       onClick={onClick}
     >
-      <div
-        style={{
-          position: "absolute",
-          top: 0,
-          bottom: 0,
-          left: 0,
-          right: 0,
-          boxShadow: `inset 0px 0px 0px ${selected ? 4 : 1}px ${color}`,
-        }}
-      ></div>
-      <img
-        src={entry.thumbnailUrl}
-        style={{
-          width: "100%",
-          height: "150px",
-          objectFit: "contain",
-          background:
-            "repeating-conic-gradient(#ededed 0% 25%, transparent 0% 50%) 50% / 20px 20px",
-          padding: 1,
-        }}
-      />
-    </Card>
+      {entry.id}
+    </List.Item>
   );
 };
 
-function getStatusBadge(
-  status: ImageEntryStatus | undefined
-): JSX.Element | null {
+function getStatusBadge(status: EntryStatus | undefined): JSX.Element | null {
   if (status === "approved") {
     return (
       <Tooltip title="This entry has been approved">
