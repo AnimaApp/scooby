@@ -1,100 +1,83 @@
 import {
-  HostedFidelityReport,
-  HostedRegressionReport,
+  HostedReport,
   HostedResource,
-  LocalFidelityReport,
-  LocalRegressionReport,
+  LocalReport,
   LocalResource,
 } from "@animaapp/scooby-shared";
+import { clone } from "../utils/clone";
 
-export function getAllLocalResourcesForRegression(
-  report: LocalRegressionReport
-): LocalResource[] {
-  return [
-    ...report.results.new.map((entry) => entry.image),
-    ...report.results.removed.map((entry) => entry.image),
-    ...report.results.changed.flatMap((pair) => [
-      pair.actual.image,
-      pair.expected.image,
-      pair.comparison.diff,
-      pair.comparison.overlap,
-      pair.comparison.normalizedActual,
-      pair.comparison.normalizedExpected,
-    ]),
-    ...report.results.unchanged.flatMap((pair) => [
-      pair.actual.image,
-      pair.expected.image,
-      pair.comparison.diff,
-      pair.comparison.overlap,
-      pair.comparison.normalizedActual,
-      pair.comparison.normalizedExpected,
-    ]),
-  ];
+export function getAllLocalResources(object: unknown): LocalResource[] {
+  if (typeof object !== "object" || !object) {
+    return [];
+  }
+
+  const resources: LocalResource[] = [];
+  if (isLocalResource(object)) {
+    resources.push(object);
+  } else if (Array.isArray(object)) {
+    for (const item of object) {
+      resources.push(...getAllLocalResources(item));
+    }
+  } else {
+    for (const [, value] of Object.entries(object)) {
+      resources.push(...getAllLocalResources(value));
+    }
+  }
+
+  return resources;
 }
 
-export function buildHostedRegressionReport(
-  localReport: LocalRegressionReport,
+export function buildHostedReport<THosted extends HostedReport>(
+  localReport: LocalReport,
   resources: Record<string, HostedResource>
-): HostedRegressionReport {
-  return {
-    ...localReport,
-    results: {
-      new: localReport.results.new.map((entry) => ({
-        ...entry,
-        image: getResource(entry.image.path, resources),
-      })),
-      removed: localReport.results.removed.map((entry) => ({
-        ...entry,
-        image: getResource(entry.image.path, resources),
-      })),
-      unchanged: localReport.results.unchanged.map((pair) => ({
-        actual: {
-          ...pair.actual,
-          image: getResource(pair.actual.image.path, resources),
-        },
-        expected: {
-          ...pair.expected,
-          image: getResource(pair.expected.image.path, resources),
-        },
-        comparison: {
-          ...pair.comparison,
-          diff: getResource(pair.comparison.diff.path, resources),
-          overlap: getResource(pair.comparison.overlap.path, resources),
-          normalizedActual: getResource(
-            pair.comparison.normalizedActual.path,
-            resources
-          ),
-          normalizedExpected: getResource(
-            pair.comparison.normalizedExpected.path,
-            resources
-          ),
-        },
-      })),
-      changed: localReport.results.changed.map((pair) => ({
-        actual: {
-          ...pair.actual,
-          image: getResource(pair.actual.image.path, resources),
-        },
-        expected: {
-          ...pair.expected,
-          image: getResource(pair.expected.image.path, resources),
-        },
-        comparison: {
-          ...pair.comparison,
-          diff: getResource(pair.comparison.diff.path, resources),
-          overlap: getResource(pair.comparison.overlap.path, resources),
-          normalizedActual: getResource(
-            pair.comparison.normalizedActual.path,
-            resources
-          ),
-          normalizedExpected: getResource(
-            pair.comparison.normalizedExpected.path,
-            resources
-          ),
-        },
-      })),
-    },
-  };
+): THosted {
+  const clonedReport = clone(localReport);
+  replaceLocalResourcesRecursively(clonedReport, resources);
+  return clonedReport as unknown as THosted;
+}
+
+function replaceLocalResourcesRecursively(
+  object: unknown,
+  resources: Record<string, HostedResource>
+) {
+  if (typeof object !== "object" || !object) {
+    return;
+  }
+
+  if (Array.isArray(object)) {
+    for (let i = 0; i < object.length; i++) {
+      const item = object[i];
+      if (isLocalResource(item)) {
+        object[i] = getResource(item.path, resources);
+      } else {
+        replaceLocalResourcesRecursively(item, resources);
+      }
+    }
+  } else {
+    for (const [key, value] of Object.entries(object)) {
+      if (isLocalResource(value)) {
+        (object as Record<string, unknown>)[key] = getResource(
+          value.path,
+          resources
+        );
+      } else {
+        replaceLocalResourcesRecursively(value, resources);
+      }
+    }
+  }
+
+  return resources;
+}
+
+function isLocalResource(object: unknown): object is LocalResource {
+  return (
+    object !== undefined &&
+    object !== null &&
+    typeof object === "object" &&
+    "type" in object &&
+    (object as Record<string, unknown>).type === "local" &&
+    "path" in object
+  );
 }
 
 function getResource(
@@ -109,51 +92,4 @@ function getResource(
   }
 
   return resource;
-}
-
-export function getAllLocalResourcesForFidelity(
-  report: LocalFidelityReport
-): LocalResource[] {
-  return [
-    ...report.pairs.flatMap((pair) => [
-      pair.actual.image,
-      pair.expected.image,
-      pair.comparison.diff,
-      pair.comparison.overlap,
-      pair.comparison.normalizedActual,
-      pair.comparison.normalizedExpected,
-    ]),
-  ];
-}
-
-export function buildHostedFidelityReport(
-  localReport: LocalFidelityReport,
-  resources: Record<string, HostedResource>
-): HostedFidelityReport {
-  return {
-    ...localReport,
-    pairs: localReport.pairs.map((pair) => ({
-      actual: {
-        ...pair.actual,
-        image: getResource(pair.actual.image.path, resources),
-      },
-      expected: {
-        ...pair.expected,
-        image: getResource(pair.expected.image.path, resources),
-      },
-      comparison: {
-        ...pair.comparison,
-        diff: getResource(pair.comparison.diff.path, resources),
-        overlap: getResource(pair.comparison.overlap.path, resources),
-        normalizedActual: getResource(
-          pair.comparison.normalizedActual.path,
-          resources
-        ),
-        normalizedExpected: getResource(
-          pair.comparison.normalizedExpected.path,
-          resources
-        ),
-      },
-    })),
-  };
 }
