@@ -10,6 +10,15 @@ export class PatchedSplitPane extends React.Component<
   SplitPaneState
 > {}
 
-export function SplitPane(props: PropsWithChildren<SplitPaneProps>) {
-  return <OriginalSplitPane {...props}>{props.children}</OriginalSplitPane>;
+export function VerticalSplitPane(props: PropsWithChildren<SplitPaneProps>) {
+  return (
+    // @ts-ignore
+    <OriginalSplitPane
+      style={{ flex: 1, height: undefined, position: undefined }}
+      minSize={200}
+      {...props}
+    >
+      {props.children}
+    </OriginalSplitPane>
+  );
 }
