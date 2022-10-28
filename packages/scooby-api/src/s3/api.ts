@@ -40,6 +40,7 @@ import {
 } from "./awsConfig";
 import { Readable } from "stream";
 import { buildHostedReport, getAllLocalResources } from "./resources";
+import fastq, { queueAsPromised } from "fastq";
 
 export class S3ScoobyAPI implements ScoobyAPI {
   private options: ScoobyAPIOptions;
@@ -201,12 +202,29 @@ export class S3ScoobyAPI implements ScoobyAPI {
   ): Promise<Record<string, HostedResource>> {
     const hostedResources: Record<string, HostedResource> = {};
 
-    for (let i = 0; i < resources.length; i++) {
-      const resource = resources[i];
-      console.log(`${i + 1}/${resources.length} - uploading: ${resource.path}`);
-      const hostedResource = await this.uploadReportResource(context, resource);
-      hostedResources[resource.path] = hostedResource;
-    }
+    type Task = {
+      index: number;
+      total: number;
+      resource: LocalResource;
+    };
+
+    const queue: queueAsPromised<Task> = fastq.promise(
+      async ({ index, total, resource }: Task) => {
+        console.log(`${index + 1}/${total} - uploading: ${resource.path}`);
+        const hostedResource = await this.uploadReportResource(
+          context,
+          resource
+        );
+        hostedResources[resource.path] = hostedResource;
+      },
+      this.options.maxConcurrentUploads
+    );
+
+    const tasks = resources.map((resource, index) =>
+      queue.push({ index, total: resources.length, resource })
+    );
+
+    await Promise.all(tasks);
 
     return hostedResources;
   }
