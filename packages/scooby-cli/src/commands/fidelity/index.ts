@@ -27,6 +27,10 @@ export default class Fidelity extends Command {
     }),
     "max-threads": maxThreadsFlag,
     formatter: formatterFlag,
+    threshold: Flags.string({
+      description:
+        "Specify a float value that acts as a threshold, with 1 being the strictest and 0 making everything pass. By default it's set to 0 to make all fidelity tests pass.",
+    }),
   };
 
   async run(): Promise<void> {
@@ -38,6 +42,7 @@ export default class Fidelity extends Command {
       expectedPath: flags.expected,
       maxThreads: flags["max-threads"],
       formatter: flags.formatter,
+      threshold: flags.threshold ? parseFloat(flags.threshold) : undefined,
     });
   }
 }

@@ -33,7 +33,7 @@ export function Report({ report, repository, commit, review }: Props) {
   }
 
   return (
-    <div style={{ height: "100%" }}>
+    <div style={{ height: "100%", display: "flex", flexDirection: "column" }}>
       <PageHeader
         title={report.name}
         tags={
@@ -84,7 +84,7 @@ export function Report({ report, repository, commit, review }: Props) {
       />
       <div
         style={{
-          height: "100%",
+          height: "calc(100% - 100px)",
           display: "flex",
           flexDirection: "column",
         }}

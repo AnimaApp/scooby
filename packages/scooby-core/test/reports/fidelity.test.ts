@@ -249,6 +249,37 @@ describe("fidelity test", () => {
     expect(mockContext.api.uploadFidelityReport).toHaveBeenCalled();
   });
 
+  it("fails if entries have a fidelity lower then threshold (JSON)", async () => {
+    const actualPath = path.resolve(
+      __dirname,
+      "../data/fidelity/json-with-differences/actual"
+    );
+    const expectedPath = path.resolve(
+      __dirname,
+      "../data/fidelity/json-with-differences/expected"
+    );
+
+    const report = await _processReport(
+      "fidelity",
+      { name: "test-fidelity", actualPath, expectedPath, threshold: 1 },
+      mockContext
+    );
+    if (report.type !== "fidelity") {
+      throw new Error("invalid report type received: " + report.type);
+    }
+
+    expect(report.name).toEqual("test-fidelity");
+    expect(report.commitHash).toEqual("feature-commit");
+    expect(report.summary.result).toEqual("failure");
+    expect(report.overallFidelityScore).toBeLessThan(1);
+    expect(report.pairs.length).toEqual(2);
+    expect(
+      (report.pairs as any[]).every((pair) => pair.comparison.similarity < 1)
+    ).toEqual(true);
+
+    expect(mockContext.api.uploadFidelityReport).toHaveBeenCalled();
+  });
+
   it("handles fidelity report with differences (JSX)", async () => {
     const actualPath = path.resolve(
       __dirname,

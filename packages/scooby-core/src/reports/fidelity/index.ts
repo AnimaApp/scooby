@@ -10,12 +10,14 @@ import {
   SourceEntry,
 } from "../../types";
 import { generateReport } from "./report";
+import { calculateEntriesOutcome } from "./threshold";
 
 export type FidelityTestParams = BaseReportParams & {
   expectedPath: string;
   actualPath: string;
   formatter?: Formatter;
   maxThreads?: number;
+  threshold?: number;
 };
 
 export async function runFidelityReport(
@@ -62,11 +64,16 @@ export async function runFidelityReport(
     matchedSources.matching
   );
 
+  console.log("computing items below threshold...");
+  const outcome = calculateEntriesOutcome(comparisonResult, {
+    threshold: params.threshold,
+  });
+
   console.log("generating report...");
   const report = await generateReport({
     name: params.name,
     commitHash: context.environment.currentCommitHash,
-    comparisonResult,
+    outcome,
   });
 
   return report;
