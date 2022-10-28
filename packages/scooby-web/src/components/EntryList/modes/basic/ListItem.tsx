@@ -43,7 +43,15 @@ export const ListItem = ({ selected, entry, onClick }: Props) => {
       }}
       onClick={onClick}
     >
-      {entry.id}
+      <span
+        style={{
+          whiteSpace: "nowrap",
+          overflow: "hidden",
+          textOverflow: "ellipsis",
+        }}
+      >
+        {entry.id}
+      </span>
     </List.Item>
   );
 };

@@ -15,12 +15,14 @@ const optionsSchema = z.object({
       region: z.string(),
     })
   ),
+  maxConcurrentUploads: z.number().int(),
 });
 
 export type ScoobyAPIOptions = z.infer<typeof optionsSchema>;
 
 const DEFAULT_OPTIONS: Partial<ScoobyAPIOptions> = {
   provider: "s3",
+  maxConcurrentUploads: 8,
 };
 
 export function validateOptions(
