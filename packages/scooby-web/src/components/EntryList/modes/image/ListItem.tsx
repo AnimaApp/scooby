@@ -1,4 +1,4 @@
-import { Card, Tag } from "antd";
+import { Card, Tag, Tooltip } from "antd";
 import { useEffect, useRef } from "react";
 import { ImageEntry } from "../../../../types";
 import { getColorForSentiment } from "../../../../utils/colors";
@@ -27,7 +27,7 @@ export const ListItem = ({ selected, entry, onClick }: Props) => {
     <Card
       ref={ref}
       hoverable
-      title={entry.id}
+      title={<Tooltip title={entry.id}>{entry.id}</Tooltip>}
       extra={
         <div style={{ display: "flex", alignItems: "center" }}>
           {entry.tag ? <Tag color={color}>{entry.tag}</Tag> : null}

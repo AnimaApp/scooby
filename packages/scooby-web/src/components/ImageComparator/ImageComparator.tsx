@@ -144,8 +144,19 @@ export const ImageComparator = (props: Props) => {
 
 function getTitle(name: string, imageData: ImageData): ReactNode {
   return (
-    <>
-      <span style={{ marginRight: 8 }}>{name}</span>
+    <div style={{ display: "flex", maxWidth: 600 }}>
+      <Tooltip title={name}>
+        <span
+          style={{
+            marginRight: 8,
+            textOverflow: "ellipsis",
+            whiteSpace: "nowrap",
+            overflow: "hidden",
+          }}
+        >
+          {name}
+        </span>
+      </Tooltip>
       {imageData.tag && (
         <Tag
           color={
@@ -160,6 +171,6 @@ function getTitle(name: string, imageData: ImageData): ReactNode {
       {imageData.type === "pair" && (
         <Tag>Similarity: {imageData.similarity.toFixed(6)}</Tag>
       )}
-    </>
+    </div>
   );
 }
