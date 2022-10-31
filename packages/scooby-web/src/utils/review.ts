@@ -7,6 +7,7 @@ export type ItemStatus =
   | "changes_requested";
 
 export function computeReportItemsReviewStatuses(
+  reportName: string,
   items: ReportItem[],
   review: Review
 ): Record<string, ItemStatus> {
@@ -14,10 +15,16 @@ export function computeReportItemsReviewStatuses(
 
   for (const item of items) {
     const approval = review.approvals.find(
-      (approval) => approval.id === item.id && approval.hash === item.hash
+      (approval) =>
+        approval.id === item.id &&
+        approval.hash === item.hash &&
+        approval.report === reportName
     );
     const rejection = review.rejections.find(
-      (rejection) => rejection.id === item.id && rejection.hash === item.hash
+      (rejection) =>
+        rejection.id === item.id &&
+        rejection.hash === item.hash &&
+        rejection.report === reportName
     );
 
     let status: ItemStatus;

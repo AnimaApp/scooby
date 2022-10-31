@@ -68,6 +68,7 @@ function generateImageEntriesWithReview(
   review: Review
 ): Entry[] {
   const itemStatuses = computeReportItemsReviewStatuses(
+    report.name,
     report.items ?? [],
     review
   );
