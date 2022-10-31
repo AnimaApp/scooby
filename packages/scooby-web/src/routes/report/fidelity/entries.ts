@@ -55,6 +55,7 @@ function generateImageEntriesWithReview(
   review: Review
 ): EnrichedEntry[] {
   const itemStatuses = computeReportItemsReviewStatuses(
+    report.name,
     report.items ?? [],
     review
   );

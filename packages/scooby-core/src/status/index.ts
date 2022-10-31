@@ -66,11 +66,13 @@ export async function updateStatus(context: UpdateStatusContext) {
   const reports = await fetchReports(context.api, context.commitHash);
 
   console.log("getting aggregate review...");
-  const review = await getAggregatedReview(
-    context.commitHash,
-    context.api,
-    context.githubApi
-  );
+  const review = await getAggregatedReview({
+    commit: context.commitHash,
+    api: context.api,
+    githubApi: context.githubApi,
+    isMainBranch: context.isMainBranch,
+    reports,
+  });
 
   console.log("computing statuses...");
   const statuses = await computeReportStatuses(
