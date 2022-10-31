@@ -1,18 +1,28 @@
 import { ScoobyAPI } from "@animaapp/scooby-api";
 import { GitHubAPI } from "@animaapp/scooby-github-api/src/types";
 import {
+  HostedReport,
   Review,
   ReviewApproval,
   ReviewRejection,
 } from "@animaapp/scooby-shared";
 
-export async function getAggregatedReview(
-  commit: string,
-  api: ScoobyAPI,
-  githubApi: GitHubAPI
-): Promise<Review> {
+export async function getAggregatedReview(context: {
+  commit: string;
+  api: ScoobyAPI;
+  githubApi: GitHubAPI;
+  isMainBranch: boolean;
+  reports: HostedReport[];
+}): Promise<Review> {
+  if (context.isMainBranch) {
+    console.log(
+      "building auto-approved review because we are running on main branch"
+    );
+    return buildReviewForMainBranch(context.commit, context.reports);
+  }
+
   console.log("fetching associated commits...");
-  const commits = await githubApi.getAssociatedCommits(commit);
+  const commits = await context.githubApi.getAssociatedCommits(context.commit);
   if (!commits?.length) {
     console.warn(
       "could not find associated commits, falling back on empty review"
@@ -21,7 +31,7 @@ export async function getAggregatedReview(
   }
 
   console.log("fetching reviews...");
-  const reviews = await fetchReviews(commits, api);
+  const reviews = await fetchReviews(commits, context.api);
   if (!reviews.length) {
     console.info("no reviews found, falling back on empty review");
     return buildEmptyReview();
@@ -100,6 +110,31 @@ async function fetchReviews(
 function buildEmptyReview(): Review {
   return {
     approvals: [],
+    rejections: [],
+  };
+}
+
+function buildReviewForMainBranch(
+  commit: string,
+  reports: HostedReport[]
+): Review {
+  const approvals: ReviewApproval[] = [];
+
+  for (const report of reports) {
+    for (const item of report.items ?? []) {
+      // All entries are automatically auto-approved on main branch
+      approvals.push({
+        createdAt: new Date().getTime(),
+        id: item.id,
+        commitHash: commit,
+        report: report.name,
+        hash: item.hash,
+      });
+    }
+  }
+
+  return {
+    approvals,
     rejections: [],
   };
 }
