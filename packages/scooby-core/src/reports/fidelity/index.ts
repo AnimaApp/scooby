@@ -28,7 +28,7 @@ export async function runFidelityReport(
   console.log(
     "loading expected test entries from path: " + params.expectedPath
   );
-  const expectedEntries = await loadTestEntries(params.expectedPath);
+  const expectedEntries = await loadTestEntries(params.expectedPath, params.fileType);
   console.log(`found ${expectedEntries.length} expected test entries`);
 
   console.log("loading actual test entries from path: " + params.actualPath);

@@ -17,7 +17,7 @@ export const nestedMultipleFilesLoader: Loader = {
     const files = dirEntries.filter(item => !item.isDirectory()).map(file => file.name);
 
     for(const folder of folders){
-      const directoryTests = await this.load(path.join(directory, folder));
+      const directoryTests = await this.load(path.join(directory, folder), fileType);
       entries.push(...directoryTests);
     }
 

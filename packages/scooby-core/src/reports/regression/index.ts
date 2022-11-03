@@ -28,7 +28,7 @@ export async function runRegressionReport(
   params: RegressionReportParams
 ): Promise<LocalRegressionReport> {
   console.log("loading test entries from path: " + params.testsPath);
-  const testEntries = await loadTestEntries(params.testsPath);
+  const testEntries = await loadTestEntries(params.testsPath, params.fileType);
   console.log(`found ${testEntries.length} test entries`);
 
   console.log("generating test sources...");
