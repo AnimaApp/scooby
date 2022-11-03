@@ -12,15 +12,9 @@ Scooby was built with these goals in mind:
 - Be highly extensible to support new kinds of tests and reports
 - Integrate well with our GitHub-based workflows
 
-# Overview
-
-TODO
-
 # Getting started
-
-## First-time repository setup
-
-### Environment variables
+1. `yarn install`
+2. Create `.env` (See [example](.env.sample))
 
 ## Adding your first Scooby test on CircleCI
 
