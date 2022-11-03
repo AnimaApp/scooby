@@ -14,6 +14,6 @@ export const formatterFlag = Flags.enum<Formatter>({
 
 export const fileType = Flags.string({
   char: "f",
-  description: "Specify a file type to test",
+  description: "Specify a file type to test. For example, --file-type=html",
   required: true,
 });
