@@ -10,14 +10,15 @@ export const nestedMultipleFilesLoader: Loader = {
     return true;
   },
 
-  async load(directory: string, fileType: string = ""): Promise<TestEntry[]> {
+  async load(directory: string, relativePath: string = "", fileType: string = ""): Promise<TestEntry[]> {
     const entries: TestEntry[] = [];
-    const dirEntries = await readdir(directory, { withFileTypes: true });
+    const absolutePath = path.join(directory, relativePath);
+    const dirEntries = await readdir(absolutePath, { withFileTypes: true });
     const folders = dirEntries.filter(item => item.isDirectory()).map(folder => folder.name);
     const files = dirEntries.filter(item => !item.isDirectory()).map(file => file.name);
 
     for(const folder of folders){
-      const directoryTests = await this.load(path.join(directory, folder), fileType);
+      const directoryTests = await this.load(directory, relativePath=path.join(relativePath, folder), fileType=fileType);
       entries.push(...directoryTests);
     }
 
@@ -28,14 +29,14 @@ export const nestedMultipleFilesLoader: Loader = {
         testExtension = foundExtension;
       } else {
         throw new Error(
-          "could not determine test extension in path: " + directory
+          "could not determine test extension in path: " + absolutePath
         );
       }
     }
 
     const baseOptionsFile = files.find((entry) => entry === "scooby.json");
     const baseOptions = baseOptionsFile
-      ? await loadOptions(path.join(directory, "scooby.json"))
+      ? await loadOptions(path.join(absolutePath, "scooby.json"))
       : undefined;
 
     const testFiles = files.filter((subEntry) => subEntry.endsWith(testExtension));
@@ -46,7 +47,7 @@ export const nestedMultipleFilesLoader: Loader = {
         (entry) => entry === `${name}.scooby.json`
       );
       const specificOptions = specificOptionsFile
-        ? await loadOptions(path.join(directory, `${name}.scooby.json`))
+        ? await loadOptions(path.join(absolutePath, `${name}.scooby.json`))
         : undefined;
 
       const options = {
@@ -54,13 +55,14 @@ export const nestedMultipleFilesLoader: Loader = {
         ...specificOptions,
       };
 
-      const absolutePath = path.join(directory, testFile);
+      const absoluteFilePath = path.join(absolutePath, testFile);
+      const id = relativePath ? `${relativePath.replace("/", "-")}-${name}` : name;
 
       entries.push({
-        id: `${directory}-${name}`,
+        id: id,
         type: getTypeForEntry(testFile),
-        path: absolutePath,
-        relativePath: path.relative(directory, absolutePath),
+        path: absoluteFilePath,
+        relativePath: path.relative(directory, absoluteFilePath),
         ...(options && Object.keys(options).length > 0 && { options }),
       });
     }

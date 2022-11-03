@@ -10,7 +10,7 @@ export async function loadTestEntries(path: string, fileType?: string): Promise<
 
   const loader = await getLoaderForPath(path);
 
-  const entries = await loader.load(path, fileType);
+  const entries = await loader.load(path, fileType=fileType);
 
   if (!entries.length) {
     throw new Error(`no test entries found in path: ${path}`);
