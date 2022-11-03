@@ -1,7 +1,7 @@
 import { existsSync } from "fs";
 
 import { TestEntry } from "../types";
-import { load } from "./loaders/loader";
+import { load } from "./loader/index";
 
 export async function loadTestEntries(
   path: string,

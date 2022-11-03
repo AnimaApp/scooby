@@ -44,7 +44,7 @@ export default class Regression extends Command {
       maxReferenceCommitBacktracking: flags["max-backtracking"],
       maxThreads: flags["max-threads"],
       formatter: flags.formatter,
-      fileType: flags.fileType,
+      fileType: flags["file-type"],
     });
   }
 }

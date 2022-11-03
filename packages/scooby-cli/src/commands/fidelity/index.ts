@@ -44,7 +44,7 @@ export default class Fidelity extends Command {
       maxThreads: flags["max-threads"],
       formatter: flags.formatter,
       threshold: flags.threshold ? parseFloat(flags.threshold) : undefined,
-      fileType: flags.fileType,
+      fileType: flags["file-type"],
     });
   }
 }
