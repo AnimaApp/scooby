@@ -5,7 +5,11 @@ import { nestedMultipleFilesLoader } from "./nested-multiple-files";
 
 export type Loader = {
   isCompatible: (testsPath: string) => Promise<boolean>;
-  load: (testsPath: string, fileType?: string, relativePath?: string) => Promise<TestEntry[]>;
+  load: (
+    testsPath: string,
+    fileType?: string,
+    relativePath?: string
+  ) => Promise<TestEntry[]>;
 };
 
 const LOADERS: Loader[] = [

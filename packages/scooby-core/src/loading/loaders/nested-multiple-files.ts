@@ -10,33 +10,47 @@ export const nestedMultipleFilesLoader: Loader = {
     return true;
   },
 
-  async load(directory: string, relativePath: string = "", fileType: string = ""): Promise<TestEntry[]> {
+  async load(
+    directory: string,
+    relativePath: string = "",
+    fileType: string = ""
+  ): Promise<TestEntry[]> {
     const entries: TestEntry[] = [];
     const absolutePath = path.join(directory, relativePath);
     const dirEntries = await readdir(absolutePath, { withFileTypes: true });
-    const folders = dirEntries.filter(item => item.isDirectory()).map(folder => folder.name);
-    const files = dirEntries.filter(item => !item.isDirectory()).map(file => file.name);
+    const folders = dirEntries
+      .filter((item) => item.isDirectory())
+      .map((folder) => folder.name);
+    const files = dirEntries
+      .filter((item) => !item.isDirectory())
+      .map((file) => file.name);
 
-    for(const folder of folders){
-      const directoryTests = await this.load(directory, relativePath=folder, fileType=fileType);
+    for (const folder of folders) {
+      const directoryTests = await this.load(
+        directory,
+        (relativePath = folder),
+        (fileType = fileType)
+      );
       entries.push(...directoryTests);
     }
 
     let testExtension = fileType;
-    if(!testExtension){
+    if (!testExtension) {
       const foundExtension = getTestExtension(files);
       if (foundExtension) {
         testExtension = foundExtension;
       }
     }
 
-    if(testExtension){
+    if (testExtension) {
       const baseOptionsFile = files.find((entry) => entry === "scooby.json");
       const baseOptions = baseOptionsFile
         ? await loadOptions(path.join(absolutePath, "scooby.json"))
         : undefined;
 
-      const testFiles = files.filter((subEntry) => subEntry.endsWith(testExtension));
+      const testFiles = files.filter((subEntry) =>
+        subEntry.endsWith(testExtension)
+      );
       for (const testFile of testFiles) {
         const name = path.parse(testFile).name;
 
@@ -53,7 +67,9 @@ export const nestedMultipleFilesLoader: Loader = {
         };
 
         const absoluteFilePath = path.join(absolutePath, testFile);
-        const id = relativePath ? `${relativePath.replace("/", "-")}-${name}` : name;
+        const id = relativePath
+          ? `${relativePath.replace("/", "-")}-${name}`
+          : name;
 
         entries.push({
           id: id,
