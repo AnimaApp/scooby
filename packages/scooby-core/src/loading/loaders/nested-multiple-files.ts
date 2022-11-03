@@ -41,6 +41,7 @@ export const nestedMultipleFilesLoader: Loader = {
     const testFiles = files.filter((subEntry) => subEntry.endsWith(testExtension));
     for (const testFile of testFiles) {
       const name = path.parse(testFile);
+      console.log("NAME", name);
 
       const specificOptionsFile = files.find(
         (entry) => entry === `${name}.scooby.json`
