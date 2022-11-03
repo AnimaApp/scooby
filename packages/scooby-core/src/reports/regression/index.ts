@@ -20,6 +20,7 @@ export type RegressionReportParams = BaseReportParams & {
   formatter?: Formatter;
   maxThreads?: number;
   maxReferenceCommitBacktracking?: number;
+  fileType?: string;
 };
 
 export async function runRegressionReport(

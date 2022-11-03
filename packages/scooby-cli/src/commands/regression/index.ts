@@ -31,6 +31,9 @@ export default class Regression extends Command {
     }),
     "max-threads": maxThreadsFlag,
     formatter: formatterFlag,
+    fileType: Flags.string({
+      description: "Specify a file type to test"
+    }),
   };
 
   async run(): Promise<void> {
@@ -43,6 +46,7 @@ export default class Regression extends Command {
       maxReferenceCommitBacktracking: flags["max-backtracking"],
       maxThreads: flags["max-threads"],
       formatter: flags.formatter,
+      fileType: flags.fileType
     });
   }
 }

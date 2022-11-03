@@ -31,6 +31,9 @@ export default class Fidelity extends Command {
       description:
         "Specify a float value that acts as a threshold, with 1 being the strictest and 0 making everything pass. By default it's set to 0 to make all fidelity tests pass.",
     }),
+    fileType: Flags.string({
+      description: "Specify a file type to test"
+    }),
   };
 
   async run(): Promise<void> {
@@ -43,6 +46,7 @@ export default class Fidelity extends Command {
       maxThreads: flags["max-threads"],
       formatter: flags.formatter,
       threshold: flags.threshold ? parseFloat(flags.threshold) : undefined,
+      fileType: flags.fileType
     });
   }
 }

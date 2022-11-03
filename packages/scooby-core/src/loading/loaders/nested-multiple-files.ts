@@ -10,7 +10,7 @@ export const nestedMultipleFilesLoader: Loader = {
     return true;
   },
 
-  async load(directory: string): Promise<TestEntry[]> {
+  async load(directory: string, fileType: string = ""): Promise<TestEntry[]> {
     const entries: TestEntry[] = [];
     const dirEntries = await readdir(directory, { withFileTypes: true });
     const folders = dirEntries.filter(item => item.isDirectory()).map(folder => folder.name);
@@ -21,7 +21,18 @@ export const nestedMultipleFilesLoader: Loader = {
       entries.push(...directoryTests);
     }
 
-    const testExtension = "html";
+    let testExtension = fileType;
+    if(!testExtension){
+      const foundExtension = getTestExtension(files);
+      if (foundExtension) {
+        testExtension = foundExtension;
+      } else {
+        throw new Error(
+          "could not determine test extension in path: " + directory
+        );
+      }
+    }
+
     const baseOptionsFile = files.find((entry) => entry === "scooby.json");
     const baseOptions = baseOptionsFile
       ? await loadOptions(path.join(directory, "scooby.json"))

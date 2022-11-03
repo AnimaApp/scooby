@@ -18,6 +18,7 @@ export type FidelityTestParams = BaseReportParams & {
   formatter?: Formatter;
   maxThreads?: number;
   threshold?: number;
+  fileType?: string;
 };
 
 export async function runFidelityReport(
