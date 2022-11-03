@@ -20,7 +20,7 @@ export type RegressionReportParams = BaseReportParams & {
   formatter?: Formatter;
   maxThreads?: number;
   maxReferenceCommitBacktracking?: number;
-  fileType?: string;
+  fileType: string;
 };
 
 export async function runRegressionReport(
@@ -87,6 +87,7 @@ async function performFeatureBranchFlow(
     await loadReferenceEntries({
       currentCommit: context.environment.currentCommitHash,
       latestMainBranchCommits: context.environment.latestMainBranchCommitHashes,
+      fileType: params.fileType,
       snapshotName: params.name,
       localReferencePath: params.referencePath,
       maxReferenceCommitBacktracking: params.maxReferenceCommitBacktracking,

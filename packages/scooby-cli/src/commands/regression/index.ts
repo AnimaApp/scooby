@@ -25,15 +25,17 @@ export default class Regression extends Command {
       description:
         "Specify a custom path that acts as reference dataset, instead of pulling it automatically. You should probably not use this, unless you know what you're doing.",
     }),
+    fileType: Flags.string({
+      char: "f",
+      description: "Specify a file type to test",
+      required: true,
+    }),
     "max-backtracking": Flags.integer({
       description:
         "Specify the number of backtracking attempts on previous commits to find a matching reference dataset. This is mostly useful when the main branch doesn't publish reference datasets for each commit.",
     }),
     "max-threads": maxThreadsFlag,
     formatter: formatterFlag,
-    fileType: Flags.string({
-      description: "Specify a file type to test",
-    }),
   };
 
   async run(): Promise<void> {

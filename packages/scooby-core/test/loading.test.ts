@@ -9,7 +9,7 @@ describe("loading test folders", () => {
       "./data/loading/basic-test-structure"
     );
 
-    const entries = await loadTestEntries(testsPath);
+    const entries = await loadTestEntries(testsPath, "html");
 
     expect(entries).toEqual([
       {
@@ -41,7 +41,7 @@ describe("loading test folders", () => {
       "./data/loading/nested-test-structure"
     );
 
-    const entries = await loadTestEntries(testsPath);
+    const entries = await loadTestEntries(testsPath, "html");
 
     expect(entries).toEqual([
       {
@@ -73,7 +73,7 @@ describe("loading test folders", () => {
       "./data/loading/nested-multiple-files-test-structure"
     );
 
-    const entries = await loadTestEntries(testsPath);
+    const entries = await loadTestEntries(testsPath, "html");
 
     expect(entries).toEqual([
       {
