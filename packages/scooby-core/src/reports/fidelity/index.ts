@@ -56,8 +56,6 @@ export async function runFidelityReport(
   console.log("matching datasets...");
   const matchedSources = matchSources(expectedSources, actualSources);
 
-  console.log("MATCHED SOURCES", matchedSources);
-
   validateMatchedSources(matchedSources);
 
   console.log(`found ${matchedSources.matching.length} matched tests`);
