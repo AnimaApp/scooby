@@ -11,7 +11,6 @@ function checkNoDuplicateIds<T extends MatchableSource>(
   expected: T[],
   actual: T[]
 ) {
-  console.log("DUPLICATE", expected, actual);
   const expectedIds = new Set(expected.map((entry) => entry.id));
   if (expected.length !== expectedIds.size) {
     throw new Error("expected source dataset has duplicate ids");
