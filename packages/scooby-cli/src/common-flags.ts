@@ -11,3 +11,9 @@ export const formatterFlag = Flags.enum<Formatter>({
     "Specify the formatter to be used in text-based tests. Specify 'none' to disable auto-formatting.",
   options: ["none", "json", "prettier"],
 });
+
+export const fileType = Flags.string({
+  char: "f",
+  description: "Specify a file type to test",
+  required: true,
+});
