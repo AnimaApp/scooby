@@ -45,13 +45,13 @@ describe("loading test folders", () => {
 
     expect(entries).toEqual([
       {
-        id: "test1",
+        id: "test1-index",
         type: { category: "image", subtype: "html" },
         path: path.join(testsPath, "./test1/index.html"),
         relativePath: "test1/index.html",
       },
       {
-        id: "test2",
+        id: "test2-index",
         type: { category: "image", subtype: "html" },
         path: path.join(testsPath, "./test2/index.html"),
         relativePath: "test2/index.html",
