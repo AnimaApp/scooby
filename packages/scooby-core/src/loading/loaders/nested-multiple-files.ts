@@ -7,7 +7,7 @@ import { getTestExtension, getTypeForEntry } from "./util";
 
 export const nestedMultipleFilesLoader: Loader = {
   async isCompatible(testsPath: string): Promise<boolean> {
-    return false;
+    return true;
   },
 
   async load(directory: string, fileType: string = ""): Promise<TestEntry[]> {
