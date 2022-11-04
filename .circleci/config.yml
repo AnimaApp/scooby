@@ -101,6 +101,9 @@ jobs:
       - run:
           name: "Run JSX regression test"
           command: "scooby regression --name 'jsx-regression' --tests sample-projects/ci-jsx-regression --file-type=jsx"
+      - run:
+          name: "Run Recursive HTML regression test"
+          command: "scooby regression --name 'recursive-html-regression' --tests sample-projects/ci-recursive-regression --file-type=html"
 
   run-scooby-fidelity-tests:
     docker:

@@ -19,13 +19,11 @@ export const load = async (
     .filter((item) => !item.isDirectory())
     .map((file) => file.name);
 
-  console.log(folders, files, fileType);
-
   for (const folder of folders) {
     const directoryTests = await load(
       directory,
       fileType,
-      (relativePath = folder)
+      `${relativePath}/${folder}`
     );
     entries.push(...directoryTests);
   }
