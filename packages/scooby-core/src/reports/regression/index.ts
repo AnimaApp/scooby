@@ -20,6 +20,7 @@ export type RegressionReportParams = BaseReportParams & {
   formatter?: Formatter;
   maxThreads?: number;
   maxReferenceCommitBacktracking?: number;
+  fileType: string;
 };
 
 export async function runRegressionReport(
@@ -27,7 +28,7 @@ export async function runRegressionReport(
   params: RegressionReportParams
 ): Promise<LocalRegressionReport> {
   console.log("loading test entries from path: " + params.testsPath);
-  const testEntries = await loadTestEntries(params.testsPath);
+  const testEntries = await loadTestEntries(params.testsPath, params.fileType);
   console.log(`found ${testEntries.length} test entries`);
 
   console.log("generating test sources...");
@@ -86,6 +87,7 @@ async function performFeatureBranchFlow(
     await loadReferenceEntries({
       currentCommit: context.environment.currentCommitHash,
       latestMainBranchCommits: context.environment.latestMainBranchCommitHashes,
+      fileType: params.fileType,
       snapshotName: params.name,
       localReferencePath: params.referencePath,
       maxReferenceCommitBacktracking: params.maxReferenceCommitBacktracking,

@@ -26,7 +26,12 @@ describe("fidelity test", () => {
     expect(() =>
       _processReport(
         "fidelity",
-        { name: "invalid name/", actualPath: "path", expectedPath: "path" },
+        {
+          name: "invalid name/",
+          actualPath: "path",
+          expectedPath: "path",
+          fileType: "html",
+        },
         mockContext
       )
     ).rejects.toThrowError();
@@ -44,7 +49,7 @@ describe("fidelity test", () => {
     expect(() =>
       _processReport(
         "fidelity",
-        { name: "test-fidelity", actualPath, expectedPath },
+        { name: "test-fidelity", actualPath, expectedPath, fileType: "html" },
         mockContext
       )
     ).rejects.toThrowError();
@@ -62,7 +67,7 @@ describe("fidelity test", () => {
 
     const report = await _processReport(
       "fidelity",
-      { name: "test-fidelity", actualPath, expectedPath },
+      { name: "test-fidelity", actualPath, expectedPath, fileType: "html" },
       mockContext
     );
     if (report.type !== "fidelity") {
@@ -90,7 +95,7 @@ describe("fidelity test", () => {
 
     const report = await _processReport(
       "fidelity",
-      { name: "test-fidelity", actualPath, expectedPath },
+      { name: "test-fidelity", actualPath, expectedPath, fileType: "json" },
       mockContext
     );
     if (report.type !== "fidelity") {
@@ -118,7 +123,7 @@ describe("fidelity test", () => {
 
     const report = await _processReport(
       "fidelity",
-      { name: "test-fidelity", actualPath, expectedPath },
+      { name: "test-fidelity", actualPath, expectedPath, fileType: "jsx" },
       mockContext
     );
     if (report.type !== "fidelity") {
@@ -146,7 +151,7 @@ describe("fidelity test", () => {
 
     const report = await _processReport(
       "fidelity",
-      { name: "test-fidelity", actualPath, expectedPath },
+      { name: "test-fidelity", actualPath, expectedPath, fileType: "json" },
       mockContext
     );
     if (report.type !== "fidelity") {
@@ -174,7 +179,13 @@ describe("fidelity test", () => {
 
     const report = await _processReport(
       "fidelity",
-      { name: "test-fidelity", actualPath, expectedPath, formatter: "none" },
+      {
+        name: "test-fidelity",
+        actualPath,
+        expectedPath,
+        formatter: "none",
+        fileType: "json",
+      },
       mockContext
     );
     if (report.type !== "fidelity") {
@@ -202,7 +213,7 @@ describe("fidelity test", () => {
 
     const report = await _processReport(
       "fidelity",
-      { name: "test-fidelity", actualPath, expectedPath },
+      { name: "test-fidelity", actualPath, expectedPath, fileType: "html" },
       mockContext
     );
     if (report.type !== "fidelity") {
@@ -230,7 +241,7 @@ describe("fidelity test", () => {
 
     const report = await _processReport(
       "fidelity",
-      { name: "test-fidelity", actualPath, expectedPath },
+      { name: "test-fidelity", actualPath, expectedPath, fileType: "json" },
       mockContext
     );
     if (report.type !== "fidelity") {
@@ -261,7 +272,13 @@ describe("fidelity test", () => {
 
     const report = await _processReport(
       "fidelity",
-      { name: "test-fidelity", actualPath, expectedPath, threshold: 1 },
+      {
+        name: "test-fidelity",
+        actualPath,
+        expectedPath,
+        threshold: 1,
+        fileType: "json",
+      },
       mockContext
     );
     if (report.type !== "fidelity") {
@@ -292,7 +309,7 @@ describe("fidelity test", () => {
 
     const report = await _processReport(
       "fidelity",
-      { name: "test-fidelity", actualPath, expectedPath },
+      { name: "test-fidelity", actualPath, expectedPath, fileType: "jsx" },
       mockContext
     );
     if (report.type !== "fidelity") {
@@ -326,7 +343,7 @@ describe("fidelity test", () => {
 
     const report = await _processReport(
       "fidelity",
-      { name: "test-fidelity", actualPath, expectedPath },
+      { name: "test-fidelity", actualPath, expectedPath, fileType: "html" },
       mockContext
     );
     if (report.type !== "fidelity") {

@@ -31,7 +31,7 @@ describe("regression test", () => {
     expect(() =>
       _processReport(
         "regression",
-        { name: "invalid name/", testsPath: "path" },
+        { name: "invalid name/", testsPath: "path", fileType: "html" },
         mockContext
       )
     ).rejects.toThrowError();
@@ -51,7 +51,7 @@ describe("regression test", () => {
 
     const report = await _processReport(
       "regression",
-      { name: "test-regression", testsPath },
+      { name: "test-regression", testsPath, fileType: "html" },
       mockContext
     );
     if (report.type !== "regression") {
@@ -83,7 +83,7 @@ describe("regression test", () => {
 
     const report = await _processReport(
       "regression",
-      { name: "test-regression", testsPath },
+      { name: "test-regression", testsPath, fileType: "json" },
       mockContext
     );
     if (report.type !== "regression") {
@@ -115,7 +115,7 @@ describe("regression test", () => {
 
     const report = await _processReport(
       "regression",
-      { name: "test-regression", testsPath },
+      { name: "test-regression", testsPath, fileType: "json" },
       mockContext
     );
     if (report.type !== "regression") {
@@ -147,7 +147,7 @@ describe("regression test", () => {
 
     const report = await _processReport(
       "regression",
-      { name: "test-regression", testsPath },
+      { name: "test-regression", testsPath, fileType: "jsx" },
       mockContext
     );
     if (report.type !== "regression") {
@@ -179,7 +179,7 @@ describe("regression test", () => {
 
     const report = await _processReport(
       "regression",
-      { name: "test-regression", testsPath },
+      { name: "test-regression", testsPath, fileType: "html" },
       mockContext
     );
     if (report.type !== "regression") {
@@ -236,7 +236,7 @@ describe("regression test", () => {
 
     const report = await _processReport(
       "regression",
-      { name: "test-regression", testsPath },
+      { name: "test-regression", testsPath, fileType: "json" },
       mockContext
     );
     if (report.type !== "regression") {
@@ -293,7 +293,7 @@ describe("regression test", () => {
 
     const report = await _processReport(
       "regression",
-      { name: "test-regression", testsPath },
+      { name: "test-regression", testsPath, fileType: "jsx" },
       mockContext
     );
     if (report.type !== "regression") {
@@ -326,7 +326,7 @@ describe("regression test", () => {
 
     const report = await _processReport(
       "regression",
-      { name: "test-regression", testsPath },
+      { name: "test-regression", testsPath, fileType: "json" },
       mockContext
     );
     if (report.type !== "regression") {
@@ -359,7 +359,7 @@ describe("regression test", () => {
 
     const report = await _processReport(
       "regression",
-      { name: "test-regression", testsPath },
+      { name: "test-regression", testsPath, fileType: "html" },
       mockContext
     );
     if (report.type !== "regression") {
@@ -396,7 +396,7 @@ describe("regression test", () => {
 
     const report = await _processReport(
       "regression",
-      { name: "test-regression", testsPath },
+      { name: "test-regression", testsPath, fileType: "html" },
       mockContext
     );
     if (report.type !== "regression") {
@@ -424,7 +424,7 @@ describe("regression test", () => {
 
     const report = await _processReport(
       "regression",
-      { name: "test-regression", testsPath },
+      { name: "test-regression", testsPath, fileType: "html" },
       mockContext
     );
     if (report.type !== "regression") {

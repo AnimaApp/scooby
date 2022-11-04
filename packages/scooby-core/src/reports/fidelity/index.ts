@@ -18,6 +18,7 @@ export type FidelityTestParams = BaseReportParams & {
   formatter?: Formatter;
   maxThreads?: number;
   threshold?: number;
+  fileType: string;
 };
 
 export async function runFidelityReport(
@@ -27,11 +28,17 @@ export async function runFidelityReport(
   console.log(
     "loading expected test entries from path: " + params.expectedPath
   );
-  const expectedEntries = await loadTestEntries(params.expectedPath);
+  const expectedEntries = await loadTestEntries(
+    params.expectedPath,
+    params.fileType
+  );
   console.log(`found ${expectedEntries.length} expected test entries`);
 
   console.log("loading actual test entries from path: " + params.actualPath);
-  const actualEntries = await loadTestEntries(params.actualPath);
+  const actualEntries = await loadTestEntries(
+    params.actualPath,
+    params.fileType
+  );
   console.log(`found ${expectedEntries.length} actual test entries`);
 
   const sourceGenerationOptions: GenerateSourcesOptions = {
