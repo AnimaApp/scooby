@@ -26,7 +26,12 @@ describe("fidelity test", () => {
     expect(() =>
       _processReport(
         "fidelity",
-        { name: "invalid name/", actualPath: "path", expectedPath: "path", fileType: "html" },
+        {
+          name: "invalid name/",
+          actualPath: "path",
+          expectedPath: "path",
+          fileType: "html",
+        },
         mockContext
       )
     ).rejects.toThrowError();
@@ -174,7 +179,13 @@ describe("fidelity test", () => {
 
     const report = await _processReport(
       "fidelity",
-      { name: "test-fidelity", actualPath, expectedPath, formatter: "none", fileType: "json" },
+      {
+        name: "test-fidelity",
+        actualPath,
+        expectedPath,
+        formatter: "none",
+        fileType: "json",
+      },
       mockContext
     );
     if (report.type !== "fidelity") {
@@ -261,7 +272,13 @@ describe("fidelity test", () => {
 
     const report = await _processReport(
       "fidelity",
-      { name: "test-fidelity", actualPath, expectedPath, threshold: 1, fileType: "json" },
+      {
+        name: "test-fidelity",
+        actualPath,
+        expectedPath,
+        threshold: 1,
+        fileType: "json",
+      },
       mockContext
     );
     if (report.type !== "fidelity") {
