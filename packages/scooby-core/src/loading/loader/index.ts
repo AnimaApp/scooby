@@ -51,7 +51,7 @@ export const load = async (
 
     const absoluteFilePath = path.join(absolutePath, testFile);
     const id = relativePath
-      ? `${relativePath.replace("/", "-")}-${name}`
+      ? `${relativePath.replace("/", "-").substring(1)}-${name}`
       : name;
 
     entries.push({
