@@ -1,6 +1,6 @@
 {
   "name": "@animaapp/scooby-api",
-  "version": "1.7.0",
+  "version": "1.8.0",
   "description": "This package contains the logic to upload/retrieve test results",
   "main": "dist/src/index.js",
   "repository": "https://github.com/AnimaApp/scooby",
@@ -21,7 +21,7 @@
     "ts-jest": "^29.0.3"
   },
   "dependencies": {
-    "@animaapp/scooby-shared": "^1.7.0",
+    "@animaapp/scooby-shared": "^1.8.0",
     "@aws-sdk/client-s3": "3.186.0",
     "fastq": "^1.13.0",
     "uuid": "^9.0.0",
