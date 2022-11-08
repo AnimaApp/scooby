@@ -42,6 +42,7 @@ export type BaseSourceEntry = {
   groupId: string;
   tags: string[];
   relativePath: string;
+  metadata?: Metadata<LocalResource>[];
 };
 
 export type ImageSourceEntry = BaseSourceEntry & {

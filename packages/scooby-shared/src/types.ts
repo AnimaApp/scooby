@@ -50,28 +50,33 @@ export type ReportCodeComparison<TResource extends Resource> = {
 export type BaseMetadata = {
   name: string;
   description?: string;
-}
+};
 export type TextMetadata = BaseMetadata & {
-  type: "text"
+  type: "text";
   text: string;
-}
+};
 export type LinkMetadata = BaseMetadata & {
-  type: "link"
+  type: "link";
   url: string;
-}
+};
 export type ImageMetadata<TResource extends Resource> = BaseMetadata & {
-  type: "image"
+  type: "image";
   image: TResource;
-}
+};
 export type CodeMetadata<TResource extends Resource> = BaseMetadata & {
-  type: "code"
+  type: "code";
   code: TResource;
-}
+};
 export type FileMetadata<TResource extends Resource> = BaseMetadata & {
-  type: "file"
+  type: "file";
   file: TResource;
-}
-export type Metadata<TResource extends Resource> = TextMetadata | LinkMetadata | ImageMetadata<TResource> | CodeMetadata<TResource>| FileMetadata<TResource>;
+};
+export type Metadata<TResource extends Resource> =
+  | TextMetadata
+  | LinkMetadata
+  | ImageMetadata<TResource>
+  | CodeMetadata<TResource>
+  | FileMetadata<TResource>;
 
 // Regression
 

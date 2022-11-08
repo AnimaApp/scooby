@@ -20,6 +20,7 @@ export async function generatePNGImageSources(
       path: entry.path,
       relativePath: entry.relativePath,
       tags: entry.options?.tags ?? [],
+      metadata: entry.options?.metadata,
     });
   }
 
