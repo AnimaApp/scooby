@@ -16,19 +16,20 @@ export type BaseReport = {
   items?: ReportItem[];
 };
 
-export type BaseReportEntry = {
+export type BaseReportEntry<TResource extends Resource> = {
   id: string;
   groupId: string;
   tags: string[];
   path: string;
+  metadata?: Metadata<TResource>[];
 };
 export type ReportImageTestEntry<TResource extends Resource> =
-  BaseReportEntry & {
+  BaseReportEntry<TResource> & {
     type: "image";
     image: TResource;
   };
 export type ReportCodeTestEntry<TResource extends Resource> =
-  BaseReportEntry & {
+  BaseReportEntry<TResource> & {
     type: "code";
     code: TResource;
   };
@@ -45,6 +46,32 @@ export type ReportCodeComparison<TResource extends Resource> = {
   similarity: number;
   diff?: TResource;
 };
+
+export type BaseMetadata = {
+  name: string;
+  description?: string;
+}
+export type TextMetadata = BaseMetadata & {
+  type: "text"
+  text: string;
+}
+export type LinkMetadata = BaseMetadata & {
+  type: "link"
+  url: string;
+}
+export type ImageMetadata<TResource extends Resource> = BaseMetadata & {
+  type: "image"
+  image: TResource;
+}
+export type CodeMetadata<TResource extends Resource> = BaseMetadata & {
+  type: "code"
+  code: TResource;
+}
+export type FileMetadata<TResource extends Resource> = BaseMetadata & {
+  type: "file"
+  file: TResource;
+}
+export type Metadata<TResource extends Resource> = TextMetadata | LinkMetadata | ImageMetadata<TResource> | CodeMetadata<TResource>| FileMetadata<TResource>;
 
 // Regression
 

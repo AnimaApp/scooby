@@ -1,0 +1,9 @@
+{
+  "metadata": [
+    {
+      "type": "image",
+      "name": "Example image",
+      "image_path": "invalid-path.png"
+    }
+  ]
+}

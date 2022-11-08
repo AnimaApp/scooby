@@ -1,4 +1,5 @@
 import { ScoobyAPI } from "@animaapp/scooby-api";
+import { LocalResource, Metadata } from "@animaapp/scooby-shared";
 
 export type ImageTestEntryType = {
   category: "image";
@@ -23,6 +24,7 @@ export type TestEntry = {
 export type TestEntryOptions = {
   viewports?: Viewport[];
   tags?: string[];
+  metadata?: Metadata<LocalResource>[];
 };
 
 export type Viewport = {

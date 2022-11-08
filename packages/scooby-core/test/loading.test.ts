@@ -126,4 +126,146 @@ describe("loading test folders", () => {
       },
     ] as TestEntry[]);
   });
+
+  it("loads metadata correctly", async () => {
+    const testsPath = path.resolve(__dirname, "./data/loading/basic-metadata");
+
+    const entries = await loadTestEntries(testsPath, "html");
+
+    expect(entries).toEqual([
+      {
+        id: "test1",
+        type: { category: "image", subtype: "html" },
+        path: path.join(testsPath, "./test1.html"),
+        relativePath: "test1.html",
+        options: {
+          metadata: [
+            {
+              type: "text",
+              name: "Example text",
+              text: "text metadata",
+            },
+            {
+              type: "link",
+              name: "Example link",
+              description: "it even has a description",
+              url: "https://google.com",
+            },
+            {
+              type: "image",
+              name: "Example image",
+              image: {
+                type: "local",
+                path: path.join(testsPath, "test1-image.scooby.png"),
+              },
+            },
+            {
+              type: "file",
+              name: "Example file",
+              file: {
+                type: "local",
+                path: path.join(testsPath, "./test1-image.scooby.png"),
+              },
+            },
+            {
+              type: "code",
+              name: "Example code",
+              code: {
+                type: "local",
+                path: path.join(testsPath, "./test1.code.scooby.jsx"),
+              },
+            },
+          ],
+        },
+      },
+      {
+        id: "test2",
+        type: { category: "image", subtype: "html" },
+        path: path.join(testsPath, "./test2.html"),
+        relativePath: "test2.html",
+        options: {
+          metadata: [
+            {
+              type: "code",
+              name: "Example code",
+              code: {
+                type: "local",
+                path: path.join(testsPath, "./test2-code.scooby.html"),
+              },
+            },
+          ],
+        },
+      },
+    ] as TestEntry[]);
+  });
+
+  it("loads metadata in nested directory with relative paths", async () => {
+    const testsPath = path.resolve(__dirname, "./data/loading/nested-metadata");
+
+    const entries = await loadTestEntries(testsPath, "html");
+
+    expect(entries).toEqual([
+      {
+        id: "test-index",
+        type: { category: "image", subtype: "html" },
+        path: path.join(testsPath, "./test/index.html"),
+        relativePath: "test/index.html",
+        options: {
+          metadata: [
+            {
+              type: "code",
+              name: "example code",
+              code: {
+                type: "local",
+                path: path.join(testsPath, "./assets.scooby/code.js"),
+              },
+            },
+          ],
+        },
+      },
+    ] as TestEntry[]);
+  });
+
+  it("throws error if metadata points to invalid path", async () => {
+    const testsPath = path.resolve(
+      __dirname,
+      "./data/loading/invalid-metadata-path"
+    );
+
+    await expect(
+      async () => await loadTestEntries(testsPath, "html")
+    ).rejects.toThrow();
+  });
+
+  it("skips scooby entries correctly", async () => {
+    const testsPath = path.resolve(
+      __dirname,
+      "./data/loading/skip-scooby-entries-correctly"
+    );
+
+    const entries = await loadTestEntries(testsPath, "html");
+
+    expect(entries).toEqual([
+      {
+        id: "test1-index",
+        type: { category: "image", subtype: "html" },
+        path: path.join(testsPath, "./test1/index.html"),
+        relativePath: "test1/index.html",
+      },
+      {
+        id: "test2-index",
+        type: { category: "image", subtype: "html" },
+        path: path.join(testsPath, "./test2/index.html"),
+        relativePath: "test2/index.html",
+        options: {
+          viewports: [
+            {
+              width: 1920,
+              height: 1080,
+            },
+          ],
+        },
+      },
+    ] as TestEntry[]);
+  });
 });

@@ -53,11 +53,40 @@ const hostedResource = z.object({
   url: z.string().url(),
 });
 
+const baseMetadataSchema = z.object({
+  name: z.string(),
+  description: z.optional(z.string()),
+})
+const textMetadataSchema = baseMetadataSchema.extend({
+  type: z.literal("text"),
+  text: z.string(),
+})
+const linkMetadataSchema = baseMetadataSchema.extend({
+  type: z.literal("link"),
+  url: z.string(),
+})
+const imageMetadataSchema = baseMetadataSchema.extend({
+  type: z.literal("image"),
+  image: hostedResource,
+})
+const codeMetadataSchema = baseMetadataSchema.extend({
+  type: z.literal("code"),
+  code: hostedResource,
+})
+const fileMetadataSchema = baseMetadataSchema.extend({
+  type: z.literal("file"),
+  file: hostedResource,
+})
+const metadataSchema = z.discriminatedUnion("type", [
+  textMetadataSchema, linkMetadataSchema, imageMetadataSchema, codeMetadataSchema, fileMetadataSchema
+])
+
 const baseReportEntrySchema = z.object({
   id: z.string(),
   groupId: z.string(),
   tags: z.array(z.string()),
   path: z.string().default("path"),
+  metadata: z.optional(z.array(metadataSchema)),
 });
 const reportImageEntrySchema = baseReportEntrySchema.extend({
   type: z.literal("image").default("image"),
