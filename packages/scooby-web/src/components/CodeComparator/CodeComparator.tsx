@@ -11,7 +11,7 @@ import { CodeData } from "./CodeComparatorController";
 import { Sources } from "./useSource";
 import Editor from "@monaco-editor/react";
 import { DiffEditor } from "@monaco-editor/react";
-import { getLanguageForFile } from "./language";
+import { getLanguageForFile } from "../../utils/language";
 
 type Props = {
   sources: Sources;

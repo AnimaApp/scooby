@@ -1,24 +1,61 @@
 import React from "react";
-import { PropsWithChildren } from "react";
-import OriginalSplitPane, {
-  SplitPaneProps,
-  SplitPaneState,
-} from "react-split-pane";
+import Split from "react-split";
 
-export class PatchedSplitPane extends React.Component<
-  PropsWithChildren<SplitPaneProps>,
-  SplitPaneState
-> {}
+type Props = {
+  left?: React.ReactNode;
+  center: React.ReactNode;
+  right?: React.ReactNode;
+};
 
-export function VerticalSplitPane(props: PropsWithChildren<SplitPaneProps>) {
+export function VerticalSplitPane({ left, center, right }: Props) {
+  function getChildren() {
+    if (left && center && right) {
+      return [left, center, right];
+    } else if (left && center) {
+      return [left, center];
+    } else if (center && right) {
+      return [center, right];
+    } else {
+      return [center];
+    }
+  }
+
+  function getSizes() {
+    if (left && center && right) {
+      return [15, 70, 15];
+    } else if (left && center) {
+      return [20, 80];
+    } else if (center && right) {
+      return [80, 20];
+    } else {
+      return [100];
+    }
+  }
+
+  function getMinSizes() {
+    if (left && center && right) {
+      return [150, 500, 50];
+    } else if (left && center) {
+      return [150, 500];
+    } else if (center && right) {
+      return [500, 150];
+    } else {
+      return [500];
+    }
+  }
+
   return (
-    // @ts-ignore
-    <OriginalSplitPane
-      style={{ flex: 1, height: undefined, position: undefined }}
-      minSize={200}
-      {...props}
-    >
-      {props.children}
-    </OriginalSplitPane>
+    <Split
+      style={{ width: "100%" }}
+      className="split"
+      minSize={getMinSizes()}
+      sizes={getSizes()}
+      children={getChildren().map((child) => (
+        <div>{child}</div>
+      ))}
+      elementStyle={(dimension, size, gutterSize) => ({
+        width: "calc(" + size + "vw - " + gutterSize + "px)",
+      })}
+    />
   );
 }
