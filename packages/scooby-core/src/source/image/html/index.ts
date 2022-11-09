@@ -35,6 +35,7 @@ export async function generateHTMLImageSources(
         path: result.screenshotPath,
         tags: matchedEntry.options?.tags ?? [],
         relativePath: matchedEntry.relativePath,
+        metadata: matchedEntry.options?.metadata,
       };
     });
   });

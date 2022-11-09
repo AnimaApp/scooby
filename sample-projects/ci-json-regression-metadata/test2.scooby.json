@@ -1,0 +1,15 @@
+{
+  "metadata": [
+    {
+      "type": "text",
+      "name": "Example text",
+      "text": "another text metadata"
+    },
+    {
+      "type": "link",
+      "name": "Example link",
+      "description": "it even has a description",
+      "url": "https://google.com"
+    }
+  ]
+}

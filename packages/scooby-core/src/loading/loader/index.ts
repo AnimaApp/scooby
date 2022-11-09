@@ -7,7 +7,7 @@ import { getTypeForEntry } from "./util";
 export const load = async (
   directory: string,
   fileType: string,
-  relativePath: string = ""
+  relativePath = ""
 ) => {
   const entries: TestEntry[] = [];
   const absolutePath = path.join(directory, relativePath);
@@ -20,6 +20,11 @@ export const load = async (
     .map((file) => file.name);
 
   for (const folder of folders) {
+    // Skip *.scooby directories
+    if (folder.endsWith(".scooby")) {
+      continue;
+    }
+
     const directoryTests = await load(
       directory,
       fileType,
@@ -36,6 +41,11 @@ export const load = async (
   const testFiles = files.filter((subEntry) => subEntry.endsWith(fileType));
   for (const testFile of testFiles) {
     const name = path.parse(testFile).name;
+
+    // Skip *.scooby.* files
+    if (name.endsWith(".scooby")) {
+      continue;
+    }
 
     const specificOptionsFile = files.find(
       (entry) => entry === `${name}.scooby.json`

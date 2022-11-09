@@ -1,0 +1,30 @@
+{
+  "metadata": [
+    {
+      "type": "text",
+      "name": "Example text",
+      "text": "text metadata"
+    },
+    {
+      "type": "link",
+      "name": "Example link",
+      "description": "it even has a description",
+      "url": "https://google.com"
+    },
+    {
+      "type": "image",
+      "name": "Example image",
+      "image_path": "test1-image.scooby.png"
+    },
+    {
+      "type": "file",
+      "name": "Example file",
+      "file_path": "./test1-image.scooby.png"
+    },
+    {
+      "type": "code",
+      "name": "Example code",
+      "code_path": "./test1.code.scooby.jsx"
+    }
+  ]
+}

@@ -4,6 +4,7 @@ import { VerticalSplitPane } from "../../../components/SplitPane";
 import { Entry } from "../../../types";
 import { Action } from "./actions";
 import { ComparisonView } from "./comparison";
+import { DetailsView } from "./details";
 
 type Props = {
   report: HostedFidelityReport;
@@ -24,14 +25,17 @@ export function FidelityReport({
 
   return (
     <div style={{ height: "100%", display: "flex", alignItems: "stretch" }}>
-      <VerticalSplitPane>
-        <EntryList
-          entries={entries}
-          selectedEntryId={selectedId}
-          onEntrySelected={handleEntrySelected}
-        />
-        <ComparisonView report={report} selectedId={selectedId} />
-      </VerticalSplitPane>
+      <VerticalSplitPane
+        left={
+          <EntryList
+            entries={entries}
+            selectedEntryId={selectedId}
+            onEntrySelected={handleEntrySelected}
+          />
+        }
+        center={<ComparisonView report={report} selectedId={selectedId} />}
+        right={<DetailsView report={report} selectedId={selectedId} />}
+      />
     </div>
   );
 }

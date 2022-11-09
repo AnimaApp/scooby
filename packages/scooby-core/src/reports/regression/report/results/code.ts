@@ -35,6 +35,7 @@ function convertCodeSourceEntryToReportEntry(
     code: convertPathToLocalResource(entry.path),
     tags: entry.tags,
     path: entry.relativePath,
+    metadata: entry.metadata,
   };
 }
 
