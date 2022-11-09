@@ -123,9 +123,16 @@ async function takeScreenshot(
 ): Promise<ScreenshotTaskResult> {
   return await withPage(browser, async (page: Page) => {
     await page.setViewport(request.viewport);
+    console.info(`Screenshotting ${request.htmlPath}`);
     await page.goto(url.pathToFileURL(request.htmlPath).toString(), {
-      waitUntil: "networkidle0",
+      waitUntil: "load",
     });
+
+    try {
+      await page.waitForNetworkIdle({ idleTime: 1000, timeout: 8000 });
+    } catch {
+      console.error(`Loading ${request.htmlPath} timed out`);
+    }
 
     const screenshotPath = await createTemporaryFile(
       "screenshot-html-",
