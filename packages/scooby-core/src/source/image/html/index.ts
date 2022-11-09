@@ -14,6 +14,7 @@ export async function generateHTMLImageSources(
   options: GenerateImageSourcesOptions
 ): Promise<ImageSourceEntry[]> {
   return await withBrowser(async (browser: Browser) => {
+    console.log(`Using browser ${await browser.version()}`);
     const queue = fastq.promise<
       Browser,
       ScreenshotTaskRequest,
