@@ -53,6 +53,7 @@ export const ListItem = ({ selected, entry, onClick }: Props) => {
       ></div>
       <img
         src={entry.thumbnailUrl}
+        loading="lazy"
         style={{
           width: "100%",
           height: "150px",
