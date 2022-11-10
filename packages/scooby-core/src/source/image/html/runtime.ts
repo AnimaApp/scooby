@@ -1,27 +1,30 @@
-import puppeteer, { Browser, Page } from "puppeteer";
+import { Cluster } from "puppeteer-cluster";
 
-export const withBrowser = async <T>(
-  fn: (browser: Browser) => T
-): Promise<T> => {
-  const browser = await puppeteer.launch({
-    args: ["--no-sandbox", "--disable-setuid-sandbox"],
-    headless: true,
+export const withCluster = async <
+  TClusterTaskInput,
+  TClusterTaskOutput,
+  TFnReturn
+>(
+  fn: (browser: Cluster<TClusterTaskInput, TClusterTaskOutput>) => TFnReturn,
+  options: {
+    maxConcurrency: number;
+  }
+): Promise<TFnReturn> => {
+  const cluster = await Cluster.launch({
+    concurrency: Cluster.CONCURRENCY_BROWSER,
+    maxConcurrency: options.maxConcurrency,
+    puppeteerOptions: {
+      args: ["--no-sandbox", "--disable-setuid-sandbox"],
+      headless: true,
+    },
+    monitor: true,
+    retryLimit: 4,
+    retryDelay: 100,
   });
   try {
-    return await fn(browser);
+    return await fn(cluster);
   } finally {
-    await browser.close();
-  }
-};
-
-export const withPage = async <T>(
-  browser: Browser,
-  fn: (page: Page) => T
-): Promise<T> => {
-  const page = await browser.newPage();
-  try {
-    return await fn(page);
-  } finally {
-    await page.close();
+    console.log("closing puppeteer cluster...");
+    await cluster.close();
   }
 };
