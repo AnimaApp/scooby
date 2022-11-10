@@ -1,12 +1,12 @@
 import { runReport } from "@animaapp/scooby-core";
 import { Command, Flags } from "@oclif/core";
-import { fileType, formatterFlag, maxThreadsFlag } from "../../common-flags";
+import { formatterFlag, maxThreadsFlag } from "../../common-flags";
 
 export default class Regression extends Command {
   static description = "Run a regression test";
 
   static examples = [
-    `$ scooby regression --name "codegen-regression" --tests "/path/to/your/tests"`,
+    `$ scooby regression --name "codegen-regression" --tests "/path/to/your/tests" --file-type=html`,
   ];
 
   static flags = {
@@ -25,7 +25,11 @@ export default class Regression extends Command {
       description:
         "Specify a custom path that acts as reference dataset, instead of pulling it automatically. You should probably not use this, unless you know what you're doing.",
     }),
-    "file-type": fileType,
+    "file-type": Flags.string({
+      char: "f",
+      description: "Specify a file type to test. For example, --file-type=html",
+      required: true,
+    }),
     "max-backtracking": Flags.integer({
       description:
         "Specify the number of backtracking attempts on previous commits to find a matching reference dataset. This is mostly useful when the main branch doesn't publish reference datasets for each commit.",

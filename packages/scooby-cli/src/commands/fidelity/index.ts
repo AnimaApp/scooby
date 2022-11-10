@@ -1,12 +1,12 @@
 import { runReport } from "@animaapp/scooby-core";
 import { Command, Flags } from "@oclif/core";
-import { fileType, formatterFlag, maxThreadsFlag } from "../../common-flags";
+import { formatterFlag, maxThreadsFlag } from "../../common-flags";
 
 export default class Fidelity extends Command {
   static description = "Run a fidelity test";
 
   static examples = [
-    `$ scooby fidelity --name "codegen-fidelity" --expected "/path/to/your/expected/tests" --actual "/path/to/your/actual/tests"`,
+    `$ scooby fidelity --name "codegen-fidelity" --expected "/path/to/your/expected/tests" --actual "/path/to/your/actual/tests" --file-type=html`,
   ];
 
   static flags = {
@@ -25,17 +25,37 @@ export default class Fidelity extends Command {
       description: "Path to the folder containing the actual tests",
       required: true,
     }),
-    "file-type": fileType,
     "max-threads": maxThreadsFlag,
     formatter: formatterFlag,
     threshold: Flags.string({
       description:
         "Specify a float value that acts as a threshold, with 1 being the strictest and 0 making everything pass. By default it's set to 0 to make all fidelity tests pass.",
     }),
+    "file-type": Flags.string({
+      char: "f",
+      description: "Specify a file type to test. For example, --file-type=html",
+    }),
+    "actual-file-type": Flags.string({
+      description:
+        "Specify a file type to test the 'actual' dataset. This is useful when the actual and expected datasets use different formats. For example, --actual-file-type=html",
+    }),
+    "expected-file-type": Flags.string({
+      description:
+        "Specify a file type to test the 'actual' dataset. This is useful when the actual and expected datasets use different formats. For example, --expected-file-type=html",
+    }),
   };
 
   async run(): Promise<void> {
     const { flags } = await this.parse(Fidelity);
+
+    const actualFileType = flags["actual-file-type"] ?? flags["file-type"];
+    const expectedFileType = flags["expected-file-type"] ?? flags["file-type"];
+
+    if (!actualFileType || !expectedFileType) {
+      throw new Error(
+        "no file type flag specified, please either specify the 'file-type' flag or the 'actual-file-type' and 'expected-file-type' flags"
+      );
+    }
 
     await runReport("fidelity", {
       name: flags.name,
@@ -44,7 +64,8 @@ export default class Fidelity extends Command {
       maxThreads: flags["max-threads"],
       formatter: flags.formatter,
       threshold: flags.threshold ? parseFloat(flags.threshold) : undefined,
-      fileType: flags["file-type"],
+      actualFileType,
+      expectedFileType,
     });
   }
 }

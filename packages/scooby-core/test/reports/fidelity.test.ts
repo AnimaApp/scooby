@@ -30,7 +30,8 @@ describe("fidelity test", () => {
           name: "invalid name/",
           actualPath: "path",
           expectedPath: "path",
-          fileType: "html",
+          actualFileType: "html",
+          expectedFileType: "html",
         },
         mockContext
       )
@@ -49,7 +50,13 @@ describe("fidelity test", () => {
     expect(() =>
       _processReport(
         "fidelity",
-        { name: "test-fidelity", actualPath, expectedPath, fileType: "html" },
+        {
+          name: "test-fidelity",
+          actualPath,
+          expectedPath,
+          actualFileType: "html",
+          expectedFileType: "html",
+        },
         mockContext
       )
     ).rejects.toThrowError();
@@ -67,7 +74,13 @@ describe("fidelity test", () => {
 
     const report = await _processReport(
       "fidelity",
-      { name: "test-fidelity", actualPath, expectedPath, fileType: "html" },
+      {
+        name: "test-fidelity",
+        actualPath,
+        expectedPath,
+        actualFileType: "html",
+        expectedFileType: "html",
+      },
       mockContext
     );
     if (report.type !== "fidelity") {
@@ -95,7 +108,13 @@ describe("fidelity test", () => {
 
     const report = await _processReport(
       "fidelity",
-      { name: "test-fidelity", actualPath, expectedPath, fileType: "json" },
+      {
+        name: "test-fidelity",
+        actualPath,
+        expectedPath,
+        actualFileType: "json",
+        expectedFileType: "json",
+      },
       mockContext
     );
     if (report.type !== "fidelity") {
@@ -123,7 +142,13 @@ describe("fidelity test", () => {
 
     const report = await _processReport(
       "fidelity",
-      { name: "test-fidelity", actualPath, expectedPath, fileType: "jsx" },
+      {
+        name: "test-fidelity",
+        actualPath,
+        expectedPath,
+        actualFileType: "jsx",
+        expectedFileType: "jsx",
+      },
       mockContext
     );
     if (report.type !== "fidelity") {
@@ -151,7 +176,13 @@ describe("fidelity test", () => {
 
     const report = await _processReport(
       "fidelity",
-      { name: "test-fidelity", actualPath, expectedPath, fileType: "json" },
+      {
+        name: "test-fidelity",
+        actualPath,
+        expectedPath,
+        actualFileType: "json",
+        expectedFileType: "json",
+      },
       mockContext
     );
     if (report.type !== "fidelity") {
@@ -184,7 +215,8 @@ describe("fidelity test", () => {
         actualPath,
         expectedPath,
         formatter: "none",
-        fileType: "json",
+        actualFileType: "json",
+        expectedFileType: "json",
       },
       mockContext
     );
@@ -213,7 +245,13 @@ describe("fidelity test", () => {
 
     const report = await _processReport(
       "fidelity",
-      { name: "test-fidelity", actualPath, expectedPath, fileType: "html" },
+      {
+        name: "test-fidelity",
+        actualPath,
+        expectedPath,
+        actualFileType: "html",
+        expectedFileType: "html",
+      },
       mockContext
     );
     if (report.type !== "fidelity") {
@@ -241,7 +279,13 @@ describe("fidelity test", () => {
 
     const report = await _processReport(
       "fidelity",
-      { name: "test-fidelity", actualPath, expectedPath, fileType: "json" },
+      {
+        name: "test-fidelity",
+        actualPath,
+        expectedPath,
+        actualFileType: "json",
+        expectedFileType: "json",
+      },
       mockContext
     );
     if (report.type !== "fidelity") {
@@ -277,7 +321,8 @@ describe("fidelity test", () => {
         actualPath,
         expectedPath,
         threshold: 1,
-        fileType: "json",
+        actualFileType: "json",
+        expectedFileType: "json",
       },
       mockContext
     );
@@ -309,7 +354,13 @@ describe("fidelity test", () => {
 
     const report = await _processReport(
       "fidelity",
-      { name: "test-fidelity", actualPath, expectedPath, fileType: "jsx" },
+      {
+        name: "test-fidelity",
+        actualPath,
+        expectedPath,
+        actualFileType: "jsx",
+        expectedFileType: "jsx",
+      },
       mockContext
     );
     if (report.type !== "fidelity") {
@@ -343,7 +394,13 @@ describe("fidelity test", () => {
 
     const report = await _processReport(
       "fidelity",
-      { name: "test-fidelity", actualPath, expectedPath, fileType: "html" },
+      {
+        name: "test-fidelity",
+        actualPath,
+        expectedPath,
+        actualFileType: "html",
+        expectedFileType: "html",
+      },
       mockContext
     );
     if (report.type !== "fidelity") {
