@@ -151,26 +151,12 @@ async function takeScreenshot(
         console.info(`screenshotting ${request.htmlPath}`);
         await page.setViewport(request.viewport);
         console.debug(request.htmlPath, "viewport set");
-        try {
-          await page.goto(url.pathToFileURL(request.htmlPath).toString(), {
-            timeout: 10000,
-          });
-        } catch (error) {
-          console.debug(request.htmlPath, "catch goto error", error);
-          if (!(error instanceof TimeoutError)) {
-            throw error;
-          }
-        }
+        await gotoWithTimeout(
+          page,
+          url.pathToFileURL(request.htmlPath).toString(),
+          30000
+        );
         console.debug(request.htmlPath, "after GOTO");
-
-        try {
-          await page.waitForNetworkIdle({ idleTime: 1000, timeout: 10000 });
-        } catch {
-          console.error(
-            `loading ${request.htmlPath} timed out, could not wait for all network requests to be over`
-          );
-        }
-        console.debug(request.htmlPath, "after waitForNetworkIdle");
 
         const screenshotPath = await performScreenshotWithTimeout(page);
         console.debug(request.htmlPath, "after screenshot");
@@ -215,4 +201,45 @@ async function performScreenshotWithTimeout(page: Page): Promise<string> {
   ]);
 
   return screenshotPath;
+}
+
+async function gotoWithTimeout(
+  page: Page,
+  url: string,
+  timeoutMs: number
+): Promise<void> {
+  try {
+    // Sometimes page.goto hangs indefinitely (possibly due to resource/memory issues),
+    // causing the whole screenshot operation to hang.
+    // Therefore, we also place a hard timeout on the operation, which should trigger
+    // a browser instance refresh and operation retry.
+    await Promise.race([
+      (async () => {
+        // There is a bug in the puppeteer timeout implementation if specifying "waitUntil: networkidle0",
+        // so we have to wait for network idle explicitly
+        await page.goto(url, {
+          timeout: timeoutMs / 3,
+        });
+        await page.waitForNetworkIdle({
+          idleTime: 1000,
+          timeout: (timeoutMs / 3) * 2,
+        });
+      })(),
+      new Promise((_, reject) =>
+        setTimeout(
+          () =>
+            reject(
+              new Error(
+                `goto operation timed out unexpectedly, this might be caused by resource issues`
+              )
+            ),
+          timeoutMs + 10000
+        )
+      ),
+    ]);
+  } catch (error) {
+    if (!(error instanceof TimeoutError)) {
+      throw error;
+    }
+  }
 }
