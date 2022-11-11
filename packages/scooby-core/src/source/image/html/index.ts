@@ -30,6 +30,8 @@ export async function generateHTMLImageSources(
       const generationTasks = createGenerationTasks(entries, queue);
       const results = await Promise.all(generationTasks);
 
+      console.debug("results promises have all been completed");
+
       return results.map((result) => {
         const matchedEntry = entries.find(
           (entry) => entry.id === result.groupId
@@ -117,7 +119,10 @@ async function takeScreenshotWithRetries(
   let error;
   for (let attempt = 0; attempt < MAX_SCREENSHOT_ATTEMPTS; attempt++) {
     try {
-      return await takeScreenshot(browserPool, request);
+      console.debug(request.htmlPath, "before takeScreenshot action");
+      const screenshot = await takeScreenshot(browserPool, request);
+      console.debug(request.htmlPath, "after takeScreenshot action");
+      return screenshot;
     } catch (currentError) {
       console.error(
         `experienced error while taking screenshot for target '${
@@ -137,39 +142,59 @@ async function takeScreenshot(
   browserPool: Pool<Browser>,
   request: ScreenshotTaskRequest
 ): Promise<ScreenshotTaskResult> {
-  return withPooledBrowser(browserPool, async (browser: Browser) => {
-    return withPage(browser, async (page: Page) => {
-      await page.setViewport(request.viewport);
-      console.info(`screenshotting ${request.htmlPath}`);
-      try {
-        await page.goto(url.pathToFileURL(request.htmlPath).toString(), {
-          timeout: 10000,
-        });
-      } catch (error) {
-        if (!(error instanceof TimeoutError)) {
-          throw error;
+  console.debug(request.htmlPath, "starting pooled browser");
+  const screenshot = await withPooledBrowser(
+    browserPool,
+    async (browser: Browser) => {
+      console.debug(request.htmlPath, "starting page");
+      const screenshot = await withPage(browser, async (page: Page) => {
+        console.info(`screenshotting ${request.htmlPath}`);
+        await page.setViewport(request.viewport);
+        console.debug(request.htmlPath, "viewport set");
+        try {
+          await page.goto(url.pathToFileURL(request.htmlPath).toString(), {
+            timeout: 10000,
+          });
+        } catch (error) {
+          console.debug(request.htmlPath, "catch goto error", error);
+          if (!(error instanceof TimeoutError)) {
+            throw error;
+          }
         }
-      }
+        console.debug(request.htmlPath, "after GOTO");
 
-      try {
-        await page.waitForNetworkIdle({ idleTime: 1000, timeout: 10000 });
-      } catch {
-        console.error(
-          `loading ${request.htmlPath} timed out, could not wait for all network requests to be over`
+        try {
+          await page.waitForNetworkIdle({ idleTime: 1000, timeout: 10000 });
+        } catch {
+          console.error(
+            `loading ${request.htmlPath} timed out, could not wait for all network requests to be over`
+          );
+        }
+        console.debug(request.htmlPath, "after waitForNetworkIdle");
+
+        const screenshotPath = await performScreenshotWithTimeout(page);
+        console.debug(request.htmlPath, "after screenshot");
+
+        console.log(
+          "--> completed screenshot for: " + request.htmlPath,
+          "-->",
+          screenshotPath
         );
-      }
 
-      const screenshotPath = await performScreenshotWithTimeout(page);
+        return {
+          id: request.id,
+          groupId: request.groupId,
+          screenshotPath,
+        };
+      });
+      console.debug(request.htmlPath, "after page");
 
-      console.log("--> completed screenshot for: " + request.htmlPath);
+      return screenshot;
+    }
+  );
+  console.debug(request.htmlPath, "after pooled browser");
 
-      return {
-        id: request.id,
-        groupId: request.groupId,
-        screenshotPath,
-      };
-    });
-  });
+  return screenshot;
 }
 
 async function performScreenshotWithTimeout(page: Page): Promise<string> {
