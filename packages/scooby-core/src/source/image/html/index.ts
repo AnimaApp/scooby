@@ -214,10 +214,17 @@ async function gotoWithTimeout(
     // Therefore, we also place a hard timeout on the operation, which should trigger
     // a browser instance refresh and operation retry.
     await Promise.race([
-      page.goto(url, {
-        waitUntil: "networkidle0",
-        timeout: timeoutMs,
-      }),
+      (async () => {
+        // There is a bug in the puppeteer timeout implementation if specifying "waitUntil: networkidle0",
+        // so we have to wait for network idle explicitly
+        await page.goto(url, {
+          timeout: timeoutMs / 3,
+        });
+        await page.waitForNetworkIdle({
+          idleTime: 1000,
+          timeout: (timeoutMs / 3) * 2,
+        });
+      })(),
       new Promise((_, reject) =>
         setTimeout(
           () =>
