@@ -154,18 +154,9 @@ async function takeScreenshot(
         await gotoWithTimeout(
           page,
           url.pathToFileURL(request.htmlPath).toString(),
-          10000
+          30000
         );
         console.debug(request.htmlPath, "after GOTO");
-
-        try {
-          await page.waitForNetworkIdle({ idleTime: 1000, timeout: 10000 });
-        } catch {
-          console.error(
-            `loading ${request.htmlPath} timed out, could not wait for all network requests to be over`
-          );
-        }
-        console.debug(request.htmlPath, "after waitForNetworkIdle");
 
         const screenshotPath = await performScreenshotWithTimeout(page);
         console.debug(request.htmlPath, "after screenshot");
@@ -224,11 +215,17 @@ async function gotoWithTimeout(
     // a browser instance refresh and operation retry.
     await Promise.race([
       page.goto(url, {
+        waitUntil: "networkidle0",
         timeout: timeoutMs,
       }),
       new Promise((_, reject) =>
         setTimeout(
-          () => reject(new Error(`goto operation timed out`)),
+          () =>
+            reject(
+              new Error(
+                `goto operation timed out unexpectedly, this might be caused by resource issues`
+              )
+            ),
           timeoutMs + 10000
         )
       ),
