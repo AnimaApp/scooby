@@ -19,6 +19,7 @@ describe("fidelity test", () => {
         repositoryName: "test-repo",
         repositoryOwner: "test-owner",
       },
+      isLocalRun: false,
     };
   });
 
@@ -33,7 +34,8 @@ describe("fidelity test", () => {
           actualFileType: "html",
           expectedFileType: "html",
         },
-        mockContext
+        mockContext,
+        { type: "hosted" }
       )
     ).rejects.toThrowError();
   });
@@ -57,7 +59,8 @@ describe("fidelity test", () => {
           actualFileType: "html",
           expectedFileType: "html",
         },
-        mockContext
+        mockContext,
+        { type: "hosted" }
       )
     ).rejects.toThrowError();
   });
@@ -81,7 +84,8 @@ describe("fidelity test", () => {
         actualFileType: "html",
         expectedFileType: "html",
       },
-      mockContext
+      mockContext,
+      { type: "hosted" }
     );
     if (report.type !== "fidelity") {
       throw new Error("invalid report type received: " + report.type);
@@ -115,7 +119,8 @@ describe("fidelity test", () => {
         actualFileType: "json",
         expectedFileType: "json",
       },
-      mockContext
+      mockContext,
+      { type: "hosted" }
     );
     if (report.type !== "fidelity") {
       throw new Error("invalid report type received: " + report.type);
@@ -149,7 +154,8 @@ describe("fidelity test", () => {
         actualFileType: "jsx",
         expectedFileType: "jsx",
       },
-      mockContext
+      mockContext,
+      { type: "hosted" }
     );
     if (report.type !== "fidelity") {
       throw new Error("invalid report type received: " + report.type);
@@ -183,7 +189,8 @@ describe("fidelity test", () => {
         actualFileType: "json",
         expectedFileType: "json",
       },
-      mockContext
+      mockContext,
+      { type: "hosted" }
     );
     if (report.type !== "fidelity") {
       throw new Error("invalid report type received: " + report.type);
@@ -218,7 +225,8 @@ describe("fidelity test", () => {
         actualFileType: "json",
         expectedFileType: "json",
       },
-      mockContext
+      mockContext,
+      { type: "hosted" }
     );
     if (report.type !== "fidelity") {
       throw new Error("invalid report type received: " + report.type);
@@ -252,7 +260,8 @@ describe("fidelity test", () => {
         actualFileType: "html",
         expectedFileType: "html",
       },
-      mockContext
+      mockContext,
+      { type: "hosted" }
     );
     if (report.type !== "fidelity") {
       throw new Error("invalid report type received: " + report.type);
@@ -286,7 +295,8 @@ describe("fidelity test", () => {
         actualFileType: "json",
         expectedFileType: "json",
       },
-      mockContext
+      mockContext,
+      { type: "hosted" }
     );
     if (report.type !== "fidelity") {
       throw new Error("invalid report type received: " + report.type);
@@ -324,7 +334,8 @@ describe("fidelity test", () => {
         actualFileType: "json",
         expectedFileType: "json",
       },
-      mockContext
+      mockContext,
+      { type: "hosted" }
     );
     if (report.type !== "fidelity") {
       throw new Error("invalid report type received: " + report.type);
@@ -361,7 +372,8 @@ describe("fidelity test", () => {
         actualFileType: "jsx",
         expectedFileType: "jsx",
       },
-      mockContext
+      mockContext,
+      { type: "hosted" }
     );
     if (report.type !== "fidelity") {
       throw new Error("invalid report type received: " + report.type);
@@ -401,7 +413,8 @@ describe("fidelity test", () => {
         actualFileType: "html",
         expectedFileType: "html",
       },
-      mockContext
+      mockContext,
+      { type: "hosted" }
     );
     if (report.type !== "fidelity") {
       throw new Error("invalid report type received: " + report.type);

@@ -1,6 +1,7 @@
 import { runReport } from "@animaapp/scooby-core";
 import { Command, Flags } from "@oclif/core";
-import { formatterFlag, maxThreadsFlag } from "../../common-flags";
+import { convertFlagsToReportOutputTarget } from "../../shared/convert";
+import { formatterFlag, maxThreadsFlag, outputFlag } from "../../shared/flags";
 
 export default class Fidelity extends Command {
   static description = "Run a fidelity test";
@@ -43,6 +44,7 @@ export default class Fidelity extends Command {
       description:
         "Specify a file type to test the 'actual' dataset. This is useful when the actual and expected datasets use different formats. For example, --expected-file-type=html",
     }),
+    output: outputFlag,
   };
 
   async run(): Promise<void> {
@@ -66,6 +68,7 @@ export default class Fidelity extends Command {
       threshold: flags.threshold ? parseFloat(flags.threshold) : undefined,
       actualFileType,
       expectedFileType,
+      output: convertFlagsToReportOutputTarget(flags.name, flags),
     });
   }
 }

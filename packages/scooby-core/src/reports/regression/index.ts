@@ -16,11 +16,11 @@ import { uploadTestSnapshot } from "./snapshot";
 
 export type RegressionReportParams = BaseReportParams & {
   testsPath: string;
+  fileType: string;
   referencePath?: string;
   formatter?: Formatter;
   maxThreads?: number;
   maxReferenceCommitBacktracking?: number;
-  fileType: string;
 };
 
 export async function runRegressionReport(
@@ -61,12 +61,16 @@ async function performMainBranchFlow(
 ): Promise<LocalRegressionReport> {
   console.log("regression tests are auto-approved on default branch");
 
-  await uploadTestSnapshot(
-    params.name,
-    params.testsPath,
-    context.environment.currentCommitHash,
-    context.api
-  );
+  if (!context.isLocalRun) {
+    await uploadTestSnapshot(
+      params.name,
+      params.testsPath,
+      context.environment.currentCommitHash,
+      context.api
+    );
+  } else {
+    console.log("skipping snapshot upload on local run");
+  }
 
   console.log("generating report...");
   return generateMainBranchReport({

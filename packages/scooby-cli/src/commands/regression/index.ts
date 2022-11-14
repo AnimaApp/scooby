@@ -1,6 +1,7 @@
 import { runReport } from "@animaapp/scooby-core";
 import { Command, Flags } from "@oclif/core";
-import { formatterFlag, maxThreadsFlag } from "../../common-flags";
+import { convertFlagsToReportOutputTarget } from "../../shared/convert";
+import { formatterFlag, maxThreadsFlag, outputFlag } from "../../shared/flags";
 
 export default class Regression extends Command {
   static description = "Run a regression test";
@@ -36,6 +37,7 @@ export default class Regression extends Command {
     }),
     "max-threads": maxThreadsFlag,
     formatter: formatterFlag,
+    output: outputFlag,
   };
 
   async run(): Promise<void> {
@@ -49,6 +51,7 @@ export default class Regression extends Command {
       maxThreads: flags["max-threads"],
       formatter: flags.formatter,
       fileType: flags["file-type"],
+      output: convertFlagsToReportOutputTarget(flags.name, flags),
     });
   }
 }

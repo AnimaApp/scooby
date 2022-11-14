@@ -1,11 +1,17 @@
 import GenericPool, { Factory, Pool } from "generic-pool";
 import puppeteer, { Browser, Page } from "puppeteer";
 
-function createBrowser(): Promise<Browser> {
-  return puppeteer.launch({
-    args: ["--no-sandbox", "--disable-setuid-sandbox"],
-    headless: true,
-  });
+async function createBrowser(): Promise<Browser> {
+  try {
+    const browser = await puppeteer.launch({
+      args: ["--no-sandbox", "--disable-setuid-sandbox"],
+      headless: true,
+    });
+    return browser;
+  } catch (e) {
+    console.error("unable to start browser due to error:", e);
+    throw e;
+  }
 }
 
 export const withPage = async <T>(

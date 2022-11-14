@@ -24,6 +24,7 @@ describe("regression test", () => {
         repositoryName: "test-repo",
         repositoryOwner: "test-owner",
       },
+      isLocalRun: false,
     };
   });
 
@@ -32,7 +33,8 @@ describe("regression test", () => {
       _processReport(
         "regression",
         { name: "invalid name/", testsPath: "path", fileType: "html" },
-        mockContext
+        mockContext,
+        { type: "hosted" }
       )
     ).rejects.toThrowError();
   });
@@ -52,7 +54,8 @@ describe("regression test", () => {
     const report = await _processReport(
       "regression",
       { name: "test-regression", testsPath, fileType: "html" },
-      mockContext
+      mockContext,
+      { type: "hosted" }
     );
     if (report.type !== "regression") {
       throw new Error("invalid report type received: " + report.type);
@@ -84,7 +87,8 @@ describe("regression test", () => {
     const report = await _processReport(
       "regression",
       { name: "test-regression", testsPath, fileType: "json" },
-      mockContext
+      mockContext,
+      { type: "hosted" }
     );
     if (report.type !== "regression") {
       throw new Error("invalid report type received: " + report.type);
@@ -116,7 +120,8 @@ describe("regression test", () => {
     const report = await _processReport(
       "regression",
       { name: "test-regression", testsPath, fileType: "json" },
-      mockContext
+      mockContext,
+      { type: "hosted" }
     );
     if (report.type !== "regression") {
       throw new Error("invalid report type received: " + report.type);
@@ -148,7 +153,8 @@ describe("regression test", () => {
     const report = await _processReport(
       "regression",
       { name: "test-regression", testsPath, fileType: "jsx" },
-      mockContext
+      mockContext,
+      { type: "hosted" }
     );
     if (report.type !== "regression") {
       throw new Error("invalid report type received: " + report.type);
@@ -180,7 +186,8 @@ describe("regression test", () => {
     const report = await _processReport(
       "regression",
       { name: "test-regression", testsPath, fileType: "html" },
-      mockContext
+      mockContext,
+      { type: "hosted" }
     );
     if (report.type !== "regression") {
       throw new Error("invalid report type received: " + report.type);
@@ -237,7 +244,9 @@ describe("regression test", () => {
     const report = await _processReport(
       "regression",
       { name: "test-regression", testsPath, fileType: "json" },
-      mockContext
+      mockContext,
+
+      { type: "hosted" }
     );
     if (report.type !== "regression") {
       throw new Error("invalid report type received: " + report.type);
@@ -294,7 +303,9 @@ describe("regression test", () => {
     const report = await _processReport(
       "regression",
       { name: "test-regression", testsPath, fileType: "jsx" },
-      mockContext
+      mockContext,
+
+      { type: "hosted" }
     );
     if (report.type !== "regression") {
       throw new Error("invalid report type received: " + report.type);
@@ -327,7 +338,9 @@ describe("regression test", () => {
     const report = await _processReport(
       "regression",
       { name: "test-regression", testsPath, fileType: "json" },
-      mockContext
+      mockContext,
+
+      { type: "hosted" }
     );
     if (report.type !== "regression") {
       throw new Error("invalid report type received: " + report.type);
@@ -360,7 +373,8 @@ describe("regression test", () => {
     const report = await _processReport(
       "regression",
       { name: "test-regression", testsPath, fileType: "html" },
-      mockContext
+      mockContext,
+      { type: "hosted" }
     );
     if (report.type !== "regression") {
       throw new Error("invalid report type received: " + report.type);
@@ -397,7 +411,8 @@ describe("regression test", () => {
     const report = await _processReport(
       "regression",
       { name: "test-regression", testsPath, fileType: "html" },
-      mockContext
+      mockContext,
+      { type: "hosted" }
     );
     if (report.type !== "regression") {
       throw new Error("invalid report type received: " + report.type);
@@ -425,7 +440,8 @@ describe("regression test", () => {
     const report = await _processReport(
       "regression",
       { name: "test-regression", testsPath, fileType: "html" },
-      mockContext
+      mockContext,
+      { type: "hosted" }
     );
     if (report.type !== "regression") {
       throw new Error("invalid report type received: " + report.type);

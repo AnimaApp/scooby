@@ -74,8 +74,24 @@ export type Environment = {
 export type ReportContext = {
   environment: Environment;
   api: ScoobyAPI;
+  isLocalRun: boolean;
 };
 
 export type BaseReportParams = {
   name: string;
 };
+
+export type HostedReportOutputTarget = {
+  type: "hosted";
+};
+
+export type ZipReportOutputTarget = {
+  type: "zip";
+  path: string;
+};
+
+export type ReportOutputTarget =
+  | HostedReportOutputTarget
+  | ZipReportOutputTarget;
+
+export type ReportOutputTargetOrAuto = ReportOutputTarget | { type: "auto" };
