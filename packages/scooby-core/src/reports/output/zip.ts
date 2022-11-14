@@ -1,6 +1,5 @@
-import { v4 as uuidv4 } from "uuid";
-import { mkdirSync } from "fs";
-import { copyFile, writeFile, rename } from "fs/promises";
+import mime from "mime-types";
+import { readFile, writeFile, rename } from "fs/promises";
 import path from "path";
 import {
   HostedReport,
@@ -21,12 +20,9 @@ export async function buildZipReportOutput(
   console.log("generating report archive...");
   const tempArchiveDir = await createTemporaryDirectory("report-zip");
 
-  const allResources = getAllLocalResources(report);
-  const archivedResources = await copyResourcesToArchive(
-    allResources,
-    tempArchiveDir
-  );
-  const archivedReport = buildArchivedReport(report, archivedResources);
+  const resources = getAllLocalResources(report);
+  const resourceDataUris = await generateDataURIHostedResources(resources);
+  const archivedReport = buildArchivedReport(report, resourceDataUris);
   await writeFile(
     path.join(tempArchiveDir, "report.json"),
     JSON.stringify(archivedReport, undefined, 2),
@@ -61,25 +57,20 @@ function getAllLocalResources(object: unknown): LocalResource[] {
   return resources;
 }
 
-async function copyResourcesToArchive(
-  resources: LocalResource[],
-  archiveDir: string
+async function generateDataURIHostedResources(
+  resources: LocalResource[]
 ): Promise<Record<string, HostedResource>> {
   const output: Record<string, HostedResource> = {};
 
-  const resourcesDir = path.join(archiveDir, "resources");
-  mkdirSync(resourcesDir, { recursive: true });
-
   for (const resource of resources) {
-    const id = uuidv4();
-    const targetFilename = `${id}${path.parse(resource.path).ext}`;
-    const targetPath = path.join(resourcesDir, targetFilename);
-
-    copyFile(resource.path, targetPath);
+    const content = await readFile(resource.path);
+    const b64 = content.toString("base64");
+    const mimeType = mime.lookup(resource.path) || "text/plain";
+    const dataURI = `data:${mimeType};base64,${b64}`;
 
     output[resource.path] = {
       type: "hosted",
-      url: `resources/${targetFilename}`,
+      url: dataURI,
     };
   }
 
