@@ -12,7 +12,7 @@ export type APICreationOptions = {
 export function createAPI(
   options: APICreationOptions
 ): ScoobyWebAPI | undefined {
-  if (options.environment.s3 && options.environment.restApi) {
+  if (options.environment.s3) {
     return new MixedScoobyWebAPI(options);
   }
   if (options.environment.zipArchive) {
