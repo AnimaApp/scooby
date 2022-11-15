@@ -437,17 +437,15 @@ describe("regression test", () => {
 
     mockDownloadSnapshotArchiveImplementation(mockContext.api, referencePath);
 
-    const report = await _processReport(
-      "regression",
-      { name: "test-regression", testsPath, fileType: "html" },
-      mockContext,
-      { type: "hosted" }
-    );
-    if (report.type !== "regression") {
-      throw new Error("invalid report type received: " + report.type);
-    }
-
-    expect(report.name).toEqual("test-regression");
+    expect(
+      async () =>
+        await _processReport(
+          "regression",
+          { name: "test-regression", testsPath, fileType: "html" },
+          mockContext,
+          { type: "hosted" }
+        )
+    ).rejects.toThrow();
 
     expect(mockContext.api.uploadSnapshotArchive).not.toHaveBeenCalled();
     expect(mockContext.api.uploadRegressionReport).not.toHaveBeenCalled();

@@ -32,7 +32,7 @@ export async function buildZipReportOutput(
   const archivePath = await archiveDirectory(tempArchiveDir);
   await rename(archivePath, output.path);
 
-  console.log("done!");
+  console.log("report archive saved to: ", output.path);
   return archivedReport;
 }
 

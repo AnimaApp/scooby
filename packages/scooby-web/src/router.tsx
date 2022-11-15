@@ -3,6 +3,7 @@ import Root from "./routes/Root";
 import ErrorPage from "./routes/ErrorPage";
 import Commit from "./routes/commit";
 import Report from "./routes/report";
+import Home from "./routes/Home";
 
 export const router = createHashRouter([
   {
@@ -10,6 +11,10 @@ export const router = createHashRouter([
     element: <Root />,
     errorElement: <ErrorPage />,
     children: [
+      {
+        path: "/",
+        element: <Home />,
+      },
       {
         path: "repo/:repository/commit/:commit",
         element: <Commit />,

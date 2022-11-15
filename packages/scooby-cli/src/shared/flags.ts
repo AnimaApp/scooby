@@ -22,6 +22,7 @@ export type OutputType = "auto" | "zip" | "hosted";
 export const outputFlag = Flags.enum<OutputType>({
   options: ["auto", "zip", "hosted"],
   char: "o",
-  description: "Specify the output target for the generated report.",
+  description:
+    "Specify the output target for the generated report. Locally, it defaults to 'zip', while it defaults to 'hosted' when running on the CI.",
   default: "auto",
 });
