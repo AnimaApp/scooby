@@ -1,6 +1,8 @@
 import path from "path";
+import { statSync } from "fs";
 import { ReportContext } from "../../src";
 import { _processReport } from "../../src/reports";
+import { createTemporaryFile } from "../../src/utils/temp";
 
 describe("fidelity test", () => {
   let mockContext: ReportContext;
@@ -19,6 +21,7 @@ describe("fidelity test", () => {
         repositoryName: "test-repo",
         repositoryOwner: "test-owner",
       },
+      isLocalRun: false,
     };
   });
 
@@ -33,7 +36,8 @@ describe("fidelity test", () => {
           actualFileType: "html",
           expectedFileType: "html",
         },
-        mockContext
+        mockContext,
+        { type: "hosted" }
       )
     ).rejects.toThrowError();
   });
@@ -57,7 +61,8 @@ describe("fidelity test", () => {
           actualFileType: "html",
           expectedFileType: "html",
         },
-        mockContext
+        mockContext,
+        { type: "hosted" }
       )
     ).rejects.toThrowError();
   });
@@ -81,7 +86,8 @@ describe("fidelity test", () => {
         actualFileType: "html",
         expectedFileType: "html",
       },
-      mockContext
+      mockContext,
+      { type: "hosted" }
     );
     if (report.type !== "fidelity") {
       throw new Error("invalid report type received: " + report.type);
@@ -115,7 +121,8 @@ describe("fidelity test", () => {
         actualFileType: "json",
         expectedFileType: "json",
       },
-      mockContext
+      mockContext,
+      { type: "hosted" }
     );
     if (report.type !== "fidelity") {
       throw new Error("invalid report type received: " + report.type);
@@ -149,7 +156,8 @@ describe("fidelity test", () => {
         actualFileType: "jsx",
         expectedFileType: "jsx",
       },
-      mockContext
+      mockContext,
+      { type: "hosted" }
     );
     if (report.type !== "fidelity") {
       throw new Error("invalid report type received: " + report.type);
@@ -183,7 +191,8 @@ describe("fidelity test", () => {
         actualFileType: "json",
         expectedFileType: "json",
       },
-      mockContext
+      mockContext,
+      { type: "hosted" }
     );
     if (report.type !== "fidelity") {
       throw new Error("invalid report type received: " + report.type);
@@ -218,7 +227,8 @@ describe("fidelity test", () => {
         actualFileType: "json",
         expectedFileType: "json",
       },
-      mockContext
+      mockContext,
+      { type: "hosted" }
     );
     if (report.type !== "fidelity") {
       throw new Error("invalid report type received: " + report.type);
@@ -252,7 +262,8 @@ describe("fidelity test", () => {
         actualFileType: "html",
         expectedFileType: "html",
       },
-      mockContext
+      mockContext,
+      { type: "hosted" }
     );
     if (report.type !== "fidelity") {
       throw new Error("invalid report type received: " + report.type);
@@ -286,7 +297,8 @@ describe("fidelity test", () => {
         actualFileType: "json",
         expectedFileType: "json",
       },
-      mockContext
+      mockContext,
+      { type: "hosted" }
     );
     if (report.type !== "fidelity") {
       throw new Error("invalid report type received: " + report.type);
@@ -324,7 +336,8 @@ describe("fidelity test", () => {
         actualFileType: "json",
         expectedFileType: "json",
       },
-      mockContext
+      mockContext,
+      { type: "hosted" }
     );
     if (report.type !== "fidelity") {
       throw new Error("invalid report type received: " + report.type);
@@ -361,7 +374,8 @@ describe("fidelity test", () => {
         actualFileType: "jsx",
         expectedFileType: "jsx",
       },
-      mockContext
+      mockContext,
+      { type: "hosted" }
     );
     if (report.type !== "fidelity") {
       throw new Error("invalid report type received: " + report.type);
@@ -392,23 +406,59 @@ describe("fidelity test", () => {
     mockContext.environment.branchName = "feat/another-branch";
     mockContext.environment.currentCommitHash = "main-commit";
 
+    expect(
+      async () =>
+        await _processReport(
+          "fidelity",
+          {
+            name: "test-fidelity",
+            actualPath,
+            expectedPath,
+            actualFileType: "html",
+            expectedFileType: "html",
+          },
+          mockContext,
+          { type: "hosted" }
+        )
+    ).rejects.toThrow();
+
+    expect(mockContext.api.uploadFidelityReport).not.toHaveBeenCalled();
+  });
+
+  it("generates 'zip' output target correctly", async () => {
+    const actualPath = path.resolve(
+      __dirname,
+      "../data/fidelity/json-perfect-fidelity/actual"
+    );
+    const expectedPath = path.resolve(
+      __dirname,
+      "../data/fidelity/json-perfect-fidelity/expected"
+    );
+    const tempPath = await createTemporaryFile("test-archive-fidelity", ".zip");
+
     const report = await _processReport(
       "fidelity",
       {
         name: "test-fidelity",
         actualPath,
         expectedPath,
-        actualFileType: "html",
-        expectedFileType: "html",
+        actualFileType: "json",
+        expectedFileType: "json",
       },
-      mockContext
+      mockContext,
+      { type: "zip", path: tempPath }
     );
     if (report.type !== "fidelity") {
       throw new Error("invalid report type received: " + report.type);
     }
 
     expect(report.name).toEqual("test-fidelity");
+    expect(report.commitHash).toEqual("feature-commit");
+    expect(report.summary.result).toEqual("success");
+    expect(report.overallFidelityScore).toEqual(1);
+    expect(report.pairs.length).toEqual(2);
 
-    expect(mockContext.api.uploadFidelityReport).not.toHaveBeenCalled();
+    const archiveStats = statSync(tempPath);
+    expect(archiveStats.size).toBeGreaterThan(0);
   });
 });

@@ -186,19 +186,22 @@ async function takeScreenshot(
 async function performScreenshotWithTimeout(page: Page): Promise<string> {
   const screenshotPath = await createTemporaryFile("screenshot-html-", ".png");
 
+  let timeout;
   await Promise.race([
     page.screenshot({
       path: screenshotPath,
       type: "png",
       fullPage: true,
     }),
-    new Promise((_, reject) =>
-      setTimeout(
-        () => reject(new Error(`screenshot operation timed out`)),
-        10000
-      )
+    new Promise(
+      (_, reject) =>
+        (timeout = setTimeout(
+          () => reject(new Error(`screenshot operation timed out`)),
+          10000
+        ))
     ),
   ]);
+  clearTimeout(timeout);
 
   return screenshotPath;
 }
@@ -213,6 +216,7 @@ async function gotoWithTimeout(
     // causing the whole screenshot operation to hang.
     // Therefore, we also place a hard timeout on the operation, which should trigger
     // a browser instance refresh and operation retry.
+    let timeout;
     await Promise.race([
       (async () => {
         // There is a bug in the puppeteer timeout implementation if specifying "waitUntil: networkidle0",
@@ -225,18 +229,20 @@ async function gotoWithTimeout(
           timeout: (timeoutMs / 3) * 2,
         });
       })(),
-      new Promise((_, reject) =>
-        setTimeout(
-          () =>
-            reject(
-              new Error(
-                `goto operation timed out unexpectedly, this might be caused by resource issues`
-              )
-            ),
-          timeoutMs + 10000
-        )
+      new Promise(
+        (_, reject) =>
+          (timeout = setTimeout(
+            () =>
+              reject(
+                new Error(
+                  `goto operation timed out unexpectedly, this might be caused by resource issues`
+                )
+              ),
+            timeoutMs + 10000
+          ))
       ),
     ]);
+    clearTimeout(timeout);
   } catch (error) {
     if (!(error instanceof TimeoutError)) {
       throw error;

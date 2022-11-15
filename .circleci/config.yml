@@ -107,6 +107,9 @@ jobs:
       - run:
           name: "Run JSON regression (with metadata) test"
           command: "scooby regression --name 'json-regression-with-metadata' --tests sample-projects/ci-json-regression-metadata --file-type=json"
+      - run:
+          name: "Run regression test with ZIP output target"
+          command: "scooby regression --name 'zip-png-regression' --tests sample-projects/ci-png-regression --file-type=png --output=zip"
 
   run-scooby-fidelity-tests:
     docker:
@@ -132,6 +135,9 @@ jobs:
       - run:
           name: "Run mixed file-type fidelity test"
           command: "scooby fidelity --name 'mixed-file-type-fidelity' --expected sample-projects/ci-mixed-fidelity/expected --actual sample-projects/ci-mixed-fidelity/actual --expected-file-type=png --actual-file-type=html"
+      - run:
+          name: "Run fidelity test with ZIP output target"
+          command: "scooby fidelity --name 'zip-json-fidelity' --expected sample-projects/ci-json-fidelity/expected --actual sample-projects/ci-json-fidelity/actual --file-type=json --output=zip"
 
   scooby-update-status:
     docker:

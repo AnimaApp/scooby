@@ -1,11 +1,15 @@
-import { CommitContext, getScoobyAPI, ScoobyAPI } from "@animaapp/scooby-api";
-import { HostedReport, LocalReport, Report } from "@animaapp/scooby-shared";
+import { getScoobyAPI } from "@animaapp/scooby-api";
+import { LocalReport, Report } from "@animaapp/scooby-shared";
 import { getEnvironment } from "../environment";
-import { Environment, ReportContext } from "../types";
-import { isRunningOnReferenceCommit } from "../utils/commit";
+import {
+  ReportContext,
+  ReportOutputTarget,
+  ReportOutputTargetOrAuto,
+} from "../types";
 import { runFidelityReport } from "./fidelity";
 import { printFidelityReport } from "./fidelity/print";
 import { isValidName } from "./name";
+import { buildReportOutput } from "./output";
 import { runRegressionReport } from "./regression";
 import { printRegressionReport } from "./regression/print";
 
@@ -16,7 +20,9 @@ const REPORTS = {
 
 export async function runReport<T extends keyof typeof REPORTS>(
   type: T,
-  params: Parameters<typeof REPORTS[T]>[1]
+  params: Parameters<typeof REPORTS[T]>[1] & {
+    output: ReportOutputTargetOrAuto;
+  }
 ) {
   const environment = await getEnvironment();
   console.log("Loaded environment:", environment);
@@ -26,18 +32,26 @@ export async function runReport<T extends keyof typeof REPORTS>(
     repositoryName: environment.repositoryName,
   });
 
+  const outputTarget: ReportOutputTarget = resolveOutputTarget(
+    params.output,
+    params.name
+  );
+  console.log(`target output: ${outputTarget.type}`);
+
   const context: ReportContext = {
     environment,
     api,
+    isLocalRun: outputTarget.type !== "hosted",
   };
 
-  return _processReport(type, params, context);
+  return _processReport(type, params, context, outputTarget);
 }
 
 export async function _processReport<T extends keyof typeof REPORTS>(
   type: T,
   params: Parameters<typeof REPORTS[T]>[1],
-  context: ReportContext
+  context: ReportContext,
+  outputTarget: ReportOutputTarget
 ): Promise<Report> {
   if (!isValidName(params.name)) {
     throw new Error(
@@ -49,61 +63,7 @@ export async function _processReport<T extends keyof typeof REPORTS>(
 
   printReport(localReport);
 
-  if (shouldUploadReport(context.environment)) {
-    const hostedReport = await uploadReport(
-      {
-        commitHash: context.environment.currentCommitHash,
-      },
-      localReport,
-      context.api
-    );
-
-    return hostedReport;
-  }
-
-  return localReport;
-}
-
-function shouldUploadReport(environment: Environment): boolean {
-  const runningOnReferenceCommit = isRunningOnReferenceCommit(
-    environment.currentCommitHash,
-    environment.baseCommitHash
-  );
-
-  const isRunningOnCI = process.env["CI"] === "true";
-
-  if (environment.isMainBranch) {
-    if (isRunningOnCI) {
-      return true;
-    } else {
-      console.warn(
-        "skipping report upload as it's being done from main branch without running from the CI. This is usually a mistake, and would overwrite the reference data on main."
-      );
-      return false;
-    }
-  }
-
-  if (runningOnReferenceCommit) {
-    console.warn(
-      `this report is running on the same commit used as reference (${environment.baseCommitHash}), therefore no report will be uploaded to the API to avoid conflicts.`
-    );
-    return false;
-  }
-
-  return true;
-}
-
-async function uploadReport(
-  context: CommitContext,
-  report: LocalReport,
-  api: ScoobyAPI
-): Promise<HostedReport> {
-  switch (report.type) {
-    case "fidelity":
-      return api.uploadFidelityReport(context, report);
-    case "regression":
-      return api.uploadRegressionReport(context, report);
-  }
+  return buildReportOutput(localReport, context, outputTarget);
 }
 
 function printReport(report: LocalReport) {
@@ -112,5 +72,26 @@ function printReport(report: LocalReport) {
       return printFidelityReport(report);
     case "regression":
       return printRegressionReport(report);
+  }
+}
+
+function resolveOutputTarget(
+  output: ReportOutputTargetOrAuto,
+  reportName: string
+): ReportOutputTarget {
+  if (output.type !== "auto") {
+    return output;
+  }
+
+  const isRunningOnCI = process.env["CI"] === "true";
+  if (isRunningOnCI) {
+    return {
+      type: "hosted",
+    };
+  } else {
+    return {
+      type: "zip",
+      path: `${reportName}.zip`,
+    };
   }
 }

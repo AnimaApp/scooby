@@ -311,4 +311,7 @@ export type GlobalEnvironmentSetup = {
     baseUrl: string;
     accessToken: string;
   };
+  zipArchive?: {
+    buffer: ArrayBuffer;
+  };
 };
