@@ -17,6 +17,7 @@ export type BaseEntry = {
   tag?: string;
   status?: EntryStatus;
   path?: string;
+  score?: number;
 };
 
 export type EntryStatus = "approved" | "changes_requested";

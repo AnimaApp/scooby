@@ -28,11 +28,16 @@ export function generateEntries(
     entries.push(...generateImageEntriesWithReview(report, review));
   }
 
-  entries.sort(
-    (a, b) =>
-      (a.sentiment ? getRankForSentiment(a.sentiment) : 0) -
-      (b.sentiment ? getRankForSentiment(b.sentiment) : 0)
-  );
+  entries.sort((a, b) => {
+    if (a.sentiment !== b.sentiment) {
+      return (
+        (a.sentiment ? getRankForSentiment(a.sentiment) : 0) -
+        (b.sentiment ? getRankForSentiment(b.sentiment) : 0)
+      );
+    } else {
+      return (a.score ?? 0) - (b.score ?? 0);
+    }
+  });
 
   return entries;
 }
@@ -164,6 +169,7 @@ function mapFidelityRegressionPairToImageEntry(
     id: pair.actual.id,
     thumbnailUrl: pair.fidelityComparison.diff.url,
     path: pair.actual.path,
+    score: pair.fidelityComparison.similarity,
   };
 }
 
@@ -174,6 +180,7 @@ function mapFidelityRegressionPairToCodeEntry(
     type: "code",
     id: pair.actual.id,
     path: pair.actual.path,
+    score: pair.fidelityComparison.similarity,
   };
 }
 
