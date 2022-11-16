@@ -11,26 +11,25 @@ import {
   outputFlag,
 } from "../../shared/flags";
 
-export default class Fidelity extends Command {
-  static description = "Run a fidelity test";
+export default class FidelityRegression extends Command {
+  static description = "Run a fidelity regression test";
 
   static examples = [
-    `$ scooby fidelity --name "codegen-fidelity" --expected "/path/to/your/expected/tests" --actual "/path/to/your/actual/tests" --file-type=html`,
+    `$ scooby fidelity-regression --name "codegen-fidelity-regression" --expected "/path/to/your/expected/tests" --actual "/path/to/your/actual/tests" --file-type=html`,
   ];
 
   static flags = {
     name: Flags.string({
       char: "n",
-      description: "The name of the fidelity test, ie. 'codegen-fidelity'",
+      description: "The name of the regression test, ie. 'codegen-regression'",
       required: true,
     }),
     expected: expectedFlag,
     actual: actualFlag,
-    "max-threads": maxThreadsFlag,
-    formatter: formatterFlag,
-    threshold: Flags.string({
+    reference: Flags.string({
+      char: "r",
       description:
-        "Specify a float value that acts as a threshold, with 1 being the strictest and 0 making everything pass. By default it's set to 0 to make all fidelity tests pass.",
+        "Specify a custom path that acts as reference dataset, instead of pulling it automatically. You should probably not use this, unless you know what you're doing.",
     }),
     "file-type": Flags.string({
       char: "f",
@@ -38,11 +37,17 @@ export default class Fidelity extends Command {
     }),
     "actual-file-type": actualFileTypeFlag,
     "expected-file-type": expectedFileTypeFlag,
+    "max-backtracking": Flags.integer({
+      description:
+        "Specify the number of backtracking attempts on previous commits to find a matching reference dataset. This is mostly useful when the main branch doesn't publish reference datasets for each commit.",
+    }),
+    "max-threads": maxThreadsFlag,
+    formatter: formatterFlag,
     output: outputFlag,
   };
 
   async run(): Promise<void> {
-    const { flags } = await this.parse(Fidelity);
+    const { flags } = await this.parse(FidelityRegression);
 
     const actualFileType = flags["actual-file-type"] ?? flags["file-type"];
     const expectedFileType = flags["expected-file-type"] ?? flags["file-type"];
@@ -53,13 +58,14 @@ export default class Fidelity extends Command {
       );
     }
 
-    await runReport("fidelity", {
+    await runReport("fidelityRegression", {
       name: flags.name,
       actualPath: flags.actual,
       expectedPath: flags.expected,
+      referencePath: flags.reference,
+      maxReferenceCommitBacktracking: flags["max-backtracking"],
       maxThreads: flags["max-threads"],
       formatter: flags.formatter,
-      threshold: flags.threshold ? parseFloat(flags.threshold) : undefined,
       actualFileType,
       expectedFileType,
       output: convertFlagsToReportOutputTarget(flags.name, flags),

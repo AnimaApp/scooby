@@ -9,10 +9,10 @@ import {
   ReportContext,
   SourceEntry,
 } from "../../types";
-import { calculateRegressions } from "./changes";
-import { loadReferenceEntries } from "./reference";
 import { generateMainBranchReport, generateReport } from "./report";
-import { uploadTestSnapshot } from "./snapshot";
+import { calculateRegressions } from "../shared/regression";
+import { loadReferenceEntries } from "../shared/reference";
+import { uploadTestSnapshot } from "../shared/snapshot";
 
 export type RegressionReportParams = BaseReportParams & {
   testsPath: string;

@@ -225,9 +225,155 @@ export type LocalFidelityReport = BaseFidelityReport<LocalResource>;
 export type HostedFidelityReport = BaseFidelityReport<HostedResource>;
 export type FidelityReport = LocalFidelityReport | HostedFidelityReport;
 
-export type Report = RegressionReport | FidelityReport;
-export type LocalReport = LocalRegressionReport | LocalFidelityReport;
-export type HostedReport = HostedRegressionReport | HostedFidelityReport;
+// Fidelity-regression
+
+export type BaseFidelityRegressionReport<TResource extends Resource> =
+  BaseReport & {
+    type: "fidelity-regression";
+    baseCommitHash: string;
+    overallFidelityScore: number;
+    results: FidelityRegressionReportResults<TResource>;
+  };
+
+export type BaseFidelityRegressionReportResults<
+  TResource extends Resource,
+  TPair extends FidelityRegressionTestPair<TResource>,
+  TTriple extends FidelityRegressionTestTriple<TResource>
+> = {
+  new: TPair[];
+  removed: TPair[];
+  unchanged: TTriple[];
+  changed: TTriple[];
+};
+
+export type ImageFidelityRegressionReportResults<TResource extends Resource> =
+  BaseFidelityRegressionReportResults<
+    TResource,
+    ImageFidelityRegressionTestPair<TResource>,
+    ImageFidelityRegressionTestTriple<TResource>
+  > & {
+    type: "image";
+  };
+
+export type CodeFidelityRegressionReportResults<TResource extends Resource> =
+  BaseFidelityRegressionReportResults<
+    TResource,
+    CodeFidelityRegressionTestPair<TResource>,
+    CodeFidelityRegressionTestTriple<TResource>
+  > & {
+    type: "code";
+  };
+export type FidelityRegressionReportResults<TResource extends Resource> =
+  | ImageFidelityRegressionReportResults<TResource>
+  | CodeFidelityRegressionReportResults<TResource>;
+
+export type BaseFidelityRegressionTestPair<
+  TResource extends Resource,
+  TEntry extends FidelityRegressionTestEntry<TResource>,
+  TComparison
+> = {
+  expected: TEntry;
+  actual: TEntry;
+  fidelityComparison: TComparison;
+};
+
+export type BaseFidelityRegressionTestTriple<
+  TResource extends Resource,
+  TEntry extends FidelityRegressionTestEntry<TResource>,
+  TComparison
+> = {
+  // Fidelity-related properties
+  expected: TEntry;
+  actual: TEntry;
+  fidelityComparison: TComparison;
+
+  // Regression-related properties
+  reference: TEntry;
+  regressionComparison: TComparison;
+};
+
+export type ImageFidelityRegressionTestPair<TResource extends Resource> =
+  BaseFidelityRegressionTestPair<
+    TResource,
+    ImageFidelityRegressionTestEntry<TResource>,
+    ReportImageComparison<TResource>
+  > & {
+    type: "image";
+  };
+
+export type CodeFidelityRegressionTestPair<TResource extends Resource> =
+  BaseFidelityRegressionTestPair<
+    TResource,
+    CodeFidelityRegressionTestEntry<TResource>,
+    ReportCodeComparison<TResource>
+  > & {
+    type: "code";
+  };
+
+export type FidelityRegressionTestPair<TResource extends Resource> =
+  | ImageFidelityRegressionTestPair<TResource>
+  | CodeFidelityRegressionTestPair<TResource>;
+
+export type ImageFidelityRegressionTestTriple<TResource extends Resource> =
+  BaseFidelityRegressionTestTriple<
+    TResource,
+    ImageFidelityRegressionTestEntry<TResource>,
+    ReportImageComparison<TResource>
+  > & {
+    type: "image";
+  };
+
+export type CodeFidelityRegressionTestTriple<TResource extends Resource> =
+  BaseFidelityRegressionTestTriple<
+    TResource,
+    CodeFidelityRegressionTestEntry<TResource>,
+    ReportCodeComparison<TResource>
+  > & {
+    type: "code";
+  };
+export type FidelityRegressionTestTriple<TResource extends Resource> =
+  | ImageFidelityRegressionTestTriple<TResource>
+  | CodeFidelityRegressionTestTriple<TResource>;
+
+export type ImageFidelityRegressionTestEntry<TResource extends Resource> =
+  ReportImageTestEntry<TResource>;
+export type CodeFidelityRegressionTestEntry<TResource extends Resource> =
+  ReportCodeTestEntry<TResource>;
+export type FidelityRegressionTestEntry<TResource extends Resource> =
+  | ImageFidelityRegressionTestEntry<TResource>
+  | CodeFidelityRegressionTestEntry<TResource>;
+
+export type LocalFidelityRegressionTestPair =
+  FidelityRegressionTestPair<LocalResource>;
+export type HostedFidelityRegressionTestPair =
+  FidelityRegressionTestPair<HostedResource>;
+export type LocalFidelityRegressionTestEntry =
+  FidelityRegressionTestEntry<LocalResource>;
+export type HostedFidelityRegressionTestEntry =
+  FidelityRegressionTestEntry<HostedResource>;
+
+export type LocalFidelityRegressionReport =
+  BaseFidelityRegressionReport<LocalResource>;
+export type HostedFidelityRegressionReport =
+  BaseFidelityRegressionReport<HostedResource>;
+export type FidelityRegressionReport =
+  | LocalFidelityRegressionReport
+  | HostedFidelityRegressionReport;
+
+// General reports
+
+export type Report =
+  | RegressionReport
+  | FidelityReport
+  | FidelityRegressionReport;
+export type LocalReport =
+  | LocalRegressionReport
+  | LocalFidelityReport
+  | LocalFidelityRegressionReport;
+export type HostedReport =
+  | HostedRegressionReport
+  | HostedFidelityReport
+  | HostedFidelityRegressionReport;
 
 export type Summary = {
   result: "success" | "failure";

@@ -52,5 +52,7 @@ async function uploadReport(
       return api.uploadFidelityReport(context, report);
     case "regression":
       return api.uploadRegressionReport(context, report);
+    case "fidelity-regression":
+      return api.uploadFidelityRegressionReport(context, report);
   }
 }

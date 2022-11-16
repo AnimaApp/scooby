@@ -7,6 +7,8 @@ import {
   ReportOutputTargetOrAuto,
 } from "../types";
 import { runFidelityReport } from "./fidelity";
+import { runFidelityRegressionReport } from "./fidelity-regression";
+import { printFidelityRegressionReport } from "./fidelity-regression/print";
 import { printFidelityReport } from "./fidelity/print";
 import { isValidName } from "./name";
 import { buildReportOutput } from "./output";
@@ -16,6 +18,7 @@ import { printRegressionReport } from "./regression/print";
 const REPORTS = {
   fidelity: runFidelityReport,
   regression: runRegressionReport,
+  fidelityRegression: runFidelityRegressionReport,
 } as const;
 
 export async function runReport<T extends keyof typeof REPORTS>(
@@ -72,6 +75,8 @@ function printReport(report: LocalReport) {
       return printFidelityReport(report);
     case "regression":
       return printRegressionReport(report);
+    case "fidelity-regression":
+      return printFidelityRegressionReport(report);
   }
 }
 

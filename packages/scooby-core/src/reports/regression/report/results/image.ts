@@ -8,7 +8,7 @@ import { ImageBatchComparisonEntry } from "../../../../comparison/types";
 import { MatchedSources } from "../../../../matching";
 import { ImageSourceEntry } from "../../../../types";
 import { convertPathToLocalResource } from "../../../../utils/resource";
-import { RegressionCheckResult } from "../../changes";
+import { RegressionCheckResult } from "../../../shared/regression";
 
 export function generateImageResults(
   regressions: RegressionCheckResult<ImageBatchComparisonEntry>,
