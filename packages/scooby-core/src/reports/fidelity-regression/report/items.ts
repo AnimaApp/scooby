@@ -17,7 +17,7 @@ export async function generateItems(
   }
 
   for (const item of results.removed) {
-    items.push(await generateReportItem(item.actual, "failure"));
+    items.push(await generateReportItem(item, "failure"));
   }
 
   for (const item of results.changed) {

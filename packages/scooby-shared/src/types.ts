@@ -237,11 +237,12 @@ export type BaseFidelityRegressionReport<TResource extends Resource> =
 
 export type BaseFidelityRegressionReportResults<
   TResource extends Resource,
+  TEntry extends FidelityRegressionTestEntry<TResource>,
   TPair extends FidelityRegressionTestPair<TResource>,
   TTriple extends FidelityRegressionTestTriple<TResource>
 > = {
   new: TPair[];
-  removed: TPair[];
+  removed: TEntry[];
   unchanged: TTriple[];
   changed: TTriple[];
 };
@@ -249,6 +250,7 @@ export type BaseFidelityRegressionReportResults<
 export type ImageFidelityRegressionReportResults<TResource extends Resource> =
   BaseFidelityRegressionReportResults<
     TResource,
+    ImageFidelityRegressionTestEntry<TResource>,
     ImageFidelityRegressionTestPair<TResource>,
     ImageFidelityRegressionTestTriple<TResource>
   > & {
@@ -258,6 +260,7 @@ export type ImageFidelityRegressionReportResults<TResource extends Resource> =
 export type CodeFidelityRegressionReportResults<TResource extends Resource> =
   BaseFidelityRegressionReportResults<
     TResource,
+    CodeFidelityRegressionTestEntry<TResource>,
     CodeFidelityRegressionTestPair<TResource>,
     CodeFidelityRegressionTestTriple<TResource>
   > & {

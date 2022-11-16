@@ -24,10 +24,8 @@ export function generateImageResults(
         getFidelityEntry(fidelityComparisons, regressionEntry.id)
       )
     ),
-    removed: matchedRegressionSources.removed.map((regressionEntry) =>
-      convertImageRegressionEntryToReportPair(
-        getFidelityEntry(fidelityComparisons, regressionEntry.id)
-      )
+    removed: matchedRegressionSources.removed.map(
+      convertImageSourceEntryToReportEntry
     ),
     changed: regressions.changed.map((regressionEntry) =>
       convertImageRegressionEntryToReportTriple(

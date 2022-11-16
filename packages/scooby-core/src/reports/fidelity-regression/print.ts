@@ -50,9 +50,8 @@ export function printFidelityRegressionReportWithChanges(
   if (report.results.removed.length) {
     console.log("REMOVED TESTS:");
     console.table(
-      report.results.removed.map((pair) => ({
-        name: pair.actual.id,
-        fidelity: pair.fidelityComparison.similarity.toFixed(10),
+      report.results.removed.map((entry) => ({
+        name: entry.id,
       }))
     );
   }

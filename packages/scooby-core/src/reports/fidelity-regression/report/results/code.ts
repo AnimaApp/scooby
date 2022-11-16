@@ -24,10 +24,8 @@ export function generateCodeResults(
         getFidelityEntry(fidelityComparisons, regressionEntry.id)
       )
     ),
-    removed: matchedRegressionSources.removed.map((regressionEntry) =>
-      convertCodeRegressionEntryToReportPair(
-        getFidelityEntry(fidelityComparisons, regressionEntry.id)
-      )
+    removed: matchedRegressionSources.removed.map(
+      convertCodeSourceEntryToReportEntry
     ),
     changed: regressions.changed.map((regressionEntry) =>
       convertCodeRegressionEntryToReportTriple(
