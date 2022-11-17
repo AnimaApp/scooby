@@ -150,7 +150,7 @@ jobs:
       - setup-scooby
       - run:
           name: "Run HTML fidelity regression test"
-          command: "scooby fidelity-regression --name 'html-fidelity-regression' --expected sample-projects/ci-html-fidelity/expected --actual sample-projects/ci-html-fidelity/actual --threshold=0.5 --file-type=html"
+          command: "scooby fidelity-regression --name 'html-fidelity-regression' --expected sample-projects/ci-html-fidelity/expected --actual sample-projects/ci-html-fidelity/actual --file-type=html"
       - run:
           name: "Run JSON fidelity regression test"
           command: "scooby fidelity-regression --name 'json-fidelity-regression' --expected sample-projects/ci-json-fidelity/expected --actual sample-projects/ci-json-fidelity/actual --file-type=json"
@@ -162,7 +162,7 @@ jobs:
           command: "scooby fidelity-regression --name 'nested-jsx-fidelity-regression' --expected sample-projects/ci-nested-jsx-fidelity/expected --actual sample-projects/ci-nested-jsx-fidelity/actual --file-type=jsx"
       - run:
           name: "Run HTML fidelity regression (with-metadata) test"
-          command: "scooby fidelity-regression --name 'html-fidelity-regression-metadata' --expected sample-projects/ci-html-fidelity-metadata/expected --actual sample-projects/ci-html-fidelity-metadata/actual --threshold=0.5 --file-type=html"
+          command: "scooby fidelity-regression --name 'html-fidelity-regression-metadata' --expected sample-projects/ci-html-fidelity-metadata/expected --actual sample-projects/ci-html-fidelity-metadata/actual --file-type=html"
       - run:
           name: "Run mixed file-type fidelity regression test"
           command: "scooby fidelity-regression --name 'mixed-file-type-fidelity-regression' --expected sample-projects/ci-mixed-fidelity/expected --actual sample-projects/ci-mixed-fidelity/actual --expected-file-type=png --actual-file-type=html"
