@@ -12,7 +12,7 @@ import {
   ImageSourceEntry,
   CodeSourceEntry,
 } from "../../../../types";
-import { RegressionCheckResult } from "../../changes";
+import { RegressionCheckResult } from "../../../shared/regression";
 import {
   convertCodeSourceToMainBranchReportEntry,
   generateCodeResults,

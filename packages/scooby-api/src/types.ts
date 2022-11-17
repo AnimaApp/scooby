@@ -1,8 +1,10 @@
 import {
   CommitStatusOverview,
+  HostedFidelityRegressionReport,
   HostedFidelityReport,
   HostedRegressionReport,
   HostedReport,
+  LocalFidelityRegressionReport,
   LocalFidelityReport,
   LocalRegressionReport,
   Review,
@@ -33,6 +35,10 @@ export type ScoobyAPI = {
     context: CommitContext,
     report: LocalFidelityReport
   ) => Promise<HostedFidelityReport>;
+  uploadFidelityRegressionReport: (
+    context: CommitContext,
+    report: LocalFidelityRegressionReport
+  ) => Promise<HostedFidelityRegressionReport>;
 
   uploadSnapshotArchive: (
     context: SnapshotContext,

@@ -1,7 +1,7 @@
 import { LocalRegressionReport } from "@animaapp/scooby-shared";
 import { MatchedSources } from "../../../matching";
 import { SourceEntry } from "../../../types";
-import { RegressionCheckResult } from "../changes";
+import { RegressionCheckResult } from "../../shared/regression";
 import { generateItems } from "./items";
 import { generateMainBranchResults, generateResults } from "./results";
 import { generateSummary } from "./summary";

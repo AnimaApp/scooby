@@ -437,7 +437,7 @@ describe("regression test", () => {
 
     mockDownloadSnapshotArchiveImplementation(mockContext.api, referencePath);
 
-    expect(
+    await expect(
       async () =>
         await _processReport(
           "regression",
@@ -464,3 +464,5 @@ function mockDownloadSnapshotArchiveImplementation(
     }
   );
 }
+
+// TODO: add fidelity-regression tests!!!

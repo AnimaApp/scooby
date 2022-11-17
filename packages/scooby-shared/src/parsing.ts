@@ -175,9 +175,63 @@ const fidelityReportSchema = baseReportSchema.extend({
   ),
 });
 
+const imageFidelityRegressionEntrySchema = reportImageEntrySchema;
+const codeFidelityRegressionEntrySchema = reportCodeEntrySchema;
+const imageFidelityRegressionTestPairSchema = z.object({
+  type: z.literal("image"),
+  expected: imageFidelityRegressionEntrySchema,
+  actual: imageFidelityRegressionEntrySchema,
+  fidelityComparison: reportImageComparisonSchema,
+});
+const codeFidelityRegressionTestPairSchema = z.object({
+  type: z.literal("code"),
+  expected: codeFidelityRegressionEntrySchema,
+  actual: codeFidelityRegressionEntrySchema,
+  fidelityComparison: reportCodeComparisonSchema,
+});
+const imageFidelityRegressionTestTripleSchema = z.object({
+  type: z.literal("image"),
+  expected: imageFidelityRegressionEntrySchema,
+  actual: imageFidelityRegressionEntrySchema,
+  reference: imageFidelityRegressionEntrySchema,
+  fidelityComparison: reportImageComparisonSchema,
+  regressionComparison: reportImageComparisonSchema,
+});
+const codeFidelityRegressionTestTripleSchema = z.object({
+  type: z.literal("code"),
+  expected: codeFidelityRegressionEntrySchema,
+  actual: codeFidelityRegressionEntrySchema,
+  reference: codeFidelityRegressionEntrySchema,
+  fidelityComparison: reportCodeComparisonSchema,
+  regressionComparison: reportCodeComparisonSchema,
+});
+
+const fidelityRegressionReportSchema = baseReportSchema.extend({
+  type: z.literal("fidelity-regression"),
+  baseCommitHash: z.string(),
+  overallFidelityScore: z.number(),
+  results: z.discriminatedUnion("type", [
+    z.object({
+      type: z.literal("image"),
+      new: z.array(imageFidelityRegressionTestPairSchema),
+      removed: z.array(imageFidelityRegressionEntrySchema),
+      changed: z.array(imageFidelityRegressionTestTripleSchema),
+      unchanged: z.array(imageFidelityRegressionTestTripleSchema),
+    }),
+    z.object({
+      type: z.literal("code"),
+      new: z.array(codeFidelityRegressionTestPairSchema),
+      removed: z.array(codeFidelityRegressionEntrySchema),
+      changed: z.array(codeFidelityRegressionTestTripleSchema),
+      unchanged: z.array(codeFidelityRegressionTestTripleSchema),
+    }),
+  ]),
+});
+
 const reportSchema = z.discriminatedUnion("type", [
   regressionReportSchema,
   fidelityReportSchema,
+  fidelityRegressionReportSchema,
 ]);
 
 export function parseHostedReport(report: unknown): HostedReport {

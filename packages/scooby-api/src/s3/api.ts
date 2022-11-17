@@ -22,6 +22,8 @@ import {
   CommitStatusOverview,
   buildCommitStatusOverviewJSONPath,
   buildAggregateReviewJSONPath,
+  HostedFidelityRegressionReport,
+  LocalFidelityRegressionReport,
 } from "@animaapp/scooby-shared";
 import { readFile } from "fs/promises";
 import { ScoobyAPIOptions } from "../options";
@@ -187,6 +189,31 @@ export class S3ScoobyAPI implements ScoobyAPI {
     );
 
     const hostedReport = buildHostedReport<HostedFidelityReport>(
+      report,
+      hostedResourcesMap
+    );
+
+    await this.uploadReportJSON(context, hostedReport);
+
+    return hostedReport;
+  }
+
+  async uploadFidelityRegressionReport(
+    context: CommitContext,
+    report: LocalFidelityRegressionReport
+  ): Promise<HostedFidelityRegressionReport> {
+    const resources = getAllLocalResources(report);
+
+    console.log("uploading resources...");
+    const hostedResourcesMap = await this.uploadReportResources(
+      {
+        ...context,
+        reportName: report.name,
+      },
+      resources
+    );
+
+    const hostedReport = buildHostedReport<HostedFidelityRegressionReport>(
       report,
       hostedResourcesMap
     );

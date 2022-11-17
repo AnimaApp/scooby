@@ -1,7 +1,15 @@
 import { runReport } from "@animaapp/scooby-core";
 import { Command, Flags } from "@oclif/core";
 import { convertFlagsToReportOutputTarget } from "../../shared/convert";
-import { formatterFlag, maxThreadsFlag, outputFlag } from "../../shared/flags";
+import {
+  actualFileTypeFlag,
+  actualFlag,
+  expectedFileTypeFlag,
+  expectedFlag,
+  formatterFlag,
+  maxThreadsFlag,
+  outputFlag,
+} from "../../shared/flags";
 
 export default class Fidelity extends Command {
   static description = "Run a fidelity test";
@@ -16,16 +24,8 @@ export default class Fidelity extends Command {
       description: "The name of the fidelity test, ie. 'codegen-fidelity'",
       required: true,
     }),
-    expected: Flags.string({
-      char: "e",
-      description: "Path to the folder containing the expected tests",
-      required: true,
-    }),
-    actual: Flags.string({
-      char: "a",
-      description: "Path to the folder containing the actual tests",
-      required: true,
-    }),
+    expected: expectedFlag,
+    actual: actualFlag,
     "max-threads": maxThreadsFlag,
     formatter: formatterFlag,
     threshold: Flags.string({
@@ -36,14 +36,8 @@ export default class Fidelity extends Command {
       char: "f",
       description: "Specify a file type to test. For example, --file-type=html",
     }),
-    "actual-file-type": Flags.string({
-      description:
-        "Specify a file type to test the 'actual' dataset. This is useful when the actual and expected datasets use different formats. For example, --actual-file-type=html",
-    }),
-    "expected-file-type": Flags.string({
-      description:
-        "Specify a file type to test the 'actual' dataset. This is useful when the actual and expected datasets use different formats. For example, --expected-file-type=html",
-    }),
+    "actual-file-type": actualFileTypeFlag,
+    "expected-file-type": expectedFileTypeFlag,
     output: outputFlag,
   };
 

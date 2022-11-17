@@ -8,7 +8,7 @@ import { CodeBatchComparisonEntry } from "../../../../comparison";
 import { MatchedSources } from "../../../../matching";
 import { CodeSourceEntry } from "../../../../types";
 import { convertPathToLocalResource } from "../../../../utils/resource";
-import { RegressionCheckResult } from "../../changes";
+import { RegressionCheckResult } from "../../../shared/regression";
 
 export function generateCodeResults(
   regressions: RegressionCheckResult<CodeBatchComparisonEntry>,

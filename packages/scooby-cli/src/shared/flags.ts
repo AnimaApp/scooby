@@ -1,6 +1,18 @@
 import { Formatter } from "@animaapp/scooby-core";
 import { Flags } from "@oclif/core";
 
+export const expectedFlag = Flags.string({
+  char: "e",
+  description: "Path to the folder containing the expected tests",
+  required: true,
+});
+
+export const actualFlag = Flags.string({
+  char: "a",
+  description: "Path to the folder containing the actual tests",
+  required: true,
+});
+
 export const maxThreadsFlag = Flags.integer({
   description:
     "Specify the number of threads to be used when doing CPU-heavy processing.",
@@ -12,10 +24,14 @@ export const formatterFlag = Flags.enum<Formatter>({
   options: ["none", "json", "prettier"],
 });
 
-export const fileType = Flags.string({
-  char: "f",
-  description: "Specify a file type to test. For example, --file-type=html",
-  required: true,
+export const actualFileTypeFlag = Flags.string({
+  description:
+    "Specify a file type to test the 'actual' dataset. This is useful when the actual and expected datasets use different formats. For example, --actual-file-type=html",
+});
+
+export const expectedFileTypeFlag = Flags.string({
+  description:
+    "Specify a file type to test the 'actual' dataset. This is useful when the actual and expected datasets use different formats. For example, --expected-file-type=html",
 });
 
 export type OutputType = "auto" | "zip" | "hosted";

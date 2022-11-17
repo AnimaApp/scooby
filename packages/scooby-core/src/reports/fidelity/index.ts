@@ -1,14 +1,10 @@
 import { LocalFidelityReport } from "@animaapp/scooby-shared";
 import { performBatchComparison } from "../../comparison";
 import { loadTestEntries } from "../../loading";
-import { MatchedSources, matchSources } from "../../matching";
+import { matchSources } from "../../matching";
 import { generateSources, GenerateSourcesOptions } from "../../source";
-import {
-  BaseReportParams,
-  Formatter,
-  ReportContext,
-  SourceEntry,
-} from "../../types";
+import { BaseReportParams, Formatter, ReportContext } from "../../types";
+import { validateMatchedFidelitySources } from "../shared/match-validation";
 import { generateReport } from "./report";
 import { calculateEntriesOutcome } from "./threshold";
 
@@ -63,7 +59,7 @@ export async function runFidelityReport(
   console.log("matching datasets...");
   const matchedSources = matchSources(expectedSources, actualSources);
 
-  validateMatchedSources(matchedSources);
+  validateMatchedFidelitySources(matchedSources);
 
   console.log(`found ${matchedSources.matching.length} matched tests`);
 
@@ -85,28 +81,4 @@ export async function runFidelityReport(
   });
 
   return report;
-}
-
-function validateMatchedSources(matchedSources: MatchedSources<SourceEntry>) {
-  if (matchedSources.new.length > 0) {
-    console.warn(
-      "INVALID DATASET, detected actual entries not present in the expected dataset: ",
-      matchedSources.new.map((entry) => entry.id)
-    );
-
-    throw new Error(
-      "invalid dataset, found actual test entries that are not present in the expected dataset"
-    );
-  }
-
-  if (matchedSources.removed.length > 0) {
-    console.warn(
-      "INVALID DATASET, missing actual test entries compared to the expected dataset: ",
-      matchedSources.removed.map((entry) => entry.id)
-    );
-
-    throw new Error(
-      "invalid dataset, missing actual test entries compared to the expected dataset"
-    );
-  }
 }

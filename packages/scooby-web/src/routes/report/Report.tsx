@@ -6,6 +6,7 @@ import { StatsView } from "../../components/StatsView";
 import { SummaryBadge } from "../../components/SummaryBadge";
 import { ApproveButton } from "./ApproveButton";
 import { FidelityReportController } from "./fidelity";
+import { FidelityRegressionReportController } from "./fidelity-regression";
 import { RegressionReportController } from "./regression";
 
 type Props = {
@@ -22,6 +23,10 @@ export function Report({ report, repository, commit, review }: Props) {
         return <RegressionReportController report={report} review={review} />;
       case "fidelity":
         return <FidelityReportController report={report} review={review} />;
+      case "fidelity-regression":
+        return (
+          <FidelityRegressionReportController report={report} review={review} />
+        );
       default:
         return (
           <ErrorPanel

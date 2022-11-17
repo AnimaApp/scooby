@@ -51,6 +51,18 @@ export const ListItem = ({ selected, entry, onClick }: Props) => {
           boxShadow: `inset 0px 0px 0px ${selected ? 4 : 1}px ${color}`,
         }}
       ></div>
+      {entry.score && (
+        <div
+          style={{
+            position: "absolute",
+            bottom: 0,
+            right: 0,
+            paddingBottom: 10,
+          }}
+        >
+          <Tag>{entry.score.toFixed(6)}</Tag>
+        </div>
+      )}
       <img
         src={entry.thumbnailUrl}
         loading="lazy"
