@@ -11,11 +11,14 @@ workflows:
           context: anima-prod
       - run-scooby-fidelity-tests:
           context: anima-prod
+      - run-scooby-fidelity-regression-tests:
+          context: anima-prod
       - scooby-update-status:
           context: anima-prod
           requires:
             - run-scooby-regression-tests
             - run-scooby-fidelity-tests
+            - run-scooby-fidelity-regression-tests
 
       - deploy-scooby-web-ui:
           context: anima-prod
@@ -138,6 +141,34 @@ jobs:
       - run:
           name: "Run fidelity test with ZIP output target"
           command: "scooby fidelity --name 'zip-json-fidelity' --expected sample-projects/ci-json-fidelity/expected --actual sample-projects/ci-json-fidelity/actual --file-type=json --output=zip"
+
+  run-scooby-fidelity-regression-tests:
+    docker:
+      - image: node:16
+    steps:
+      - setup-dependencies
+      - setup-scooby
+      - run:
+          name: "Run HTML fidelity regression test"
+          command: "scooby fidelity-regression --name 'html-fidelity-regression' --expected sample-projects/ci-html-fidelity/expected --actual sample-projects/ci-html-fidelity/actual --threshold=0.5 --file-type=html"
+      - run:
+          name: "Run JSON fidelity regression test"
+          command: "scooby fidelity-regression --name 'json-fidelity-regression' --expected sample-projects/ci-json-fidelity/expected --actual sample-projects/ci-json-fidelity/actual --file-type=json"
+      - run:
+          name: "Run JSX fidelity regression test"
+          command: "scooby fidelity-regression --name 'jsx-fidelity-regression' --expected sample-projects/ci-jsx-fidelity/expected --actual sample-projects/ci-jsx-fidelity/actual --file-type=jsx"
+      - run:
+          name: "Run nested JSX fidelity regression test"
+          command: "scooby fidelity-regression --name 'nested-jsx-fidelity-regression' --expected sample-projects/ci-nested-jsx-fidelity/expected --actual sample-projects/ci-nested-jsx-fidelity/actual --file-type=jsx"
+      - run:
+          name: "Run HTML fidelity regression (with-metadata) test"
+          command: "scooby fidelity-regression --name 'html-fidelity-regression-metadata' --expected sample-projects/ci-html-fidelity-metadata/expected --actual sample-projects/ci-html-fidelity-metadata/actual --threshold=0.5 --file-type=html"
+      - run:
+          name: "Run mixed file-type fidelity regression test"
+          command: "scooby fidelity-regression --name 'mixed-file-type-fidelity-regression' --expected sample-projects/ci-mixed-fidelity/expected --actual sample-projects/ci-mixed-fidelity/actual --expected-file-type=png --actual-file-type=html"
+      - run:
+          name: "Run fidelity regression test with ZIP output target"
+          command: "scooby fidelity-regression --name 'zip-json-fidelity-regression' --expected sample-projects/ci-json-fidelity/expected --actual sample-projects/ci-json-fidelity/actual --file-type=json --output=zip"
 
   scooby-update-status:
     docker:
