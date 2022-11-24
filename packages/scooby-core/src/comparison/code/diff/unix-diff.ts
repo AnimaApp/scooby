@@ -7,9 +7,11 @@ const execPromise = promisify(exec);
 import { CodeComparator, CodeComparisonResult } from ".";
 import { createTemporaryFile } from "../../../utils/temp";
 
+const MAX_EXEC_BUFFER = 1024 * 1024 * 32;
+
 export async function isUnixDiffAvailable(): Promise<boolean> {
   try {
-    await execPromise("diff --version");
+    await execPromise("diff --version", { maxBuffer: MAX_EXEC_BUFFER });
     return true;
   } catch {
     return false;
@@ -91,7 +93,7 @@ function invokeDiff(
 ): Promise<{ outcome: "identical" } | { outcome: "different"; diff: string }> {
   return new Promise((resolve, reject) => {
     const command = `diff ${args.map((arg) => `'${arg}'`).join(" ")}`;
-    exec(command, (error, stdout, stderr) => {
+    exec(command, { maxBuffer: MAX_EXEC_BUFFER }, (error, stdout, stderr) => {
       if (stderr) {
         console.error(stderr);
       }
