@@ -21,7 +21,6 @@ export function flexibleMatchSources<T extends MatchableSource>(
   const matchingActual = matching.map((m) => m?.actual);
   const matchingExpected = matching.map((m) => m?.expected);
 
-  console.log(expected, matchingExpected);
   return {
     new: actual.filter((a) => !matchingActual.includes(a)),
     removed: expected.filter((e) => !matchingExpected.includes(e)),
