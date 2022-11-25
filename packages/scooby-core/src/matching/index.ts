@@ -164,7 +164,7 @@ export function flexibleMatchSources<T extends MatchableSource>(
   validateSources(expected, actual);
   const expectedSourceByGroupId = groupEntriesByGroupId(expected);
   const matching = [];
-  for(const a of actual){
+  for (const a of actual) {
     const expected = flexibleMatchFindExpected(
       a.groupId,
       expectedSourceByGroupId
