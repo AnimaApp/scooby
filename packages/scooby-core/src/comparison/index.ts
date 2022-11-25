@@ -1,4 +1,4 @@
-import { MatchedPair } from "../matching/types";
+import { MatchedPair } from "../matching";
 import { CodeSourceEntry, ImageSourceEntry, SourceEntry } from "../types";
 import { performBatchCodeComparison } from "./code";
 import { performBatchImageComparison } from "./image";
