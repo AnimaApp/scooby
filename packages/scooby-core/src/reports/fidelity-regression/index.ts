@@ -130,7 +130,7 @@ async function performFeatureBranchFlow(
   const { entries: referenceEntries, referenceCommitHash } =
     await loadReferenceEntries({
       currentCommit: context.environment.currentCommitHash,
-      latestMainBranchCommits: context.environment.latestMainBranchCommitHashes,
+      latestBaseCommits: context.environment.latestBaseCommitHashes,
       fileType: params.actualFileType,
       snapshotName: params.name,
       localReferencePath: params.referencePath,
