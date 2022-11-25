@@ -507,7 +507,7 @@ describe("matching", () => {
           {
             id: "A-frame",
             groupId: "A-frame",
-          }
+          },
         ],
         [
           {
@@ -524,7 +524,7 @@ describe("matching", () => {
           },
         ],
         {
-          strategy: "flexible"
+          strategy: "flexible",
         }
       )
     ).toEqual({
