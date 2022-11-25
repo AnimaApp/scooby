@@ -1,4 +1,4 @@
-import { runReport } from "@animaapp/scooby-core";
+import { FidelityMatchingType, runReport } from "@animaapp/scooby-core";
 import { Command, Flags } from "@oclif/core";
 import { convertFlagsToReportOutputTarget } from "../../shared/convert";
 import {
@@ -41,6 +41,11 @@ export default class FidelityRegression extends Command {
       description:
         "Specify the number of backtracking attempts on previous commits to find a matching reference dataset. This is mostly useful when the main branch doesn't publish reference datasets for each commit.",
     }),
+    "fidelity-matching": Flags.enum<FidelityMatchingType>({
+      options: ["default", "flexible"],
+      description: "Specify fidelity matching process",
+      default: "default",
+    }),
     "max-threads": maxThreadsFlag,
     formatter: formatterFlag,
     output: outputFlag,
@@ -68,6 +73,7 @@ export default class FidelityRegression extends Command {
       formatter: flags.formatter,
       actualFileType,
       expectedFileType,
+      fidelityMatching: flags["fidelity-matching"],
       output: convertFlagsToReportOutputTarget(flags.name, flags),
     });
   }

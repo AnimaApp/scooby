@@ -1,4 +1,4 @@
-import { MatchableSource } from ".";
+import { MatchableSource } from "./types";
 
 export function validateSources<T extends MatchableSource>(
   expected: T[],

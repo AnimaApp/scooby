@@ -498,4 +498,64 @@ describe("matching", () => {
       ],
     } as MatchedSources<any>);
   });
+
+  it("matches non-indentical folders with flexible match", async () => {
+    expect(
+      matchSources(
+        [
+          {
+            id: "A-frame",
+            groupId: "A-frame",
+          },
+        ],
+        [
+          {
+            id: "A-html-frame-300x200",
+            groupId: "A-html-frame",
+          },
+          {
+            id: "A-react-frame-300x200",
+            groupId: "A-react-frame",
+          },
+          {
+            id: "B-html-frame-300x200",
+            groupId: "B-html-frame",
+          },
+        ],
+        {
+          strategy: "flexible",
+        }
+      )
+    ).toEqual({
+      removed: [],
+      matching: [
+        {
+          actual: {
+            id: "A-html-frame-300x200",
+            groupId: "A-html-frame",
+          },
+          expected: {
+            id: "A-frame",
+            groupId: "A-frame",
+          },
+        },
+        {
+          actual: {
+            id: "A-react-frame-300x200",
+            groupId: "A-react-frame",
+          },
+          expected: {
+            id: "A-frame",
+            groupId: "A-frame",
+          },
+        },
+      ],
+      new: [
+        {
+          id: "B-html-frame-300x200",
+          groupId: "B-html-frame",
+        },
+      ],
+    } as MatchedSources<any>);
+  });
 });
