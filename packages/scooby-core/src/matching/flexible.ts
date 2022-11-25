@@ -41,4 +41,9 @@ function flexibleMatchFindExpected(groupId: string, expectedKeys: string[]) {
       return key;
     }
   }
+  for (const key of expectedKeys) {
+    if (key.toLowerCase().startsWith(splitId[0])){
+      return key;
+    }
+  }
 }
