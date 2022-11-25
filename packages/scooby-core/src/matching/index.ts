@@ -163,14 +163,18 @@ export function flexibleMatchSources<T extends MatchableSource>(
 ): MatchedSources<T> {
   validateSources(expected, actual);
   const expectedSourceByGroupId = groupEntriesByGroupId(expected);
+  const expectedKeys = Array.from(expectedSourceByGroupId.keys());
   const matching = [];
   for (const a of actual) {
-    const expected = flexibleMatchFindExpected(
+    const expectedKey = flexibleMatchFindExpected(
       a.groupId,
-      expectedSourceByGroupId
+      expectedKeys
     );
-    if (expected) {
-      matching.push({ actual: a, expected: expected[0] });
+    if (expectedKey) {
+      const expected = expectedSourceByGroupId.get(expectedKey);
+      if(expected){
+        matching.push({ actual: a, expected: expected[0] });
+      }
     }
   }
 
@@ -186,19 +190,18 @@ export function flexibleMatchSources<T extends MatchableSource>(
 
 function flexibleMatchFindExpected<T extends MatchableSource>(
   groupId: string,
-  expected: Map<string, T[]>
+  expectedKeys: string[]
 ) {
-  if (expected.get(groupId)) {
-    return expected.get(groupId);
+  if (expectedKeys.includes(groupId)) {
+    return groupId;
   }
   const splitId = groupId.split("-");
-  const keys = expected.keys();
-  for (const key of keys) {
+  for (const key of expectedKeys) {
     if (
       key.startsWith(splitId[0]) &&
       key.endsWith(splitId[splitId.length - 1])
     ) {
-      return expected.get(key);
+      return key;
     }
   }
 }
