@@ -1,5 +1,4 @@
-import { matchSources } from "../src/matching";
-import { MatchedSources } from "../src/matching/types";
+import { matchSources, MatchedSources } from "../src/matching";
 
 describe("matching", () => {
   it("detects new entries correctly", async () => {
