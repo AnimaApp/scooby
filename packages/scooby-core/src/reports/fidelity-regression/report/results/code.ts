@@ -6,7 +6,7 @@ import {
   CodeFidelityRegressionTestTriple,
 } from "@animaapp/scooby-shared";
 import { CodeBatchComparisonEntry } from "../../../../comparison";
-import { MatchedSources } from "../../../../matching/types";
+import { MatchedSources } from "../../../../matching";
 import { CodeSourceEntry } from "../../../../types";
 import { convertPathToLocalResource } from "../../../../utils/resource";
 import { RegressionCheckResult } from "../../../shared/regression";

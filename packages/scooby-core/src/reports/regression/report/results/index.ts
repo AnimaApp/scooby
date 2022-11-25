@@ -6,7 +6,7 @@ import {
   CodeBatchComparisonEntry,
   ImageBatchComparisonEntry,
 } from "../../../../comparison/types";
-import { MatchedSources } from "../../../../matching/types";
+import { MatchedSources } from "../../../../matching";
 import {
   SourceEntry,
   ImageSourceEntry,

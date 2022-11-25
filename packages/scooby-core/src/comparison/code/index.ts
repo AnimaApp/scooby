@@ -7,7 +7,7 @@ import type {
 } from "../types";
 import { CodeSourceEntry } from "../../types";
 import { runComparisonBatch } from "../batch";
-import { MatchedPair } from "../../matching/types";
+import { MatchedPair } from "../../matching";
 
 export async function performBatchCodeComparison(
   pairs: MatchedPair<CodeSourceEntry>[],

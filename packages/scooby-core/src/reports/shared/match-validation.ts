@@ -1,4 +1,4 @@
-import { MatchedSources } from "../../matching/types";
+import { MatchedSources } from "../../matching";
 import { SourceEntry } from "../../types";
 
 export function validateMatchedFidelitySources(

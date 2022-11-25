@@ -1,6 +1,6 @@
 import { LocalFidelityRegressionReport } from "@animaapp/scooby-shared";
 import { BatchComparisonEntry } from "../../../comparison";
-import { MatchedSources } from "../../../matching/types";
+import { MatchedSources } from "../../../matching";
 import { SourceEntry } from "../../../types";
 import { RegressionCheckResult } from "../../shared/regression";
 import { generateItems } from "./items";
