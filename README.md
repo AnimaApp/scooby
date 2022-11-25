@@ -14,7 +14,24 @@ Scooby was built with these goals in mind:
 
 # Overview
 
-TODO
+Scooby is composed of three main components:
+
+- A **CLI** used to run reports, either locally or inside a CI pipeline
+- A **Web UI** used to view reports, and leave reviews (approvals, rejections, etc)
+- An **API** service to save reviews, and other actions
+
+While Scooby has been built to be storage-agnostic, as of now, all reports and artifacts
+are stored inside **AWS S3 buckets**.
+
+The typical flow of a Scooby-powered report looks as follows:
+
+1. The Scooby CLI is invoked to run a given report, pointing it to the relevant test dataset
+2. After all report tasks have been run, the Scooby CLI is called to update the GitHub Status
+3. Reports can be then viewed on the Scooby Web UI, and reviewers can approve/reject them
+
+The following diagram illustrates an high-level overview of the system:
+
+![Overview](images/overview.png)
 
 # Getting started
 
@@ -51,9 +68,58 @@ These are the environment variables you need to specify in the project CI:
 | `SCOOBY_GITHUB_ACCESS_TOKEN`   | A Github Access Token with write access to the repository you are planning to use.                                                                                |
 | `SCOOBY_WEB_BASE_URL`          | Set this to `https://animaapp.github.io/scooby` unless you're planning to host the frontend somewhere else.                                                       |
 
-## Adding your first Scooby test on CircleCI
+After the necessary environment variables have been set, you are ready to generate a Scooby report.
 
-## Adding the GitHub status update step
+## Generating your first Scooby report on CircleCI
+
+In this section, we'll discuss the process to generate a visual regression report.
+In particular, the goal is to have an automated check that fails whenever some HTML pages change visually.
+
+> While this example focuses on visual regression reports, other report types can be generated
+> following a similar process. Please refer to the Reference section below for more information.
+
+Assuming that the test HTML files are located in the `path/to/tests` folder,
+you can generate a Scooby regression report by running this command:
+
+```
+npx @animaapp/scooby-cli regression --name "my-html-regression" --tests path/to/tests --file-type=html
+```
+
+This command tells Scooby to generate a regression report named `my-html-regression` based
+on all HTML files located in the `path/to/tests` folder.
+Scooby will automatically take care of comparing these HTML files with the known reference
+(usually the one on `main` branch).
+
+Now that we generated the report, we are ready to trigger the GitHub status update, which will show
+the status for each report in our PRs and commits:
+
+![GitHub Commit Status](images/status.png)
+
+To update the GitHub status, you'll need to run:
+
+```
+npx @animaapp/scooby-cli update-status
+```
+
+For efficiency reasons, it's better to run the `update-status` step only after all Scooby
+report tasks have been completed.
+If you are running multiple reports in parallel on CircleCI, a common pattern
+is to use job dependencies:
+
+```yaml
+- run-scooby-fidelity-tests:
+    context: anima-prod
+- run-scooby-regression-tests:
+    context: anima-prod
+- scooby-update-status:
+    context: anima-prod
+    requires:
+      - run-scooby-regression-tests
+      - run-scooby-fidelity-tests
+```
+
+In this example, the `scooby-update-status` job is only run after the two other report tasks
+have been completed, thus invoking `update-status` only once.
 
 # FAQ
 
