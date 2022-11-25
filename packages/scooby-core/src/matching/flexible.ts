@@ -32,12 +32,17 @@ function flexibleMatchFindExpected(groupId: string, expectedKeys: string[]) {
   if (expectedKeys.includes(groupId)) {
     return groupId;
   }
-  const splitId = groupId.split("-");
+  const splitId = groupId.toLowerCase().split("-");
   for (const key of expectedKeys) {
     if (
-      key.startsWith(splitId[0]) &&
-      key.endsWith(splitId[splitId.length - 1])
+      key.toLowerCase().startsWith(splitId[0]) &&
+      key.toLowerCase().endsWith(splitId[splitId.length - 1])
     ) {
+      return key;
+    }
+  }
+  for (const key of expectedKeys) {
+    if (key.toLowerCase().startsWith(splitId[0])) {
       return key;
     }
   }
