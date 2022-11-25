@@ -171,7 +171,7 @@ jobs:
           command: "scooby fidelity-regression --name 'zip-json-fidelity-regression' --expected sample-projects/ci-json-fidelity/expected --actual sample-projects/ci-json-fidelity/actual --file-type=json --output=zip"
       - run:
           name: "Run fidelity regression test with images and flexible matching"
-          command: "scooby fidelity-regression --name "html-fidelity-regression-shared-images" --expected sample-projects/ci-html-fidelity-regression-shared-images/expected --expected-file-type=png --actual sample-projects/ci-html-fidelity-regression-shared-images/actual --actual-file-type=html --flexible-match"
+          command: "scooby fidelity-regression --name 'html-fidelity-regression-shared-images' --expected sample-projects/ci-html-fidelity-regression-shared-images/expected --expected-file-type=png --actual sample-projects/ci-html-fidelity-regression-shared-images/actual --actual-file-type=html --flexible-match"
 
   scooby-update-status:
     docker:
