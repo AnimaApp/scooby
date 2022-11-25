@@ -5,9 +5,9 @@ import type {
   CodeComparisonTaskRequest,
   CodeComparisonTaskResult,
 } from "../types";
-import { MatchedPair } from "../../matching";
 import { CodeSourceEntry } from "../../types";
 import { runComparisonBatch } from "../batch";
+import { MatchedPair } from "../../matching/types";
 
 export async function performBatchCodeComparison(
   pairs: MatchedPair<CodeSourceEntry>[],

@@ -6,7 +6,7 @@ import {
   ImageFidelityRegressionTestTriple,
 } from "@animaapp/scooby-shared";
 import { ImageBatchComparisonEntry } from "../../../../comparison/types";
-import { MatchedSources } from "../../../../matching";
+import { MatchedSources } from "../../../../matching/types";
 import { ImageSourceEntry } from "../../../../types";
 import { convertPathToLocalResource } from "../../../../utils/resource";
 import { RegressionCheckResult } from "../../../shared/regression";

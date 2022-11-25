@@ -5,9 +5,9 @@ import type {
   ImageComparisonTaskRequest,
   ImageComparisonTaskResult,
 } from "../types";
-import { MatchedPair } from "../../matching";
 import { ImageSourceEntry } from "../../types";
 import { runComparisonBatch } from "../batch";
+import { MatchedPair } from "../../matching/types";
 
 export async function performBatchImageComparison(
   pairs: MatchedPair<ImageSourceEntry>[],

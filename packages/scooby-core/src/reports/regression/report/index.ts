@@ -1,5 +1,5 @@
 import { LocalRegressionReport } from "@animaapp/scooby-shared";
-import { MatchedSources } from "../../../matching";
+import { MatchedSources } from "../../../matching/types";
 import { SourceEntry } from "../../../types";
 import { RegressionCheckResult } from "../../shared/regression";
 import { generateItems } from "./items";
