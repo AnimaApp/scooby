@@ -66,7 +66,7 @@ export type Environment = {
   baseCommitHash: string;
   branchName: string;
   isMainBranch: boolean;
-  latestMainBranchCommitHashes: string[];
+  latestBaseCommitHashes: string[];
   repositoryName: string;
   repositoryOwner: string;
 };

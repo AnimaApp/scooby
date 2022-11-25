@@ -3,7 +3,7 @@ import {
   getBaseCommitHash,
   getBranchName,
   getCurrentCommitHash,
-  getLatestMainBranchCommitHashes,
+  getLatestBaseCommitHashes,
 } from "./git";
 import { getRepositoryName } from "./repositoryName";
 import { getRepositoryOwner } from "./repositoryOwner";
@@ -13,7 +13,7 @@ export * from "./repositoryName";
 export async function getEnvironment(): Promise<Environment> {
   const baseCommitHash = await getBaseCommitHash();
   const currentCommitHash = await getCurrentCommitHash();
-  const latestMainBranchCommitHashes = await getLatestMainBranchCommitHashes();
+  const latestBaseCommitHashes = await getLatestBaseCommitHashes();
   const branchName = await getBranchName();
   const isMainBranch = branchName === "main" || branchName === "master";
 
@@ -22,7 +22,7 @@ export async function getEnvironment(): Promise<Environment> {
     currentCommitHash,
     branchName,
     isMainBranch,
-    latestMainBranchCommitHashes,
+    latestBaseCommitHashes,
     repositoryName: await getRepositoryName(),
     repositoryOwner: await getRepositoryOwner(),
   };

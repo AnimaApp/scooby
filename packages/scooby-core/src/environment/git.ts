@@ -31,7 +31,7 @@ export async function getDefaultBranch(): Promise<string> {
   return "main";
 }
 
-export async function getLatestMainBranchCommitHashes(): Promise<string[]> {
+async function getLatestMainBranchCommitHashes(): Promise<string[]> {
   const git = simpleGit({ trimmed: true });
 
   const rawLatestCommits = await git.raw([
@@ -41,11 +41,29 @@ export async function getLatestMainBranchCommitHashes(): Promise<string[]> {
     "--decorate=short",
     "--format=%H",
     "-n",
-    "30",
+    "100",
   ]);
 
   return rawLatestCommits
     .split("\n")
     .map((line) => line.trim())
     .filter((line) => line.length > 0);
+}
+
+export async function getLatestBaseCommitHashes(): Promise<string[]> {
+  const baseCommit = await getBaseCommitHash();
+  const latestMainCommits = await getLatestMainBranchCommitHashes();
+
+  const baseIndex = latestMainCommits.findIndex(
+    (commit) => commit === baseCommit
+  );
+  if (baseIndex < 0) {
+    console.error(
+      `base commit '${baseCommit}' could not be found in the latestMainCommits:`,
+      latestMainCommits
+    );
+    throw new Error("unable to determine latest base commits");
+  }
+
+  return latestMainCommits.slice(baseIndex, baseIndex + 30);
 }
