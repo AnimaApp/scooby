@@ -196,6 +196,23 @@ npx @animaapp/scooby-cli fidelity --name "fidelity-name" --expected /path/to/exp
 
 # Developer guide
 
+## Running the CLI in Dev Mode
+
+When working on Scooby, you might need to invoke the development version of the CLI with your changes.
+From the repository root, you can run the following command:
+
+```
+yarn cli:run:dev --help
+```
+
+This command will build the CLI from source and invoke it with the `--help` flag. It is equivalent to running `npx @animaapp/scooby-cli --help`.
+
+By changing the argument, you can then test the various CLI commands, for example:
+
+```
+yarn cli:run:dev fidelity --name "fidelity-name" --expected /path/to/expected/tests --actual /path/to/actual/tests --file-type=png
+```
+
 # Troubleshooting
 
 ## Error: Could not find expected browser (chrome) locally. Run `npm install` to download the correct Chromium revision (1045629).
