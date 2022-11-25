@@ -19,7 +19,7 @@ describe("regression test", () => {
         branchName: "feat/feature",
         baseCommitHash: "main-commit",
         currentCommitHash: "feature-commit",
-        latestMainBranchCommitHashes: ["main-commit", "previous-main-commit"],
+        latestBaseCommitHashes: ["main-commit", "previous-main-commit"],
         isMainBranch: false,
         repositoryName: "test-repo",
         repositoryOwner: "test-owner",
