@@ -1,3 +1,4 @@
+import { FidelityMatchingType } from "../types";
 import { validateSources } from "./validation";
 
 export type MatchableSource = {
@@ -18,10 +19,24 @@ export type MatchedSources<T extends MatchableSource> = {
 
 export function matchSources<T extends MatchableSource>(
   expected: T[],
-  actual: T[]
+  actual: T[],
+  options?: {
+    strategy?: FidelityMatchingType
+  }
 ): MatchedSources<T> {
   validateSources(expected, actual);
 
+  if(options?.strategy === "flexible"){
+    return flexibleMatchSources(expected, actual)
+  } else {
+    return defaultMatchSources(expected, actual);
+  }
+}
+
+function defaultMatchSources<T extends MatchableSource>(
+  expected: T[],
+  actual: T[],
+): MatchedSources<T> {
   const expectedSourceById = new Map(
     expected.map((entry) => [entry.id, entry])
   );
@@ -161,7 +176,6 @@ export function flexibleMatchSources<T extends MatchableSource>(
   expected: T[],
   actual: T[]
 ): MatchedSources<T> {
-  validateSources(expected, actual);
   const expectedSourceByGroupId = groupEntriesByGroupId(expected);
   const expectedKeys = Array.from(expectedSourceByGroupId.keys());
   const matching = [];

@@ -5,6 +5,7 @@ import { flexibleMatchSources, matchSources } from "../../matching";
 import { generateSources, GenerateSourcesOptions } from "../../source";
 import {
   BaseReportParams,
+  FidelityMatchingType,
   Formatter,
   ReportContext,
   SourceEntry,
@@ -20,7 +21,7 @@ export type RegressionReportParams = BaseReportParams & {
   actualPath: string;
   actualFileType: string;
   expectedFileType: string;
-  flexibleMatch?: boolean;
+  fidelityMatching?: FidelityMatchingType;
   referencePath?: string;
   formatter?: Formatter;
   maxThreads?: number;
@@ -66,15 +67,7 @@ export async function runFidelityRegressionReport(
   console.log(`generated ${actualSources.length} actual test sources`);
 
   console.log("matching fidelity datasets...");
-  let matchedFidelitySources;
-  if (params.flexibleMatch) {
-    matchedFidelitySources = flexibleMatchSources(
-      expectedSources,
-      actualSources
-    );
-  } else {
-    matchedFidelitySources = matchSources(expectedSources, actualSources);
-  }
+  const matchedFidelitySources = matchSources(expectedSources, actualSources, { strategy: params.fidelityMatching });
   validateMatchedFidelitySources(matchedFidelitySources);
 
   console.log("comparing fidelity tests...");

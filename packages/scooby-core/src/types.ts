@@ -95,3 +95,5 @@ export type ReportOutputTarget =
   | ZipReportOutputTarget;
 
 export type ReportOutputTargetOrAuto = ReportOutputTarget | { type: "auto" };
+
+export type FidelityMatchingType = "flexible" | "default";
