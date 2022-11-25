@@ -41,6 +41,9 @@ export default class FidelityRegression extends Command {
       description:
         "Specify the number of backtracking attempts on previous commits to find a matching reference dataset. This is mostly useful when the main branch doesn't publish reference datasets for each commit.",
     }),
+    "flexible-match": Flags.boolean({
+      description: "Use flexible path matching to match images to test",
+    }),
     "max-threads": maxThreadsFlag,
     formatter: formatterFlag,
     output: outputFlag,
@@ -68,6 +71,7 @@ export default class FidelityRegression extends Command {
       formatter: flags.formatter,
       actualFileType,
       expectedFileType,
+      flexibleMatch: flags["flexible-match"],
       output: convertFlagsToReportOutputTarget(flags.name, flags),
     });
   }

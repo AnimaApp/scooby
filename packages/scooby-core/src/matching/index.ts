@@ -156,3 +156,49 @@ export function findMatching<T extends MatchableSource>(
 
   return pairs;
 }
+
+export function flexibleMatchSources<T extends MatchableSource>(
+  expected: T[],
+  actual: T[]
+): MatchedSources<T> {
+  validateSources(expected, actual);
+  const expectedSourceByGroupId = groupEntriesByGroupId(expected);
+  const matching = [];
+  for(const a of actual){
+    const expected = flexibleMatchFindExpected(
+      a.groupId,
+      expectedSourceByGroupId
+    );
+    if (expected) {
+      matching.push({ actual: a, expected: expected[0] });
+    }
+  }
+
+  const matchingActual = matching.map((m) => m?.actual);
+  const matchingExpected = matching.map((m) => m?.expected);
+
+  return {
+    new: actual.filter((a) => !matchingActual.includes(a)),
+    removed: expected.filter((e) => !matchingExpected.includes(e)),
+    matching: matching,
+  };
+}
+
+function flexibleMatchFindExpected<T extends MatchableSource>(
+  groupId: string,
+  expected: Map<string, T[]>
+) {
+  if (expected.get(groupId)) {
+    return expected.get(groupId);
+  }
+  const splitId = groupId.split("-");
+  const keys = expected.keys();
+  for (const key of keys) {
+    if (
+      key.startsWith(splitId[0]) &&
+      key.endsWith(splitId[splitId.length - 1])
+    ) {
+      return expected.get(key);
+    }
+  }
+}

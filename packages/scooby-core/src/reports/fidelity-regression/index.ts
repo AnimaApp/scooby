@@ -1,7 +1,7 @@
 import { LocalFidelityRegressionReport } from "@animaapp/scooby-shared";
 import { BatchComparisonEntry, performBatchComparison } from "../../comparison";
 import { loadTestEntries } from "../../loading";
-import { matchSources } from "../../matching";
+import { flexibleMatchSources, matchSources } from "../../matching";
 import { generateSources, GenerateSourcesOptions } from "../../source";
 import {
   BaseReportParams,
@@ -20,6 +20,7 @@ export type RegressionReportParams = BaseReportParams & {
   actualPath: string;
   actualFileType: string;
   expectedFileType: string;
+  flexibleMatch?: boolean;
   referencePath?: string;
   formatter?: Formatter;
   maxThreads?: number;
@@ -65,7 +66,15 @@ export async function runFidelityRegressionReport(
   console.log(`generated ${actualSources.length} actual test sources`);
 
   console.log("matching fidelity datasets...");
-  const matchedFidelitySources = matchSources(expectedSources, actualSources);
+  let matchedFidelitySources;
+  if (params.flexibleMatch) {
+    matchedFidelitySources = flexibleMatchSources(
+      expectedSources,
+      actualSources
+    );
+  } else {
+    matchedFidelitySources = matchSources(expectedSources, actualSources);
+  }
   validateMatchedFidelitySources(matchedFidelitySources);
 
   console.log("comparing fidelity tests...");
