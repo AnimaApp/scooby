@@ -13,7 +13,7 @@ export type LoadReferenceRequest = {
   localReferencePath?: string;
   maxReferenceCommitBacktracking?: number;
   api: ScoobyAPI;
-  fileType: string;
+  fileTypes: string[];
 };
 
 export type LoadReferenceResult = {
@@ -27,7 +27,7 @@ export async function loadReferenceEntries(
   if (request.localReferencePath) {
     return loadLocalReferenceEntries(
       request.localReferencePath,
-      request.fileType,
+      request.fileTypes,
       request.currentCommit
     );
   }
@@ -64,7 +64,7 @@ async function loadRemoteReferenceEntries(
 
     if (remoteReferencePath) {
       return {
-        entries: await loadTestEntries(remoteReferencePath, request.fileType),
+        entries: await loadTestEntries(remoteReferencePath, request.fileTypes),
         referenceCommitHash: candidateHash,
       };
     }
@@ -85,7 +85,7 @@ async function loadRemoteReferenceEntries(
 
 async function loadLocalReferenceEntries(
   localReferencePath: string,
-  fileType: string,
+  fileTypes: string[],
   currentCommit: string
 ): Promise<LoadReferenceResult> {
   console.log(
@@ -93,7 +93,7 @@ async function loadLocalReferenceEntries(
       localReferencePath
   );
   return {
-    entries: await loadTestEntries(localReferencePath, fileType),
+    entries: await loadTestEntries(localReferencePath, fileTypes),
     referenceCommitHash: currentCommit,
   };
 }

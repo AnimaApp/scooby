@@ -19,8 +19,8 @@ import { calculateRegressions } from "../shared/regression";
 export type RegressionReportParams = BaseReportParams & {
   expectedPath: string;
   actualPath: string;
-  actualFileType: string;
-  expectedFileType: string;
+  actualFileTypes: string[];
+  expectedFileTypes: string[];
   fidelityMatching?: FidelityMatchingType;
   referencePath?: string;
   formatter?: Formatter;
@@ -37,14 +37,14 @@ export async function runFidelityRegressionReport(
   );
   const expectedEntries = await loadTestEntries(
     params.expectedPath,
-    params.expectedFileType
+    params.expectedFileTypes
   );
   console.log(`found ${expectedEntries.length} expected test entries`);
 
   console.log("loading actual test entries from path: " + params.actualPath);
   const actualEntries = await loadTestEntries(
     params.actualPath,
-    params.actualFileType
+    params.actualFileTypes
   );
   console.log(`found ${expectedEntries.length} actual test entries`);
 
@@ -135,7 +135,7 @@ async function performFeatureBranchFlow(
     await loadReferenceEntries({
       currentCommit: context.environment.currentCommitHash,
       latestBaseCommits: context.environment.latestBaseCommitHashes,
-      fileType: params.actualFileType,
+      fileTypes: params.actualFileTypes,
       snapshotName: params.name,
       localReferencePath: params.referencePath,
       maxReferenceCommitBacktracking: params.maxReferenceCommitBacktracking,

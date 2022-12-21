@@ -113,6 +113,9 @@ jobs:
       - run:
           name: "Run regression test with ZIP output target"
           command: "scooby regression --name 'zip-png-regression' --tests sample-projects/ci-png-regression --file-type=png --output=zip"
+      - run:
+          name: "Run JSX regression test with mixed file types"
+          command: "scooby regression --name 'jsx-regression' --tests sample-projects/ci-jsx-regression --file-type=jsx,css"
 
   run-scooby-fidelity-tests:
     docker:
@@ -141,6 +144,9 @@ jobs:
       - run:
           name: "Run fidelity test with ZIP output target"
           command: "scooby fidelity --name 'zip-json-fidelity' --expected sample-projects/ci-json-fidelity/expected --actual sample-projects/ci-json-fidelity/actual --file-type=json --output=zip"
+      - run:
+          name: "Run JSX fidelity test with multiple format types"
+          command: "scooby fidelity --name 'jsx-fidelity-mixed' --expected sample-projects/ci-jsx-fidelity-mixed/expected --actual sample-projects/ci-jsx-fidelity-mixed/actual --file-type=jsx,css"
 
   run-scooby-fidelity-regression-tests:
     docker:
@@ -172,6 +178,9 @@ jobs:
       - run:
           name: "Run fidelity regression test with images and flexible matching"
           command: "scooby fidelity-regression --name 'html-fidelity-regression-shared-images' --expected sample-projects/ci-html-fidelity-regression-shared-images/expected --expected-file-type=png --actual sample-projects/ci-html-fidelity-regression-shared-images/actual --actual-file-type=html --fidelity-matching=flexible"
+      - run:
+          name: "Run JSX fidelity regression test with mixed file types"
+          command: "scooby fidelity-regression --name 'jsx-fidelity-regression-mixed' --expected sample-projects/ci-jsx-fidelity-mixed/expected --actual sample-projects/ci-jsx-fidelity-mixed/actual --file-type=jsx,css"
 
   scooby-update-status:
     docker:
@@ -289,3 +298,5 @@ commands:
           name: "Setup snoopy alias"
           command: |
             ln -s $(pwd)/packages/scooby-cli/bin/run /usr/bin/scooby
+
+# VS Code Extension Version: 1.5.0
