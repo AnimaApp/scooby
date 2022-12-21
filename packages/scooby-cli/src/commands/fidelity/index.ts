@@ -1,6 +1,9 @@
 import { runReport } from "@animaapp/scooby-core";
 import { Command, Flags } from "@oclif/core";
-import { convertFlagsToReportOutputTarget } from "../../shared/convert";
+import {
+  convertFlagsToReportOutputTarget,
+  parseFileTypesFlag,
+} from "../../shared/convert";
 import {
   actualFileTypeFlag,
   actualFlag,
@@ -34,7 +37,8 @@ export default class Fidelity extends Command {
     }),
     "file-type": Flags.string({
       char: "f",
-      description: "Specify a file type to test. For example, --file-type=html",
+      description:
+        "Specify a file type to test. For example, --file-type=html. You can also specify multiple file types, such as --file-type=html,css",
     }),
     "actual-file-type": actualFileTypeFlag,
     "expected-file-type": expectedFileTypeFlag,
@@ -44,10 +48,14 @@ export default class Fidelity extends Command {
   async run(): Promise<void> {
     const { flags } = await this.parse(Fidelity);
 
-    const actualFileType = flags["actual-file-type"] ?? flags["file-type"];
-    const expectedFileType = flags["expected-file-type"] ?? flags["file-type"];
+    const actualFileTypes = parseFileTypesFlag(
+      flags["actual-file-type"] ?? flags["file-type"]
+    );
+    const expectedFileTypes = parseFileTypesFlag(
+      flags["expected-file-type"] ?? flags["file-type"]
+    );
 
-    if (!actualFileType || !expectedFileType) {
+    if (!actualFileTypes || !expectedFileTypes) {
       throw new Error(
         "no file type flag specified, please either specify the 'file-type' flag or the 'actual-file-type' and 'expected-file-type' flags"
       );
@@ -60,8 +68,8 @@ export default class Fidelity extends Command {
       maxThreads: flags["max-threads"],
       formatter: flags.formatter,
       threshold: flags.threshold ? parseFloat(flags.threshold) : undefined,
-      actualFileType,
-      expectedFileType,
+      actualFileTypes,
+      expectedFileTypes,
       output: convertFlagsToReportOutputTarget(flags.name, flags),
     });
   }

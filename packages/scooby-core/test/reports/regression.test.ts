@@ -32,7 +32,7 @@ describe("regression test", () => {
     expect(() =>
       _processReport(
         "regression",
-        { name: "invalid name/", testsPath: "path", fileType: "html" },
+        { name: "invalid name/", testsPath: "path", fileTypes: ["html"] },
         mockContext,
         { type: "hosted" }
       )
@@ -53,7 +53,7 @@ describe("regression test", () => {
 
     const report = await _processReport(
       "regression",
-      { name: "test-regression", testsPath, fileType: "html" },
+      { name: "test-regression", testsPath, fileTypes: ["html"] },
       mockContext,
       { type: "hosted" }
     );
@@ -86,7 +86,7 @@ describe("regression test", () => {
 
     const report = await _processReport(
       "regression",
-      { name: "test-regression", testsPath, fileType: "json" },
+      { name: "test-regression", testsPath, fileTypes: ["json"] },
       mockContext,
       { type: "hosted" }
     );
@@ -119,7 +119,7 @@ describe("regression test", () => {
 
     const report = await _processReport(
       "regression",
-      { name: "test-regression", testsPath, fileType: "json" },
+      { name: "test-regression", testsPath, fileTypes: ["json"] },
       mockContext,
       { type: "hosted" }
     );
@@ -152,7 +152,7 @@ describe("regression test", () => {
 
     const report = await _processReport(
       "regression",
-      { name: "test-regression", testsPath, fileType: "jsx" },
+      { name: "test-regression", testsPath, fileTypes: ["jsx"] },
       mockContext,
       { type: "hosted" }
     );
@@ -185,7 +185,7 @@ describe("regression test", () => {
 
     const report = await _processReport(
       "regression",
-      { name: "test-regression", testsPath, fileType: "html" },
+      { name: "test-regression", testsPath, fileTypes: ["html"] },
       mockContext,
       { type: "hosted" }
     );
@@ -243,7 +243,7 @@ describe("regression test", () => {
 
     const report = await _processReport(
       "regression",
-      { name: "test-regression", testsPath, fileType: "json" },
+      { name: "test-regression", testsPath, fileTypes: ["json"] },
       mockContext,
 
       { type: "hosted" }
@@ -302,7 +302,7 @@ describe("regression test", () => {
 
     const report = await _processReport(
       "regression",
-      { name: "test-regression", testsPath, fileType: "jsx" },
+      { name: "test-regression", testsPath, fileTypes: ["jsx"] },
       mockContext,
 
       { type: "hosted" }
@@ -337,7 +337,7 @@ describe("regression test", () => {
 
     const report = await _processReport(
       "regression",
-      { name: "test-regression", testsPath, fileType: "json" },
+      { name: "test-regression", testsPath, fileTypes: ["json"] },
       mockContext,
 
       { type: "hosted" }
@@ -372,7 +372,7 @@ describe("regression test", () => {
 
     const report = await _processReport(
       "regression",
-      { name: "test-regression", testsPath, fileType: "html" },
+      { name: "test-regression", testsPath, fileTypes: ["html"] },
       mockContext,
       { type: "hosted" }
     );
@@ -410,7 +410,7 @@ describe("regression test", () => {
 
     const report = await _processReport(
       "regression",
-      { name: "test-regression", testsPath, fileType: "html" },
+      { name: "test-regression", testsPath, fileTypes: ["html"] },
       mockContext,
       { type: "hosted" }
     );
@@ -441,7 +441,7 @@ describe("regression test", () => {
       async () =>
         await _processReport(
           "regression",
-          { name: "test-regression", testsPath, fileType: "html" },
+          { name: "test-regression", testsPath, fileTypes: ["html"] },
           mockContext,
           { type: "hosted" }
         )

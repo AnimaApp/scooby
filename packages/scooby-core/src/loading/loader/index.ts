@@ -6,7 +6,7 @@ import { getTypeForEntry } from "./util";
 
 export const load = async (
   directory: string,
-  fileType: string,
+  fileTypes: string[],
   relativePath = ""
 ) => {
   const entries: TestEntry[] = [];
@@ -27,7 +27,7 @@ export const load = async (
 
     const directoryTests = await load(
       directory,
-      fileType,
+      fileTypes,
       `${relativePath}/${folder}`
     );
     entries.push(...directoryTests);
@@ -38,13 +38,27 @@ export const load = async (
     ? await loadOptions(path.join(absolutePath, "scooby.json"))
     : undefined;
 
-  const testFiles = files.filter((subEntry) => subEntry.endsWith(fileType));
+  const testFiles = files.filter((subEntry) =>
+    fileTypes.some((fileType) => subEntry.endsWith("." + fileType))
+  );
   for (const testFile of testFiles) {
-    const name = path.parse(testFile).name;
+    let name = path.parse(testFile).name;
 
     // Skip *.scooby.* files
     if (name.endsWith(".scooby")) {
       continue;
+    }
+
+    // When loading multiple file types, we want to add the extension as suffix to prevent
+    // name conflicts (for example test.jsx and test.css would both resolve to "test" otherwise).
+    // We are adding the suffix only to the secondary file types for backward compatibility purposes
+    // (as changing the ID of a test entry would break existing regression tests).
+    if (
+      fileTypes.length > 1 &&
+      fileTypes.slice(1).some((fileType) => testFile.endsWith("." + fileType))
+    ) {
+      const extension = path.parse(testFile).ext.slice(1);
+      name = `${name}-${extension}`;
     }
 
     const specificOptionsFile = files.find(

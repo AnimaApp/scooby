@@ -1,6 +1,9 @@
 import { runReport } from "@animaapp/scooby-core";
 import { Command, Flags } from "@oclif/core";
-import { convertFlagsToReportOutputTarget } from "../../shared/convert";
+import {
+  convertFlagsToReportOutputTarget,
+  parseFileTypesFlag,
+} from "../../shared/convert";
 import { formatterFlag, maxThreadsFlag, outputFlag } from "../../shared/flags";
 
 export default class Regression extends Command {
@@ -28,7 +31,8 @@ export default class Regression extends Command {
     }),
     "file-type": Flags.string({
       char: "f",
-      description: "Specify a file type to test. For example, --file-type=html",
+      description:
+        "Specify a file type to test. For example, --file-type=html. You can also specify multiple file types, such as --file-type=html,css",
       required: true,
     }),
     "max-backtracking": Flags.integer({
@@ -43,6 +47,13 @@ export default class Regression extends Command {
   async run(): Promise<void> {
     const { flags } = await this.parse(Regression);
 
+    const fileTypes = parseFileTypesFlag(flags["file-type"]);
+    if (!fileTypes) {
+      throw new Error(
+        "no file type flag specified, please specify the 'file-type' flag"
+      );
+    }
+
     await runReport("regression", {
       name: flags.name,
       testsPath: flags.tests,
@@ -50,7 +61,7 @@ export default class Regression extends Command {
       maxReferenceCommitBacktracking: flags["max-backtracking"],
       maxThreads: flags["max-threads"],
       formatter: flags.formatter,
-      fileType: flags["file-type"],
+      fileTypes,
       output: convertFlagsToReportOutputTarget(flags.name, flags),
     });
   }

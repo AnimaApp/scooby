@@ -16,7 +16,7 @@ import { uploadTestSnapshot } from "../shared/snapshot";
 
 export type RegressionReportParams = BaseReportParams & {
   testsPath: string;
-  fileType: string;
+  fileTypes: string[];
   referencePath?: string;
   formatter?: Formatter;
   maxThreads?: number;
@@ -28,7 +28,7 @@ export async function runRegressionReport(
   params: RegressionReportParams
 ): Promise<LocalRegressionReport> {
   console.log("loading test entries from path: " + params.testsPath);
-  const testEntries = await loadTestEntries(params.testsPath, params.fileType);
+  const testEntries = await loadTestEntries(params.testsPath, params.fileTypes);
   console.log(`found ${testEntries.length} test entries`);
 
   console.log("generating test sources...");
@@ -91,7 +91,7 @@ async function performFeatureBranchFlow(
     await loadReferenceEntries({
       currentCommit: context.environment.currentCommitHash,
       latestBaseCommits: context.environment.latestBaseCommitHashes,
-      fileType: params.fileType,
+      fileTypes: params.fileTypes,
       snapshotName: params.name,
       localReferencePath: params.referencePath,
       maxReferenceCommitBacktracking: params.maxReferenceCommitBacktracking,

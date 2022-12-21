@@ -21,3 +21,13 @@ export function convertFlagsToReportOutputTarget(
       };
   }
 }
+
+export function parseFileTypesFlag(
+  fileTypes: string | undefined
+): string[] | undefined {
+  if (!fileTypes) {
+    return;
+  }
+
+  return fileTypes.split(",").map((fileType) => fileType.trim());
+}

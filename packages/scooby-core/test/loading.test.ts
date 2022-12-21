@@ -9,7 +9,7 @@ describe("loading test folders", () => {
       "./data/loading/basic-test-structure"
     );
 
-    const entries = await loadTestEntries(testsPath, "html");
+    const entries = await loadTestEntries(testsPath, ["html"]);
 
     expect(entries).toEqual([
       {
@@ -35,13 +35,43 @@ describe("loading test folders", () => {
     ] as TestEntry[]);
   });
 
+  it("loads multiple file types correctly with conflicting IDs", async () => {
+    const testsPath = path.resolve(
+      __dirname,
+      "./data/loading/multiple-file-types"
+    );
+
+    const entries = await loadTestEntries(testsPath, ["html", "css"]);
+
+    expect(entries).toEqual([
+      {
+        id: "test1-css",
+        type: { category: "code", extension: "css" },
+        path: path.join(testsPath, "./test1.css"),
+        relativePath: "test1.css",
+      },
+      {
+        id: "test1",
+        type: { category: "image", subtype: "html" },
+        path: path.join(testsPath, "./test1.html"),
+        relativePath: "test1.html",
+      },
+      {
+        id: "test2",
+        type: { category: "image", subtype: "html" },
+        path: path.join(testsPath, "./test2.html"),
+        relativePath: "test2.html",
+      },
+    ] as TestEntry[]);
+  });
+
   it("loads nested folders correctly", async () => {
     const testsPath = path.resolve(
       __dirname,
       "./data/loading/nested-test-structure"
     );
 
-    const entries = await loadTestEntries(testsPath, "html");
+    const entries = await loadTestEntries(testsPath, ["html"]);
 
     expect(entries).toEqual([
       {
@@ -73,7 +103,7 @@ describe("loading test folders", () => {
       "./data/loading/nested-multiple-files-test-structure"
     );
 
-    const entries = await loadTestEntries(testsPath, "html");
+    const entries = await loadTestEntries(testsPath, ["html"]);
 
     expect(entries).toEqual([
       {
@@ -130,7 +160,7 @@ describe("loading test folders", () => {
   it("loads metadata correctly", async () => {
     const testsPath = path.resolve(__dirname, "./data/loading/basic-metadata");
 
-    const entries = await loadTestEntries(testsPath, "html");
+    const entries = await loadTestEntries(testsPath, ["html"]);
 
     expect(entries).toEqual([
       {
@@ -202,7 +232,7 @@ describe("loading test folders", () => {
   it("loads metadata in nested directory with relative paths", async () => {
     const testsPath = path.resolve(__dirname, "./data/loading/nested-metadata");
 
-    const entries = await loadTestEntries(testsPath, "html");
+    const entries = await loadTestEntries(testsPath, ["html"]);
 
     expect(entries).toEqual([
       {
@@ -233,7 +263,7 @@ describe("loading test folders", () => {
     );
 
     await expect(
-      async () => await loadTestEntries(testsPath, "html")
+      async () => await loadTestEntries(testsPath, ["html"])
     ).rejects.toThrow();
   });
 
@@ -243,7 +273,7 @@ describe("loading test folders", () => {
       "./data/loading/skip-scooby-entries-correctly"
     );
 
-    const entries = await loadTestEntries(testsPath, "html");
+    const entries = await loadTestEntries(testsPath, ["html"]);
 
     expect(entries).toEqual([
       {
