@@ -6,7 +6,7 @@ export async function generatePNGImageSources(
   const output: ImageSourceEntry[] = [];
 
   for (const entry of entries) {
-    if (entry.type.category !== "image" || entry.type.subtype !== "png") {
+    if (entry.type !== "image" || entry.extension !== "png") {
       throw new Error(
         "unable to load PNG test entry, found found entry type: " +
           JSON.stringify(entry.type)

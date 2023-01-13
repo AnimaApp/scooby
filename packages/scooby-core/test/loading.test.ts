@@ -14,7 +14,7 @@ describe("loading test folders", () => {
     expect(entries).toEqual([
       {
         id: "test1",
-        type: { category: "image", subtype: "html" },
+        extension: "html",
         path: path.join(testsPath, "./test1.html"),
         relativePath: "test1.html",
         options: {
@@ -28,7 +28,7 @@ describe("loading test folders", () => {
       },
       {
         id: "test2",
-        type: { category: "image", subtype: "html" },
+        extension: "html",
         path: path.join(testsPath, "./test2.html"),
         relativePath: "test2.html",
       },
@@ -52,13 +52,13 @@ describe("loading test folders", () => {
       },
       {
         id: "test1",
-        type: { category: "image", subtype: "html" },
+        extension: "html",
         path: path.join(testsPath, "./test1.html"),
         relativePath: "test1.html",
       },
       {
         id: "test2",
-        type: { category: "image", subtype: "html" },
+        extension: "html",
         path: path.join(testsPath, "./test2.html"),
         relativePath: "test2.html",
       },
@@ -76,13 +76,13 @@ describe("loading test folders", () => {
     expect(entries).toEqual([
       {
         id: "test1-index",
-        type: { category: "image", subtype: "html" },
+        extension: "html",
         path: path.join(testsPath, "./test1/index.html"),
         relativePath: "test1/index.html",
       },
       {
         id: "test2-index",
-        type: { category: "image", subtype: "html" },
+        extension: "html",
         path: path.join(testsPath, "./test2/index.html"),
         relativePath: "test2/index.html",
         options: {
@@ -108,7 +108,7 @@ describe("loading test folders", () => {
     expect(entries).toEqual([
       {
         id: "test1-another",
-        type: { category: "image", subtype: "html" },
+        extension: "html",
         path: path.join(testsPath, "./test1/another.html"),
         relativePath: "test1/another.html",
         options: {
@@ -122,7 +122,7 @@ describe("loading test folders", () => {
       },
       {
         id: "test1-index",
-        type: { category: "image", subtype: "html" },
+        extension: "html",
         path: path.join(testsPath, "./test1/index.html"),
         relativePath: "test1/index.html",
         options: {
@@ -136,7 +136,7 @@ describe("loading test folders", () => {
       },
       {
         id: "test2-index",
-        type: { category: "image", subtype: "html" },
+        extension: "html",
         path: path.join(testsPath, "./test2/index.html"),
         relativePath: "test2/index.html",
         options: {
@@ -150,7 +150,7 @@ describe("loading test folders", () => {
       },
       {
         id: "test3-file",
-        type: { category: "image", subtype: "html" },
+        extension: "html",
         path: path.join(testsPath, "./test3/file.html"),
         relativePath: "test3/file.html",
       },
@@ -165,7 +165,7 @@ describe("loading test folders", () => {
     expect(entries).toEqual([
       {
         id: "test1",
-        type: { category: "image", subtype: "html" },
+        extension: "html",
         path: path.join(testsPath, "./test1.html"),
         relativePath: "test1.html",
         options: {
@@ -210,7 +210,7 @@ describe("loading test folders", () => {
       },
       {
         id: "test2",
-        type: { category: "image", subtype: "html" },
+        extension: "html",
         path: path.join(testsPath, "./test2.html"),
         relativePath: "test2.html",
         options: {
@@ -237,7 +237,7 @@ describe("loading test folders", () => {
     expect(entries).toEqual([
       {
         id: "test-index",
-        type: { category: "image", subtype: "html" },
+        extension: "html",
         path: path.join(testsPath, "./test/index.html"),
         relativePath: "test/index.html",
         options: {
@@ -278,13 +278,13 @@ describe("loading test folders", () => {
     expect(entries).toEqual([
       {
         id: "test1-index",
-        type: { category: "image", subtype: "html" },
+        extension: "html",
         path: path.join(testsPath, "./test1/index.html"),
         relativePath: "test1/index.html",
       },
       {
         id: "test2-index",
-        type: { category: "image", subtype: "html" },
+        extension: "html",
         path: path.join(testsPath, "./test2/index.html"),
         relativePath: "test2/index.html",
         options: {

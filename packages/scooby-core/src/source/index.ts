@@ -18,12 +18,17 @@ export async function generateSources(
     return [];
   }
 
-  let datasetType;
-  if (options.datasetType) {
+  let datasetType: TestEntryType;
+  if (
+    options.datasetType &&
+    (options.datasetType === "code" || options.datasetType === "image")
+  ) {
     datasetType = options.datasetType;
   } else {
     datasetType = getDatasetType(entries);
   }
+
+  entries = entries.map((entry) => ({ ...entry, type: datasetType }));
 
   if (datasetType === "image") {
     return generateImageSources(entries, {
