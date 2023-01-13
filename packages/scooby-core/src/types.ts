@@ -8,7 +8,6 @@ export type TestEntry = {
   extension: string;
   path: string;
   relativePath: string;
-  type?: TestEntryType;
   options?: TestEntryOptions;
 };
 
