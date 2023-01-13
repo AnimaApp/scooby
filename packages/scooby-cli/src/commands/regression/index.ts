@@ -61,6 +61,7 @@ export default class Regression extends Command {
       referencePath: flags.reference,
       maxReferenceCommitBacktracking: flags["max-backtracking"],
       maxThreads: flags["max-threads"],
+      datasetType: flags["dataset-type"],
       formatter: flags.formatter,
       fileTypes,
       output: convertFlagsToReportOutputTarget(flags.name, flags),
