@@ -7,7 +7,7 @@ import { generateImageSources } from "./image";
 export type GenerateSourcesOptions = {
   maxThreads?: number;
   formatter?: Formatter;
-  datasetType?: string;
+  overrideDatasetType?: TestEntryType;
 };
 
 export async function generateSources(
@@ -18,17 +18,8 @@ export async function generateSources(
     return [];
   }
 
-  let datasetType: TestEntryType;
-  if (
-    options.datasetType &&
-    (options.datasetType === "code" || options.datasetType === "image")
-  ) {
-    datasetType = options.datasetType;
-  } else {
-    datasetType = getDatasetType(entries);
-  }
-
-  entries = entries.map((entry) => ({ ...entry, type: datasetType }));
+  const datasetType: TestEntryType =
+    options.overrideDatasetType ?? inferDatasetType(entries);
 
   if (datasetType === "image") {
     return generateImageSources(entries, {
@@ -47,7 +38,14 @@ export async function generateSources(
   );
 }
 
-export function getDatasetType(entries: TestEntry[]): TestEntryType {
+function getEntryType(extension: string): TestEntryType {
+  if (extension === "html" || extension === "png") {
+    return "image";
+  }
+  return "code";
+}
+
+function inferDatasetType(entries: TestEntry[]): TestEntryType {
   const entryTypes = entries.map(({ extension }) => getEntryType(extension));
 
   if (entryTypes.every((val) => val === entryTypes[0])) {
