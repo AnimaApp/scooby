@@ -17,10 +17,7 @@ export async function generateSources(
     return [];
   }
 
-  const datasetType = getDatasetType(entries);
-  if (options.datasetType && (options.datasetType === "code" || options.datasetType ==="image")) {
-    datasetType.category = options.datasetType;
-  }
+  const datasetType = getDatasetType(entries, options.datasetType);
 
   if (datasetType.category === "image") {
     return generateImageSources(entries, {
@@ -41,17 +38,21 @@ export async function generateSources(
   );
 }
 
-export function getDatasetType(entries: TestEntry[]): TestEntryType {
+export function getDatasetType(entries: TestEntry[], datasetTypeOption?: string): TestEntryType {
   const entryType = entries?.[0].type;
   if (!entryType) {
     throw new Error("unable to determine dataset entry type, dataset is empty");
   }
 
-  if (!entries.every((entry) => entry.type.category === entryType.category)) {
+  if (!datasetTypeOption && !entries.every((entry) => entry.type.category === entryType.category)) {
     throw new Error(
       "dataset is malformed, found different categories of test entries. Expected all to be: " +
         entryType.category
     );
+  }
+
+  if (datasetTypeOption && (datasetTypeOption === "code" || datasetTypeOption ==="image")) {
+    entryType.category = datasetTypeOption;
   }
 
   return entryType;
