@@ -1,4 +1,3 @@
-import { getEntryType } from "../loading/loader/util";
 import { Formatter, TestEntry, TestEntryType } from "../types";
 import { SourceEntry } from "../types";
 import { generateCodeSources } from "./code";
