@@ -6,6 +6,7 @@ import { generateImageSources } from "./image";
 export type GenerateSourcesOptions = {
   maxThreads?: number;
   formatter?: Formatter;
+  datasetType?: string;
 };
 
 export async function generateSources(
@@ -17,6 +18,9 @@ export async function generateSources(
   }
 
   const datasetType = getDatasetType(entries);
+  if (options.datasetType && (options.datasetType === "code" || options.datasetType ==="image")) {
+    datasetType.category = options.datasetType;
+  }
 
   if (datasetType.category === "image") {
     return generateImageSources(entries, {

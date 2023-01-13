@@ -42,3 +42,10 @@ export const outputFlag = Flags.enum<OutputType>({
     "Specify the output target for the generated report. Locally, it defaults to 'zip', while it defaults to 'hosted' when running on the CI.",
   default: "auto",
 });
+
+export type DatasetType = "code" | "image";
+export const datasetType = Flags.enum<DatasetType>({
+  options: ["code", "image"],
+  description:
+    "Specify the type of the dataset and how it should be reported.",
+});

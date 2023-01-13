@@ -21,6 +21,7 @@ export type RegressionReportParams = BaseReportParams & {
   formatter?: Formatter;
   maxThreads?: number;
   maxReferenceCommitBacktracking?: number;
+  datasetType?: string;
 };
 
 export async function runRegressionReport(
@@ -35,6 +36,7 @@ export async function runRegressionReport(
   const sourceGenerationOptions: GenerateSourcesOptions = {
     maxThreads: params.maxThreads,
     formatter: params.formatter,
+    datasetType: params.datasetType,
   };
   const testSources = await generateSources(
     testEntries,
