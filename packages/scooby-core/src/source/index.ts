@@ -40,7 +40,7 @@ export async function generateSources(
 
 export function getDatasetType(
   entries: TestEntry[],
-  datasetTypeOption?: string
+  overrideDatasetType?: string
 ): TestEntryType {
   const entryType = entries?.[0].type;
   if (!entryType) {
@@ -48,7 +48,7 @@ export function getDatasetType(
   }
 
   if (
-    !datasetTypeOption &&
+    !overrideDatasetType &&
     !entries.every((entry) => entry.type.category === entryType.category)
   ) {
     throw new Error(
@@ -58,10 +58,10 @@ export function getDatasetType(
   }
 
   if (
-    datasetTypeOption &&
-    (datasetTypeOption === "code" || datasetTypeOption === "image")
+    overrideDatasetType &&
+    (overrideDatasetType === "code" || overrideDatasetType === "image")
   ) {
-    entryType.category = datasetTypeOption;
+    entryType.category = overrideDatasetType;
   }
 
   return entryType;

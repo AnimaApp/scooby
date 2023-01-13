@@ -46,5 +46,6 @@ export const outputFlag = Flags.enum<OutputType>({
 export type DatasetType = "code" | "image";
 export const datasetType = Flags.enum<DatasetType>({
   options: ["code", "image"],
-  description: "Specify the type of the dataset and how it should be reported.",
+  description:
+    "Overrides the type of dataset and how it should be reported. Useful with HTML as it can be interpreted both as image and code.",
 });
