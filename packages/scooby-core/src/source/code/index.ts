@@ -1,13 +1,7 @@
-import {
-  CodeSourceEntry,
-  TestEntry,
-  CodeTestEntryType,
-  Formatter,
-} from "../../types";
+import { CodeSourceEntry, TestEntry, Formatter } from "../../types";
 import { batchPrepareCodeSources, PrepareCodeSourceRequest } from "./batch";
 
 export type GenerateImageSourcesOptions = {
-  datasetType: CodeTestEntryType;
   maxThreads?: number;
   formatter?: Formatter;
 };

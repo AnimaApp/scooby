@@ -1,3 +1,4 @@
+import { getEntryType } from "../loading/loader/util";
 import { Formatter, TestEntry, TestEntryType } from "../types";
 import { SourceEntry } from "../types";
 import { generateCodeSources } from "./code";
@@ -17,16 +18,19 @@ export async function generateSources(
     return [];
   }
 
-  const datasetType = getDatasetType(entries, options.datasetType);
+  let datasetType;
+  if (options.datasetType) {
+    datasetType = options.datasetType;
+  } else {
+    datasetType = getDatasetType(entries);
+  }
 
-  if (datasetType.category === "image") {
+  if (datasetType === "image") {
     return generateImageSources(entries, {
-      datasetType,
       maxThreads: options.maxThreads,
     });
-  } else if (datasetType.category === "code") {
+  } else if (datasetType === "code") {
     return generateCodeSources(entries, {
-      datasetType,
       maxThreads: options.maxThreads,
       formatter: options.formatter,
     });
@@ -38,31 +42,14 @@ export async function generateSources(
   );
 }
 
-export function getDatasetType(
-  entries: TestEntry[],
-  overrideDatasetType?: string
-): TestEntryType {
-  const entryType = entries?.[0].type;
-  if (!entryType) {
-    throw new Error("unable to determine dataset entry type, dataset is empty");
+export function getDatasetType(entries: TestEntry[]): TestEntryType {
+  const entryTypes = entries.map(({ extension }) => getEntryType(extension));
+
+  if (entryTypes.every((val) => val === entryTypes[0])) {
+    return entryTypes[0];
   }
 
-  if (
-    !overrideDatasetType &&
-    !entries.every((entry) => entry.type.category === entryType.category)
-  ) {
-    throw new Error(
-      "dataset is malformed, found different categories of test entries. Expected all to be: " +
-        entryType.category
-    );
-  }
-
-  if (
-    overrideDatasetType &&
-    (overrideDatasetType === "code" || overrideDatasetType === "image")
-  ) {
-    entryType.category = overrideDatasetType;
-  }
-
-  return entryType;
+  throw new Error(
+    "dataset is malformed, found different categories of test entries."
+  );
 }

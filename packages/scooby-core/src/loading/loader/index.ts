@@ -2,7 +2,7 @@ import path from "path";
 import { readdir } from "fs/promises";
 import { TestEntry } from "../../types";
 import { loadOptions } from "../options";
-import { getTypeForEntry } from "./util";
+import { getExtension } from "./util";
 
 export const load = async (
   directory: string,
@@ -80,7 +80,7 @@ export const load = async (
 
     entries.push({
       id: id,
-      type: getTypeForEntry(testFile),
+      extension: getExtension(testFile),
       path: absoluteFilePath,
       relativePath: path.relative(directory, absoluteFilePath),
       ...(options && Object.keys(options).length > 0 && { options }),
