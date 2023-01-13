@@ -9,7 +9,7 @@ export async function generatePNGImageSources(
     if (entry.extension !== "png") {
       throw new Error(
         "unable to load PNG test entry, found found entry type: " +
-        entry.extension
+          entry.extension
       );
     }
 
