@@ -1,4 +1,4 @@
-import { ImageSourceEntry, TestEntry, ImageTestEntryType } from "../../types";
+import { ImageSourceEntry, TestEntry } from "../../types";
 import { generateHTMLImageSources } from "./html";
 import { generatePNGImageSources } from "./png";
 
