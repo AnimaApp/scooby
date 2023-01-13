@@ -4,7 +4,12 @@ import {
   convertFlagsToReportOutputTarget,
   parseFileTypesFlag,
 } from "../../shared/convert";
-import { datasetType, formatterFlag, maxThreadsFlag, outputFlag } from "../../shared/flags";
+import {
+  datasetType,
+  formatterFlag,
+  maxThreadsFlag,
+  outputFlag,
+} from "../../shared/flags";
 
 export default class Regression extends Command {
   static description = "Run a regression test";
