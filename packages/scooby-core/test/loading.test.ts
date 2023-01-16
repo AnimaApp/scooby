@@ -46,7 +46,7 @@ describe("loading test folders", () => {
     expect(entries).toEqual([
       {
         id: "test1-css",
-        type: { category: "code", extension: "css" },
+        extension: "css",
         path: path.join(testsPath, "./test1.css"),
         relativePath: "test1.css",
       },
