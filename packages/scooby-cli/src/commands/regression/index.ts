@@ -4,7 +4,12 @@ import {
   convertFlagsToReportOutputTarget,
   parseFileTypesFlag,
 } from "../../shared/convert";
-import { formatterFlag, maxThreadsFlag, outputFlag } from "../../shared/flags";
+import {
+  datasetType,
+  formatterFlag,
+  maxThreadsFlag,
+  outputFlag,
+} from "../../shared/flags";
 
 export default class Regression extends Command {
   static description = "Run a regression test";
@@ -40,6 +45,7 @@ export default class Regression extends Command {
         "Specify the number of backtracking attempts on previous commits to find a matching reference dataset. This is mostly useful when the main branch doesn't publish reference datasets for each commit.",
     }),
     "max-threads": maxThreadsFlag,
+    "dataset-type": datasetType,
     formatter: formatterFlag,
     output: outputFlag,
   };
@@ -60,6 +66,7 @@ export default class Regression extends Command {
       referencePath: flags.reference,
       maxReferenceCommitBacktracking: flags["max-backtracking"],
       maxThreads: flags["max-threads"],
+      overrideDatasetType: flags["dataset-type"],
       formatter: flags.formatter,
       fileTypes,
       output: convertFlagsToReportOutputTarget(flags.name, flags),

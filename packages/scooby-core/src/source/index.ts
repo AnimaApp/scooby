@@ -6,6 +6,7 @@ import { generateImageSources } from "./image";
 export type GenerateSourcesOptions = {
   maxThreads?: number;
   formatter?: Formatter;
+  overrideDatasetType?: TestEntryType;
 };
 
 export async function generateSources(
@@ -16,16 +17,15 @@ export async function generateSources(
     return [];
   }
 
-  const datasetType = getDatasetType(entries);
+  const datasetType: TestEntryType =
+    options.overrideDatasetType ?? inferDatasetType(entries);
 
-  if (datasetType.category === "image") {
+  if (datasetType === "image") {
     return generateImageSources(entries, {
-      datasetType,
       maxThreads: options.maxThreads,
     });
-  } else if (datasetType.category === "code") {
+  } else if (datasetType === "code") {
     return generateCodeSources(entries, {
-      datasetType,
       maxThreads: options.maxThreads,
       formatter: options.formatter,
     });
@@ -37,18 +37,21 @@ export async function generateSources(
   );
 }
 
-export function getDatasetType(entries: TestEntry[]): TestEntryType {
-  const entryType = entries?.[0].type;
-  if (!entryType) {
-    throw new Error("unable to determine dataset entry type, dataset is empty");
+function getEntryType(extension: string): TestEntryType {
+  if (extension === "html" || extension === "png") {
+    return "image";
+  }
+  return "code";
+}
+
+function inferDatasetType(entries: TestEntry[]): TestEntryType {
+  const entryTypes = entries.map(({ extension }) => getEntryType(extension));
+
+  if (entryTypes.every((val) => val === entryTypes[0])) {
+    return entryTypes[0];
   }
 
-  if (!entries.every((entry) => entry.type.category === entryType.category)) {
-    throw new Error(
-      "dataset is malformed, found different categories of test entries. Expected all to be: " +
-        entryType.category
-    );
-  }
-
-  return entryType;
+  throw new Error(
+    "dataset is malformed, found different categories of test entries."
+  );
 }

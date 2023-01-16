@@ -1,13 +1,7 @@
-import {
-  CodeSourceEntry,
-  TestEntry,
-  CodeTestEntryType,
-  Formatter,
-} from "../../types";
+import { CodeSourceEntry, TestEntry, Formatter } from "../../types";
 import { batchPrepareCodeSources, PrepareCodeSourceRequest } from "./batch";
 
 export type GenerateImageSourcesOptions = {
-  datasetType: CodeTestEntryType;
   maxThreads?: number;
   formatter?: Formatter;
 };
@@ -16,12 +10,6 @@ export async function generateCodeSources(
   entries: TestEntry[],
   options: GenerateImageSourcesOptions
 ): Promise<CodeSourceEntry[]> {
-  if (!entries.every((entry) => entry.type.category === "code")) {
-    throw new Error(
-      "dataset is malformed, some entries are not in the 'code' category"
-    );
-  }
-
   const requests: PrepareCodeSourceRequest[] = entries.map(
     (entry): PrepareCodeSourceRequest => ({
       id: entry.id,

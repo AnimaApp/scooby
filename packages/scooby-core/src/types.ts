@@ -1,21 +1,11 @@
 import { ScoobyAPI } from "@animaapp/scooby-api";
 import { LocalResource, Metadata } from "@animaapp/scooby-shared";
 
-export type ImageTestEntryType = {
-  category: "image";
-  subtype: "png" | "html";
-};
-
-export type CodeTestEntryType = {
-  category: "code";
-  extension: string;
-};
-
-export type TestEntryType = ImageTestEntryType | CodeTestEntryType;
+export type TestEntryType = "code" | "image";
 
 export type TestEntry = {
   id: string;
-  type: TestEntryType;
+  extension: string;
   path: string;
   relativePath: string;
   options?: TestEntryOptions;

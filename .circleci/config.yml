@@ -96,6 +96,9 @@ jobs:
           name: "Run HTML regression test"
           command: "scooby regression --name 'html-regression' --tests sample-projects/ci-html-regression --file-type=html"
       - run:
+          name: "Run HTML code regression test"
+          command: "scooby regression --name 'html-code-regression' --tests sample-projects/ci-html-code-regression --file-type=html,css --dataset-type=code"
+      - run:
           name: "Run PNG regression test"
           command: "scooby regression --name 'png-regression' --tests sample-projects/ci-png-regression --file-type=png"
       - run:

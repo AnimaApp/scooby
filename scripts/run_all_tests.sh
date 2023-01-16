@@ -11,7 +11,7 @@ for package in packages/* ; do
   package_name=$(cat "$package/package.json" | jq -r '.name')
   if [ "$package_test_command" != "null" ] ; then
     echo "Testing package $package_name"
-    yarn workspace "$package_name" test
+    npx yarn workspace "$package_name" test
   else
     echo "Skipping package $package_name, no tests defined"
   fi

@@ -8,6 +8,7 @@ import {
   Formatter,
   ReportContext,
   SourceEntry,
+  TestEntryType,
 } from "../../types";
 import { generateMainBranchReport, generateReport } from "./report";
 import { calculateRegressions } from "../shared/regression";
@@ -21,6 +22,7 @@ export type RegressionReportParams = BaseReportParams & {
   formatter?: Formatter;
   maxThreads?: number;
   maxReferenceCommitBacktracking?: number;
+  overrideDatasetType?: TestEntryType;
 };
 
 export async function runRegressionReport(
@@ -35,6 +37,7 @@ export async function runRegressionReport(
   const sourceGenerationOptions: GenerateSourcesOptions = {
     maxThreads: params.maxThreads,
     formatter: params.formatter,
+    overrideDatasetType: params.overrideDatasetType,
   };
   const testSources = await generateSources(
     testEntries,
