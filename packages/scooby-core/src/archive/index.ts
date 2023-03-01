@@ -1,54 +1,35 @@
-import archiver from "archiver";
 import extract from "extract-zip";
-import { existsSync, statSync, createWriteStream } from "fs";
-import { createTemporaryDirectory, createTemporaryFile } from "../utils/temp";
+import { createTemporaryDirectory } from "../utils/temp";
+import { archiveDirectoryUsingNodeArchiver } from "./node-archiver";
+import { archiveDirectoryUsingZipCli, hasZipCliInstalled } from "./zip-cli";
 
-export async function archiveDirectory(dirPath: string): Promise<string> {
-  if (!existsSync(dirPath)) {
-    throw new Error(
-      "unable to archive directory, the given path does not exist"
-    );
+export type ArchiveDirectoryOptions = {
+  forceMode?: ArchiveDirectoryMode;
+};
+
+export type ArchiveDirectoryMode = "node-archiver" | "zip-cli";
+
+export async function archiveDirectory(
+  dirPath: string,
+  options?: ArchiveDirectoryOptions
+): Promise<string> {
+  const archiveMode = options?.forceMode ?? (await inferBestArchiverMode());
+  console.log("using archiver mode:", archiveMode);
+
+  switch (archiveMode) {
+    case "node-archiver":
+      return archiveDirectoryUsingNodeArchiver(dirPath);
+    case "zip-cli":
+      return archiveDirectoryUsingZipCli(dirPath);
   }
-
-  if (!statSync(dirPath).isDirectory()) {
-    throw new Error(
-      "unable to archive directory, the given path is not a directory"
-    );
-  }
-
-  const archivePath = await createTemporaryFile("archive", ".zip");
-
-  const archiveFileStream = createWriteStream(archivePath);
-  const archive = archiver("zip", {
-    zlib: { level: 9 }, // Sets the compression level.
-  });
-  archive.on("warning", function (err) {
-    if (err.code === "ENOENT") {
-      console.warn("ARCHIVER:", err.code);
-    } else {
-      throw err;
-    }
-  });
-  archive.on("error", function (err) {
-    throw err;
-  });
-
-  archive.pipe(archiveFileStream);
-  archive.directory(dirPath, false);
-
-  await archive.finalize();
-  await waitForStreamToFinish(archiveFileStream);
-
-  return archivePath;
 }
 
-function waitForStreamToFinish(
-  stream: ReturnType<typeof createWriteStream>
-): Promise<void> {
-  return new Promise((resolve, reject) => {
-    stream.on("finish", resolve);
-    stream.on("error", reject);
-  });
+async function inferBestArchiverMode(): Promise<ArchiveDirectoryMode> {
+  if (await hasZipCliInstalled()) {
+    return "zip-cli";
+  } else {
+    return "node-archiver";
+  }
 }
 
 export async function extractArchive(archivePath: string): Promise<string> {
