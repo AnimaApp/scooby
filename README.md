@@ -1,4 +1,4 @@
-![Scooby](images/scooby-logo.svg)
+![Scooby](images/scoobyLogo.png)
 
 _Scooby_ is an optimized visual, regression and E2E testing framework.
 It can be used to generate many different kinds of reports, and integrates
