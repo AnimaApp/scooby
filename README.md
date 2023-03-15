@@ -1,16 +1,34 @@
 ![Scooby](images/scoobyLogo.png)
 
-_Scooby_ is an optimized visual, regression and E2E testing framework.
-It can be used to generate many different kinds of reports, and integrates
-seemlessly with our GitHub-based workflows.
+_Scooby_ is an optimized regression and fidelity testing framework.
+It can be used to test for regressions (both visual and textual), and provides all
+tools and integrations necessary to streamline the experience (a CLI, a review UI, web service, and more).
+
+For a quick introduction and demo, see this video:
+
+TODO
+
+Example use-cases:
+
+- **Prevent visual regressions in your website UI**
+  - After a PR is opened, you can use Scooby to verify that the changes didn't
+    cause any unwanted regression in your website UI, flagging them for review and approval if necessary.
+- **Test for regressions in generated configuration files**
+  - You might use Scooby to do Snapshot testing of your UI structure (JSON) or other configuration files. With Scooby, you can avoid committing the snapshots into your repository, and instead generate and compare them on the fly inside a CI pipeline.
+- **Support migrations by comparing the output of two systems**
+  - If you are migrating a system, you might want to verify that the output of the new system is equal to the legacy one. Scooby can be used to compare and visualize the differences between the outputs, flagging them up for review and approval if necessary
+- **Test for Storybook components regressions (soon)**
+  - Verify that a code change doesn't cause any visual regression in your Storybook components
 
 Scooby was built with these goals in mind:
 
-- Make it easy to add new regression, visual, and E2E tests
+- Make it easy to add new regression and fidelity tests, both visual and textual
 - Support multiple test formats out of the box (such as HTML, PNG, code, etc) to minimize the amount of boilerplate glue code.
 - Being cost-efficient
 - Be highly extensible to support new kinds of tests and reports
 - Integrate well with our GitHub-based workflows
+
+Scooby has been extensively battle-tested at [Anima](https://www.animaapp.com/), where is powering most of our production pipelines.
 
 # Overview
 
@@ -18,10 +36,9 @@ Scooby is composed of three main components:
 
 - A **CLI** used to run reports, either locally or inside a CI pipeline
 - A **Web UI** used to view reports, and leave reviews (approvals, rejections, etc)
-- An **API** service to save reviews, and other actions
+- (Optional) An **API** service to send reviews, and other actions. Scooby can also work without this component, but approvals won't work in the Web UI without it.
 
-While Scooby has been built to be storage-agnostic, as of now, all reports and artifacts
-are stored inside **AWS S3 buckets**.
+While Scooby has been built to be storage-agnostic, as of now, only **AWS S3 buckets** are supported as destination for reports and artifacts. If you are interested in other storage options, please open an issue!
 
 The typical flow of a Scooby-powered report looks as follows:
 
