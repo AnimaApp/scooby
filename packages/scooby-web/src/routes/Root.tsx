@@ -1,6 +1,6 @@
 import { Layout } from "antd";
 import { Outlet, Link } from "react-router-dom";
-import logo from "../assets/scooby-logo.png";
+import logo from "../assets/scoobyLogo.png";
 import { FeedbackProvider } from "../providers/feedback";
 import { useDropzone } from "./useDropzone";
 
