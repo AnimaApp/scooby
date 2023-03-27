@@ -2,13 +2,13 @@ FROM node:16-bullseye
 
 WORKDIR /usr/src/app
 
-RUN apt-get -y update && \
+RUN apt-get -y update && apt-get -y upgrade && \
     apt-get install -y libasound2 libgconf-2-4 \
     libatk1.0-0 libatk-bridge2.0-0 libgdk-pixbuf2.0-0 \
     libgtk-3-0 libgbm-dev libnss3-dev libxss-dev chromium
 
 # Install doppler
-RUN apt-get update && apt-get upgrade && apt-get install -y apt-transport-https ca-certificates curl gnupg && \
+RUN apt-get -y update && apt-get upgrade -y && apt-get install -y apt-transport-https ca-certificates curl gnupg && \
     curl -sLf --retry 3 --tlsv1.2 --proto "=https" 'https://packages.doppler.com/public/cli/gpg.DE2A7741A397C129.key' | apt-key add - && \
     echo "deb https://packages.doppler.com/public/cli/deb/debian any-version main" | tee /etc/apt/sources.list.d/doppler-cli.list && \
     apt-get update && \
