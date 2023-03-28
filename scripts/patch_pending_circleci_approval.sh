@@ -15,7 +15,7 @@ do
   curl --request GET \
     --url "https://api.github.com/repos/AnimaApp/scooby/statuses/$CIRCLE_SHA1" \
     --header 'Accept: application/vnd.github.v3+json' \
-    --header "Authorization: Bearer $GITHUB_CI_BOT_TOKEN" > commit-statuses.json
+    --header "Authorization: Bearer $SCOOBY_GITHUB_CI_BOT_TOKEN" > commit-statuses.json
 
   cat commit-statuses.json
   cat commit-statuses.json | jq -r '.[].context' > commit-statuses.txt
@@ -27,7 +27,7 @@ do
     curl --request POST \
       --url "https://api.github.com/repos/AnimaApp/scooby/statuses/$CIRCLE_SHA1" \
       --header 'Accept: application/vnd.github.v3+json' \
-      --header "Authorization: Bearer $GITHUB_CI_BOT_TOKEN" \
+      --header "Authorization: Bearer $SCOOBY_GITHUB_CI_BOT_TOKEN" \
       --header 'Content-Type: application/json' \
       --data '{
         "state": "success",
