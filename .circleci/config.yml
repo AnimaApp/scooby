@@ -212,6 +212,12 @@ jobs:
     docker:
       - image: node:16
     steps:
+      - run:
+          name: Set npm registry
+          command: |
+            echo "registry=https://registry.npmjs.org/" >> ~/.npmrc
+            echo "@animaapp:registry=https://npm.pkg.github.com/" >> ~/.npmrc
+            echo "//npm.pkg.github.com/:_authToken=\${GITHUB_PACKAGE_TOKEN}" >> ~/.npmrc
       - setup-dependencies
       - add_ssh_keys:
           fingerprints:
@@ -277,12 +283,6 @@ jobs:
 commands:
   setup-dependencies:
     steps:
-      - run:
-          name: Set npm registry
-          command: |
-            echo "registry=https://registry.npmjs.org/" >> ~/.npmrc
-            echo "@animaapp:registry=https://npm.pkg.github.com/" >> ~/.npmrc
-            echo "//npm.pkg.github.com/:_authToken=\${GITHUB_PACKAGE_TOKEN}" >> ~/.npmrc
       - checkout
       - run:
           name: "Install dependencies"
