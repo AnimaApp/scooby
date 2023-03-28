@@ -4,24 +4,17 @@ orbs:
 workflows:
   scooby:
     jobs:
-      - build-and-test:
-          context: anima-prod
-
-      - run-scooby-regression-tests:
-          context: anima-prod
-      - run-scooby-fidelity-tests:
-          context: anima-prod
-      - run-scooby-fidelity-regression-tests:
-          context: anima-prod
+      - build-and-test
+      - run-scooby-regression-tests
+      - run-scooby-fidelity-tests
+      - run-scooby-fidelity-regression-tests
       - scooby-update-status:
-          context: anima-prod
           requires:
             - run-scooby-regression-tests
             - run-scooby-fidelity-tests
             - run-scooby-fidelity-regression-tests
 
       - deploy-scooby-web-ui:
-          context: anima-prod
           requires:
             - build-and-test
           filters:
@@ -36,23 +29,20 @@ workflows:
           filters:
             branches:
               only: main
-      # This workaround is used to patch this CircleCI behavior: https://circleci.canny.io/cloud-feature-requests/p/show-overall-all-checks-have-passed-status-in-github-even-on-builds-with-incompl
-      - patch-request-npm-packages-deploy-approval-github-status:
-          context: anima-prod
-          requires:
-            - build-and-test
-          filters:
-            branches:
-              only: main
       - deploy-npm-packages:
           context: anima-prod
           requires:
             - request-npm-packages-deploy-approval
+          filters:
+            branches:
+              only: main
 
   web-service:
     jobs:
       - build-and-test:
-          context: anima-prod
+          filters:
+            branches:
+              only: main
       - anima-orb/build-push-image:
           context: anima-prod
           requires:
@@ -61,7 +51,6 @@ workflows:
             branches:
               only:
                 - main
-                - /^canary.*$/
       - anima-orb/update-argocd-repo:
           context: anima-prod
           cluster-name: anima-cluster
@@ -223,6 +212,12 @@ jobs:
     docker:
       - image: node:16
     steps:
+      - run:
+          name: Set npm registry
+          command: |
+            echo "registry=https://registry.npmjs.org/" >> ~/.npmrc
+            echo "@animaapp:registry=https://npm.pkg.github.com/" >> ~/.npmrc
+            echo "//npm.pkg.github.com/:_authToken=\${GITHUB_PACKAGE_TOKEN}" >> ~/.npmrc
       - setup-dependencies
       - add_ssh_keys:
           fingerprints:
@@ -288,12 +283,6 @@ jobs:
 commands:
   setup-dependencies:
     steps:
-      - run:
-          name: Set npm registry
-          command: |
-            echo "registry=https://registry.npmjs.org/" >> ~/.npmrc
-            echo "@animaapp:registry=https://npm.pkg.github.com/" >> ~/.npmrc
-            echo "//npm.pkg.github.com/:_authToken=\${GITHUB_PACKAGE_TOKEN}" >> ~/.npmrc
       - checkout
       - run:
           name: "Install dependencies"
