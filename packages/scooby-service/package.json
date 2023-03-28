@@ -5,7 +5,6 @@
   "main": "dist/src/index.js",
   "repository": "https://github.com/AnimaApp/scooby",
   "license": "MIT",
-  "private": true,
   "scripts": {
     "build": "tsc --build",
     "dev": "yarn build && yarn start",
