@@ -1,3 +1,4 @@
 {
-  "test": false
+  "test": "this has been changed",
+  "another": "field"
 }
