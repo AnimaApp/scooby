@@ -6,10 +6,7 @@ tools and integrations necessary to streamline the experience (a CLI, a review U
 
 For a quick introduction and demo, see this video:
 
-<a href="https://www.loom.com/share/e05ded71bde947f7a1d7fc270b0db0cf">
-    <p>Scooby Demo - The Open-Source, Regression and Fidelity testing framework by Anima - Watch Video</p>
-    <img style="max-width:300px;" src="null">
-  </a>
+[![Demo Video](https://cdn.loom.com/sessions/thumbnails/e05ded71bde947f7a1d7fc270b0db0cf-with-play.gif)](https://www.loom.com/share/e05ded71bde947f7a1d7fc270b0db0cf)
 
 Example use-cases:
 
