@@ -4,7 +4,7 @@
   "description": "This package contains the logic to interact with GitHub API",
   "main": "dist/src/index.js",
   "repository": "https://github.com/AnimaApp/scooby",
-  "author": "Federico Terzi",
+  "license": "MIT",
   "publishConfig": {
     "registry": "https://npm.pkg.github.com"
   },

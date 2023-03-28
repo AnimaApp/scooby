@@ -4,10 +4,10 @@
   "description": "This package contains the logic used to perform testing",
   "main": "dist/src/index.js",
   "repository": "https://github.com/AnimaApp/scooby",
-  "author": "Federico Terzi",
   "publishConfig": {
     "registry": "https://npm.pkg.github.com"
   },
+  "license": "MIT",
   "scripts": {
     "build": "tsc --build",
     "clean": "rm -Rf ./dist && rm -f tsconfig.tsbuildinfo",
