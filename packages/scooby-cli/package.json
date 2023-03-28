@@ -2,13 +2,13 @@
   "name": "@animaapp/scooby-cli",
   "version": "1.21.0",
   "description": "A CLI to use Scooby, a visual and E2E testing framework",
-  "author": "Federico Terzi @federico-terzi-anima",
   "bin": {
     "scooby": "./bin/run"
   },
   "homepage": "https://github.com/AnimaApp/scooby/packages/scooby-cli",
   "main": "dist/index.js",
   "repository": "AnimaApp/scooby",
+  "license": "MIT",
   "files": [
     "/bin",
     "/dist",

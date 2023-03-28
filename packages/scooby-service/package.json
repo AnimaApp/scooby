@@ -4,7 +4,7 @@
   "description": "The Web Service used by Scooby to perform some backend-side operations",
   "main": "dist/src/index.js",
   "repository": "https://github.com/AnimaApp/scooby",
-  "author": "Federico Terzi",
+  "license": "MIT",
   "private": true,
   "scripts": {
     "build": "tsc --build",
