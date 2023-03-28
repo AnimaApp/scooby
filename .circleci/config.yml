@@ -267,8 +267,8 @@ jobs:
           environment:
             NPM_AUTH_TOKEN: $NPM_PUBLISH_TOKEN
           command: |
-            # Removing the NPM rc because we have a rule that points all @animaapp packages to the GitHub registry, and we don't want that here
-            rm ~/.npmrc
+            # Patching the NPMRC entry so that we push all packages to the public NPM registry instead of the Github NPM registry
+            echo "//registry.npmjs.org/:_authToken=${NPM_AUTH_TOKEN}" > ~/.npmrc
 
             ./scripts/publish_to_public_npm_registry.sh
 

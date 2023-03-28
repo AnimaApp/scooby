@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -e
+
 echo "Patching NPM registry to point to public NPM registry"
 
 git grep -rl 'https://npm.pkg.github.com' packages/ > affected_files.txt
@@ -21,7 +23,7 @@ for package in `ls packages`; do
   PACKAGE_PATH=packages/$package
   pushd $PACKAGE_PATH
 
-  yarn publish
+  yarn publish --access public
 
   popd
 done
