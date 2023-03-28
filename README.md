@@ -6,7 +6,10 @@ tools and integrations necessary to streamline the experience (a CLI, a review U
 
 For a quick introduction and demo, see this video:
 
-TODO
+<a href="https://www.loom.com/share/e05ded71bde947f7a1d7fc270b0db0cf">
+    <p>Scooby Demo - The Open-Source, Regression and Fidelity testing framework by Anima - Watch Video</p>
+    <img style="max-width:300px;" src="null">
+  </a>
 
 Example use-cases:
 
@@ -54,7 +57,7 @@ The following diagram illustrates an high-level overview of the system:
 
 This section covers the basics to use Scooby in your projects.
 We'll start from the initial repository setup, gradually
-covering all the steps to get a simple working setup.
+covering all the steps to get a simple working pipeline.
 
 > **Note for Scooby developers**: this section does not cover how to contribute to the Scooby project.
 > If your goal is to extend or modify Scooby itself, please
@@ -164,18 +167,9 @@ From these definitions, we can draw several conclusions:
 - Fidelity tests _could_ have differences and still be successful, as
   having a perfect match between datasets produced by two different systems might not be achieavable.
 
-## Why the name _Scooby_?
+## How to generate the necessary AWS credentials?
 
-There are two possible explanations, depending who's asking :D
-
-- Scooby Doo is a famous detective dog, and as a tool, Scooby
-  help us _detect_ regressions and problems.
-- During our on-site at Anima, one of the conversation topics was
-  [Cockney Rhyming slangs](https://en.wikipedia.org/wiki/Rhyming_slang).
-  Among the others, turns out _scooby_ is a slang term for _clue_.
-  For example, you could say: _I don't have a scooby about it_, which means _I don't have a clue about it_.
-  I fell in love with the term, and when it came time to choose a name
-  for the project, it was an easy choice.
+TODO (also link above)
 
 # Reference
 
