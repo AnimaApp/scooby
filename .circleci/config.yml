@@ -264,11 +264,9 @@ jobs:
       # Publish on public NPM registry
       - run:
           name: "Publishing to public NPM registry"
-          environment:
-            NPM_AUTH_TOKEN: $NPM_PUBLISH_TOKEN
           command: |
             # Patching the NPMRC entry so that we push all packages to the public NPM registry instead of the Github NPM registry
-            echo "//registry.npmjs.org/:_authToken=${NPM_AUTH_TOKEN}" > ~/.npmrc
+            echo "//registry.npmjs.org/:_authToken=${NPM_PUBLISH_TOKEN}" > ~/.npmrc
 
             ./scripts/publish_to_public_npm_registry.sh
 
