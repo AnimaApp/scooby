@@ -76,14 +76,14 @@ These are the environment variables you need to specify in the project CI:
 > If you are using CircleCI in your project, you'll need to specify them
 > inside the Project Settings > Environment Variables section.
 
-| Name                           | Description                                                                                                                                                       |
-| ------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `SCOOBY_AWS_S3_BUCKET`         | The name of the AWS S3 bucket that will host the reports and artifacts.                                                                                           |
-| `SCOOBY_AWS_S3_REGION`         | The AWS region for the S3 bucket, such as `us-west-2`                                                                                                             |
-| `SCOOBY_AWS_ACCESS_KEY_ID`     | An AWS Access Key ID with write access to the S3 bucket. There are important security considerations you should keep in mind, please read the TODO section below. |
-| `SCOOBY_AWS_SECRET_ACCESS_KEY` | The AWS secret access key associated with the above account.                                                                                                      |
-| `SCOOBY_GITHUB_ACCESS_TOKEN`   | A Github Access Token with write access to the repository you are planning to use.                                                                                |
-| `SCOOBY_WEB_BASE_URL`          | Set this to `https://animaapp.github.io/scooby` unless you're planning to host the frontend somewhere else.                                                       |
+| Name                           | Description                                                                                                 |
+| ------------------------------ | ----------------------------------------------------------------------------------------------------------- |
+| `SCOOBY_AWS_S3_BUCKET`         | The name of the AWS S3 bucket that will host the reports and artifacts.                                     |
+| `SCOOBY_AWS_S3_REGION`         | The AWS region for the S3 bucket, such as `us-west-2`                                                       |
+| `SCOOBY_AWS_ACCESS_KEY_ID`     | An AWS Access Key ID with write access to the S3 bucket.                                                    |
+| `SCOOBY_AWS_SECRET_ACCESS_KEY` | The AWS secret access key associated with the above account.                                                |
+| `SCOOBY_GITHUB_ACCESS_TOKEN`   | A Github Access Token with write access to the repository you are planning to use.                          |
+| `SCOOBY_WEB_BASE_URL`          | Set this to `https://animaapp.github.io/scooby` unless you're planning to host the frontend somewhere else. |
 
 After the necessary environment variables have been set, you are ready to generate a Scooby report.
 
@@ -124,12 +124,9 @@ If you are running multiple reports in parallel on CircleCI, a common pattern
 is to use job dependencies:
 
 ```yaml
-- run-scooby-fidelity-tests:
-    context: anima-prod
-- run-scooby-regression-tests:
-    context: anima-prod
+- run-scooby-fidelity-tests
+- run-scooby-regression-tests
 - scooby-update-status:
-    context: anima-prod
     requires:
       - run-scooby-regression-tests
       - run-scooby-fidelity-tests
@@ -163,10 +160,6 @@ From these definitions, we can draw several conclusions:
   datasets, as we are testing the same system at two different points in time.
 - Fidelity tests _could_ have differences and still be successful, as
   having a perfect match between datasets produced by two different systems might not be achieavable.
-
-## How to generate the necessary AWS credentials?
-
-TODO (also link above)
 
 # Reference
 
