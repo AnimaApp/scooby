@@ -3,7 +3,7 @@ function Comment(props) {
     <div className="Comment">
       <div className="UserInfo">
         <img
-          className="This has been changed"
+          className="new-class"
           src={props.author.avatarUrl}
           alt={props.author.name}
         />
