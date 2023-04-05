@@ -69,7 +69,30 @@ export class S3ScoobyAPI implements ScoobyAPI {
     })}/`;
 
     const subdirectories = await this.listSubdirectories(key);
-    return subdirectories;
+
+    // Because Scooby agents can run in parallel on different machines, it could happen that
+    // a report is listed, but its 'report.json' is not ready yet.
+    // In such cases, we want to filter out those partial reports as they might cause inconsistencies
+    // when updating the status.
+    const validReportIds: ReportId[] = [];
+    for (const reportId of subdirectories) {
+      const reportKey = buildReportJSONPath({
+        commitHash: params.commitHash,
+        reportName: reportId,
+        repository: this.options.repositoryName,
+      });
+
+      const hasReport = await this.hasObject(reportKey);
+      if (hasReport) {
+        validReportIds.push(reportId);
+      } else {
+        console.warn(
+          `skipping report '${reportId}' as it's not ready, this likely means the report upload process is still in progress on a concurrent machine, or the report was corrupted.`
+        );
+      }
+    }
+
+    return validReportIds;
   }
 
   async getReport(params: ReportContext): Promise<HostedReport> {
@@ -374,6 +397,23 @@ export class S3ScoobyAPI implements ScoobyAPI {
     const string = await streamToString(stream);
 
     return JSON.parse(string);
+  }
+
+  async hasObject(key: string): Promise<boolean> {
+    try {
+      await this.client.headObject({
+        Bucket: this.bucketOptions.bucket,
+        Key: key,
+      });
+
+      return true;
+    } catch (error) {
+      if (error instanceof NoSuchKey) {
+        return false;
+      }
+
+      throw error;
+    }
   }
 
   async uploadBody(key: string, body: string): Promise<string> {
