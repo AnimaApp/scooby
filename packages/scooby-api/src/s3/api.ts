@@ -1,4 +1,9 @@
-import { GetObjectCommandOutput, NoSuchKey, S3 } from "@aws-sdk/client-s3";
+import {
+  GetObjectCommandOutput,
+  NoSuchKey,
+  S3,
+  NotFound,
+} from "@aws-sdk/client-s3";
 import { v4 as uuidv4 } from "uuid";
 import { writeFile } from "fs/promises";
 import path from "path";
@@ -408,7 +413,7 @@ export class S3ScoobyAPI implements ScoobyAPI {
 
       return true;
     } catch (error) {
-      if (error instanceof NoSuchKey) {
+      if (error instanceof NotFound) {
         return false;
       }
 
