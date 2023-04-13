@@ -49,9 +49,17 @@ export const MetadataTab = ({ selectedId, report }: Props) => {
     ]) {
       if (entry.actual.id === selectedId) {
         return [
+          ...(entry.actual.metadata?.map((metadataEntry) => ({
+            ...metadataEntry,
+            name: `(actual) ${metadataEntry.name}`,
+          })) ?? []),
           ...(entry.expected.metadata?.map((metadataEntry) => ({
             ...metadataEntry,
-            name: `(before) ${metadataEntry.name}`,
+            name: `(truth) ${metadataEntry.name}`,
+          })) ?? []),
+          ...(entry.reference.metadata?.map((metadataEntry) => ({
+            ...metadataEntry,
+            name: `(reference) ${metadataEntry.name}`,
           })) ?? []),
         ];
       }
