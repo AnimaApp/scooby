@@ -28,7 +28,7 @@ Scooby was built with these goals in mind:
 - Be highly extensible to support new kinds of tests and reports
 - Integrate well with our GitHub-based workflows
 
-Scooby has been extensively battle-tested at [Anima](https://www.animaapp.com/), where is powering most of our production pipelines.
+Scooby has been extensively battle-tested at [Anima](https://www.animaapp.com/), where it's powering most of our production pipelines.
 
 # Overview
 
