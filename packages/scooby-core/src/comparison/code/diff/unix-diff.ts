@@ -33,7 +33,7 @@ export class UnixDiffComparator implements CodeComparator {
       );
     }
 
-    const result = await invokeDiff(["-U", "-1", expectedPath, actualPath]);
+    const result = await invokeDiff(["-U", "2147483646", expectedPath, actualPath]);
     if (result.outcome === "identical") {
       return generateIdenticalComparisonResult(actualPath);
     }
