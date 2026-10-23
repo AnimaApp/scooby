@@ -62,7 +62,7 @@ workflows:
 jobs:
   build-and-test:
     docker:
-      - image: node:16
+      - image: node:24.22.1-bookworm
     steps:
       - setup-dependencies
       - run:
@@ -77,7 +77,7 @@ jobs:
 
   run-scooby-regression-tests:
     docker:
-      - image: node:16
+      - image: node:24.22.1-bookworm
     steps:
       - setup-dependencies
       - setup-scooby
@@ -111,7 +111,7 @@ jobs:
 
   run-scooby-fidelity-tests:
     docker:
-      - image: node:16
+      - image: node:24.22.1-bookworm
     steps:
       - setup-dependencies
       - setup-scooby
@@ -142,7 +142,7 @@ jobs:
 
   run-scooby-fidelity-regression-tests:
     docker:
-      - image: node:16
+      - image: node:24.22.1-bookworm
     steps:
       - setup-dependencies
       - setup-scooby
@@ -176,7 +176,7 @@ jobs:
 
   scooby-update-status:
     docker:
-      - image: node:16
+      - image: node:24.22.1-bookworm
     steps:
       - setup-dependencies
       - setup-scooby
@@ -186,7 +186,7 @@ jobs:
 
   deploy-scooby-web-ui:
     docker:
-      - image: node:16
+      - image: node:24.22.1-bookworm
     steps:
       - setup-dependencies
       - run:
@@ -210,7 +210,7 @@ jobs:
 
   deploy-npm-packages:
     docker:
-      - image: node:16
+      - image: node:24.22.1-bookworm
     steps:
       - run:
           name: Set npm registry
@@ -267,7 +267,7 @@ jobs:
 
   patch-request-npm-packages-deploy-approval-github-status:
     docker:
-      - image: node:16
+      - image: node:24.22.1-bookworm
     steps:
       - checkout
       - run:

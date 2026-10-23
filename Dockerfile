@@ -1,4 +1,4 @@
-FROM node:16-bullseye
+FROM node:24.22.1-bookworm
 
 WORKDIR /usr/src/app
 
