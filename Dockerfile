@@ -19,6 +19,10 @@ COPY . .
 # Keep only the required packages
 RUN ./scripts/remove_unnecessary_packages.sh
 
+# Use the system Chromium installed above instead of downloading another browser.
+ENV PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium \
+    PUPPETEER_SKIP_DOWNLOAD=true
+
 RUN yarn install --frozen-lockfile && \
     yarn build:all && \
     rm -Rf node_modules
@@ -31,9 +35,6 @@ ENV GIT_VERSION ${GIT_VERSION}
 
 ARG REPO_NAME
 ENV REPO_NAME ${REPO_NAME}
-
-# We need to override the path, otherwise puppeteer crashes on Arm macbooks
-ENV PUPPETEER_EXECUTABLE_PATH /usr/bin/chromium
 
 EXPOSE 3000
 
